@@ -9,6 +9,10 @@
   margin-left: 10px;
   text-align: left;
 }
+.contentBlock__form{
+  display: flex;
+  width: 100%;
+}
 .contentBlock__documentList {
   width: 100%;
   padding: 0px;
