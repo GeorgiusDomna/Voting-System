@@ -1,15 +1,20 @@
 .contentBlock {
+  display: flex;
+}
+
+.content {
   width: 73%;
   padding: 2.5rem;
   padding-top: 50px;
 }
-.contentBlock__title {
+
+.content__title {
   font-size: 1.5rem;
   margin-top: 0;
   margin-left: 10px;
   text-align: left;
 }
-.contentBlock__documentList {
+.content__documentList {
   width: 100%;
   padding: 0px;
   display: flex;
@@ -18,13 +23,13 @@
 }
 
 @media (max-width: 1000px) {
-  .contentBlock {
+  .content {
     width: 65%;
   }
 }
 
 @media (max-width: 768px) {
-  .contentBlock {
+  .content {
     width: 100%;
   }
 }
