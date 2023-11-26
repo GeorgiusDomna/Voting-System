@@ -24,47 +24,50 @@ headers.set('Authorization', OAuth_token);
     alertStore.toggleAlert((error as Error).message);
   }
 */
-export async function CreateUser(params:CreateUserParams) {
-  try{
-    const response= await fetch(`${baseUrl}user`,{
-      method:'POST',
-      headers,
-      body:JSON.stringify(params)
-    })
-    if (!response.ok) {
-      const error: IFailedServerResponse = await response.json();
-      return Promise.reject(error.message);
-    }
-    const createdUser = await response.json();
-      return createdUser;
-  }
-  catch(error){
-    alertStore.toggleAlert((error as Error).message);
-  }
-  
-}
 
-export async function getUsersByDepartment(params:GetUserParams){ 
+export async function CreateUser(params: CreateUserParams) {
   try {
-    const response = await fetch(`${baseUrl}user/?departmentName=${params.departmentName}&limit=${params.limit}&page=${params.page}`, {
-      method: 'GET',
-      headers
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(`${baseUrl}user`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(params),
     });
     if (!response.ok) {
       const error: IFailedServerResponse = await response.json();
       return Promise.reject(error.message);
     }
-    const data =await response.json()
+    const createdUser = await response.json();
+    return createdUser;
+  } catch (error) {
+    alertStore.toggleAlert((error as Error).message);
+  }
+}
+
+export async function getUsersByDepartment(params: GetUserParams) {
+  try {
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(
+      `${baseUrl}user/?departmentName=${params.departmentName}&limit=${params.limit}&page=${params.page}`,
+      {
+        method: 'GET',
+        headers,
+      }
+    );
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      return Promise.reject(error.message);
+    }
+    const data = await response.json();
     return data;
   } catch (error) {
     alertStore.toggleAlert((error as Error).message);
   }
 }
 
-
-
-export async function createNewDeportment(params: departments) {
+export async function createNewDepartment(params: departments) {
   try {
+    if (!isOnline()) throw new NetworkError();
     const response = await fetch(baseUrl + 'department/', {
       method: 'POST',
       headers,
@@ -82,6 +85,7 @@ export async function createNewDeportment(params: departments) {
 
 export async function addUserToDepartment(params: AddUserToDepartmentParams) {
   try {
+    if (!isOnline()) throw new NetworkError();
     const response = await fetch(baseUrl + `user/${params.userId}`, {
       method: 'PUT',
       headers,
