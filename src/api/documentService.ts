@@ -100,3 +100,21 @@ export async function addUserToDepartment(params: AddUserToDepartmentParams) {
     alertStore.toggleAlert((error as Error).message);
   }
 }
+
+export async function getAllDepartments() {
+  try {
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(baseUrl + 'department/', {
+      method: 'GET',
+      headers,
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      return Promise.reject(error.message);
+    }
+    const data = await response.json();
+    return data.content;
+  } catch (error) {
+    alertStore.toggleAlert((error as Error).message);
+  }
+}
