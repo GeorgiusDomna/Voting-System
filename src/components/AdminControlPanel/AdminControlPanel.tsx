@@ -1,3 +1,4 @@
+import { Navigate } from 'react-router-dom';
 import styles from './adminControlPanel.module.css';
 //import { useState, useEffect } from 'react';
 
@@ -6,7 +7,7 @@ const AdminControlPanel: React.FC = () => {
 
   if (role === 'ADMIN') {
     return <div className={styles.AdminControlPanel}>AdminControlPanel</div>;
-  } else return <div>Page not found 404</div>;
+  } else return <Navigate to='/' />;
 };
 
 export default AdminControlPanel;
