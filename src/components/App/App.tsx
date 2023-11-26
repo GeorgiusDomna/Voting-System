@@ -32,22 +32,13 @@ const App: React.FC = observer(() => {
             index
             element={
               role === 'ADMIN' ? (
-                <div className={[styles.app, isOpen && styles.openAlert].join(' ')}>
-                  <AdminControlPanel />
-                </div>
+                <AdminControlPanel />
               ) : (
                 'Компонент просмотра всех документов (Юзер)'
               )
             }
           />
-          <Route
-            path={Paths.DOCUMENTS}
-            element={
-              <div className={[styles.app, isOpen && styles.openAlert].join(' ')}>
-                <AdminDocumentPanel />
-              </div>
-            }
-          />
+          <Route path={Paths.DOCUMENTS} element={<AdminDocumentPanel />} />
           <Route path={Paths.USER_DOCUMENTS} element={'Компонент добавления документа (Юзер)'} />
           <Route path={Paths.DOCUMENTS_VOTE} element={'Компонент голосования за документ (Юзер)'} />
         </Route>
