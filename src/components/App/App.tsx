@@ -40,7 +40,14 @@ const App: React.FC = observer(() => {
               )
             }
           />
-          <Route path={Paths.DOCUMENTS} element={<AdminDocumentPanel />} />
+          <Route
+            path={Paths.DOCUMENTS}
+            element={
+              <div className={[styles.app, isOpen && styles.openAlert].join(' ')}>
+                <AdminDocumentPanel />
+              </div>
+            }
+          />
           <Route path={Paths.USER_DOCUMENTS} element={'Компонент добавления документа (Юзер)'} />
           <Route path={Paths.DOCUMENTS_VOTE} element={'Компонент голосования за документ (Юзер)'} />
         </Route>
