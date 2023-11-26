@@ -1,0 +1,23 @@
+.contentBlock {
+  display: block;
+}
+
+.title {
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-left: 10px;
+  text-align: left;
+}
+
+.form {
+  display: flex;
+  width: 100%;
+}
+
+.listDepartment {
+  width: 100%;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
