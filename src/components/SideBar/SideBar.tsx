@@ -4,6 +4,7 @@ import SideBarButton from './SideBarButton/SideBarButton';
 import styles from './sideBar.module.css';
 import { observer } from 'mobx-react-lite';
 import Navigation from './Navigation/Navigation';
+import userStore from '@/stores/UserStore';
 
 const SideBar: React.FC = observer(() => {
   const [isShown, setIsShown] = useState(false);
@@ -11,6 +12,11 @@ const SideBar: React.FC = observer(() => {
   function clickHandler() {
     setIsShown(!isShown);
   }
+
+  const logout = () => {
+    userStore.setIsLoggedIn(false);
+    userStore.deleteToken();
+  };
 
   return (
     <div
@@ -20,6 +26,9 @@ const SideBar: React.FC = observer(() => {
       <Navigation />
       <SideBarButton clickHandler={clickHandler} />
       <LanguageSwitch />
+      <button type='button' className={styles.button} onClick={logout}>
+        Выход
+      </button>
     </div>
   );
 });
