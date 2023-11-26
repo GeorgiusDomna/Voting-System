@@ -7,9 +7,17 @@ interface InputPasswordProps {
   value: string;
   error: string | undefined;
   handleChange: (e: string | ChangeEvent) => void;
+  submitCount: number;
 }
 
-const InputPassword = ({ name, placeholder, value, error, handleChange }: InputPasswordProps) => {
+const InputPassword = ({
+  name,
+  placeholder,
+  value,
+  error,
+  handleChange,
+  submitCount,
+}: InputPasswordProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isFocus, setIsFocus] = useState(false);
 
@@ -23,7 +31,7 @@ const InputPassword = ({ name, placeholder, value, error, handleChange }: InputP
         className={[
           styles.input,
           styles.input_type_password,
-          `${isFocus && error ? styles.input_error : ''}`,
+          `${(isFocus && error) || (submitCount >= 1 && error) ? styles.input_error : ''}`,
         ].join(' ')}
       >
         <input
@@ -46,7 +54,7 @@ const InputPassword = ({ name, placeholder, value, error, handleChange }: InputP
           onClick={toggleVisible}
         ></button>
       </label>
-      <p className={styles.error}>{isFocus && error && error}</p>
+      <p className={styles.error}>{(isFocus && error) || (submitCount >= 1 && error && error)}</p>
     </div>
   );
 };

@@ -8,9 +8,18 @@ interface InputTextProps {
   value: string;
   error: string | undefined;
   handleChange: (e: string | ChangeEvent) => void;
+  submitCount: number;
 }
 
-const InputText = ({ type, name, placeholder, value, error, handleChange }: InputTextProps) => {
+const InputText = ({
+  type,
+  name,
+  placeholder,
+  value,
+  error,
+  handleChange,
+  submitCount,
+}: InputTextProps) => {
   const [isFocus, setIsFocus] = useState(false);
 
   return (
@@ -18,7 +27,10 @@ const InputText = ({ type, name, placeholder, value, error, handleChange }: Inpu
       <input
         type={type}
         name={name}
-        className={[styles.input, `${isFocus && error ? styles.input_error : ''}`].join(' ')}
+        className={[
+          styles.input,
+          `${(isFocus && error) || (submitCount >= 1 && error) ? styles.input_error : ''}`,
+        ].join(' ')}
         placeholder={placeholder}
         value={value}
         onChange={handleChange}
@@ -26,7 +38,7 @@ const InputText = ({ type, name, placeholder, value, error, handleChange }: Inpu
           setIsFocus(true);
         }}
       />
-      <p className={styles.error}>{isFocus && error && error}</p>
+      <p className={styles.error}>{(isFocus && error) || (submitCount >= 1 && error && error)}</p>
     </label>
   );
 };
