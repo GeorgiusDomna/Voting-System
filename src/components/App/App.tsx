@@ -50,24 +50,15 @@ const App: React.FC = observer(() => {
           <Route path={Paths.DOCUMENTS_VOTE} element={'Компонент голосования за документ (Юзер)'} />
         </Route>
         <Route
-          path={Paths.LOGIN}
+          path={Paths.ROOT}
           element={
             <ProtectedRouteElementForAuthorized>
               <Auth />
             </ProtectedRouteElementForAuthorized>
           }
         >
-          <Route index element={<FormLogin />} />
-        </Route>
-        <Route
-          path={Paths.REGISTRATION}
-          element={
-            <ProtectedRouteElementForAuthorized>
-              <Auth />
-            </ProtectedRouteElementForAuthorized>
-          }
-        >
-          <Route index element={<FormRegistration />} />
+          <Route path={Paths.LOGIN} element={<FormLogin />} />
+          <Route path={Paths.REGISTRATION} element={<FormRegistration />} />
         </Route>
       </Routes>
       {isOpen && <Alert message={message} toggleAlert={toggleAlert} />}
