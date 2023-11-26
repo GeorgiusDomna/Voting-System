@@ -60,6 +60,7 @@ const App: React.FC = observer(() => {
           <Route path={Paths.LOGIN} element={<FormLogin />} />
           <Route path={Paths.REGISTRATION} element={<FormRegistration />} />
         </Route>
+        <Route path={Paths.ANY} element={<h1>Страница не найдена</h1>} />
       </Routes>
       {isOpen && <Alert message={message} toggleAlert={toggleAlert} />}
     </>
