@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import ContentBlock from '../ContentBlock/ContentBlock';
-import UserControlPanel from '../UserControlPanel/UserControlPanel';
+import AdminControlPanel from '../AdminControlPanel/AdminControlPanel';
 import SideBar from '../SideBar/SideBar';
 import Footer from '../Footer/Footer';
 import Alert from '../Alert/Alert';
@@ -23,14 +23,14 @@ const App: React.FC = observer(() => {
               index
               element={
                 role === 'ADMIN' ? (
-                  <UserControlPanel />
+                  <AdminControlPanel />
                 ) : (
                   'Компонент просмотра всех документов (Юзер)'
                 )
               }
             />
-            <Route path='/departaments' element={'Компонент добавления департамента (Админ)'} />
-            <Route path='/create-document' element={'Компонент добавления документа (Юзер)'} />
+            <Route path='/documents' element={'Компонент управления документами (Админ)'} />
+            <Route path='/user-documents' element={'Компонент добавления документа (Юзер)'} />
             <Route path='/documents-vote' element={'Компонент голосования за документ (Юзер)'} />
           </Route>
           <Route path='/login' element={'Компонент авторизации (для незалогинившихся)'} />

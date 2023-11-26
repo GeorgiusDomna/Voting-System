@@ -10,15 +10,15 @@ const Navigation: React.FC = observer(() => {
   if (role === 'ADMIN') {
     navItems = (
       <>
-        <CategoryItem path={'/'} category='Управление персоналом' />
-        <CategoryItem path={'/departaments'} category='Управление департаментами' />
+        <CategoryItem path={'/'} category='Управление персоналом и департаментами' />
+        <CategoryItem path={'/documents'} category='Управление документами' />
       </>
     );
   } else {
     navItems = (
       <>
         <CategoryItem path={'/'} category='Просмотр документов' />
-        <CategoryItem path={'/create-document'} category='Работа с документами' />
+        <CategoryItem path={'/user-documents'} category='Работа с документами' />
         <CategoryItem path={'/documents-vote'} category='Документы на рассмотрении' />
       </>
     );
