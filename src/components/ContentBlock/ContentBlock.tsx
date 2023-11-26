@@ -29,7 +29,7 @@ const ContentBlock: React.FC = observer(() => {
       <h2 className={styles.contentBlock__title}>Документы</h2>
       <div className={styles.contentBlock__documentList}>
         {documentList.map((item) => (
-          <DocumentItem key={item.id} name={item.name} status={item.status} />
+          <DocumentItem key={item.id} name={item.name} status={item.status} id={item.id} />
         ))}
       </div>
     </div>

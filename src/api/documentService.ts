@@ -96,3 +96,23 @@ export async function addUserToDepartment(params: AddUserToDepartmentParams) {
     alertStore.toggleAlert((error as Error).message);
   }
 }
+
+export async function deleteDocumentOnServer(path: string): Promise<boolean | undefined> {
+  let url: string;
+  try {
+    if (!isOnline()) throw new NetworkError();
+    // Формируем URL для удаления файла
+     url = baseUrl +`/doc/${path}`;
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers,
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      throw new Error(error.message);
+    }
+    return true;
+  } catch (error) {
+    alertStore.toggleAlert((error as Error).message);
+  }
+}

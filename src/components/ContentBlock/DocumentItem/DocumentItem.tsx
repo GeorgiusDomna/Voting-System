@@ -1,15 +1,17 @@
 import { observer } from 'mobx-react-lite';
-
+import { deleteDocumentOnServer } from '../../../api/documentService';
 import styles from './documentItem.module.css';
-
+import alertStore from '@/stores/AlertStore';
 interface DocumentItemProps {
+  id: string;
   name: string;
   status: boolean;
 }
 
-const DocumentItem: React.FC<DocumentItemProps> = observer(({ name }) => {
+const DocumentItem: React.FC<DocumentItemProps> = observer(({ id, name }) => {
   const toggleOption = () => {
     /// При нажатии на кнопку должен быть рутинг на страницу с документом, где можно просмотреть более подробную информацию о нём
+    
   };
 
   return (
