@@ -1,7 +1,5 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import styles from './auth.module.css';
-import FormLogin from './Forms/FormLogin';
-import FormRegistration from './Forms/FormRegistration';
 
 const Auth = () => {
   const location = useLocation();
@@ -42,8 +40,7 @@ const Auth = () => {
             Регистрация
           </button>
         </div>
-        {location.pathname === '/login' && <FormLogin />}
-        {location.pathname === '/registration' && <FormRegistration />}
+        <Outlet />
       </div>
     </section>
   );

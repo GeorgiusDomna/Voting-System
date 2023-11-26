@@ -13,6 +13,8 @@ import {
   ProtectedRouteElementForAuthorized,
   ProtectedRouteElementForUnauthorized,
 } from './ProtectedRoute';
+import FormLogin from '../Auth/Forms/FormLogin';
+import FormRegistration from '../Auth/Forms/FormRegistration';
 
 const App: React.FC = observer(() => {
   const { isOpen, message, toggleAlert } = alertStore;
@@ -28,6 +30,7 @@ const App: React.FC = observer(() => {
             <ProtectedRouteElementForUnauthorized>
               <div className={[styles.app, isOpen && styles.openAlert].join(' ')}>
                 <ContentBlock />
+                <Footer />
               </div>
             </ProtectedRouteElementForUnauthorized>
           }
@@ -53,7 +56,9 @@ const App: React.FC = observer(() => {
               <Auth />
             </ProtectedRouteElementForAuthorized>
           }
-        />
+        >
+          <Route index element={<FormLogin />} />
+        </Route>
         <Route
           path={Paths.REGISTRATION}
           element={
@@ -61,9 +66,10 @@ const App: React.FC = observer(() => {
               <Auth />
             </ProtectedRouteElementForAuthorized>
           }
-        />
+        >
+          <Route index element={<FormRegistration />} />
+        </Route>
       </Routes>
-      <Footer />
       {isOpen && <Alert message={message} toggleAlert={toggleAlert} />}
     </>
   );
