@@ -11,7 +11,7 @@ const OAuth_token: string = import.meta.env.VITE_OAUTH_TOKEN;
 const baseUrl = 'http://5.35.83.142:8082/api/';
 
 const headers: Headers = new Headers();
-headers.set('Accept', 'application/json');
+headers.set('accept', 'application/json');
 headers.set('Content-Type', 'application/json');
 headers.set('Authorization', OAuth_token);
 
