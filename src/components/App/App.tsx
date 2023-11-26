@@ -9,6 +9,10 @@ import alertStore from '@/stores/AlertStore';
 import styles from './app.module.css';
 import { Paths } from '@/enums/Paths';
 import Auth from '../Auth/Auth';
+import {
+  ProtectedRouteElementForAuthorized,
+  ProtectedRouteElementForUnauthorized,
+} from './ProtectedRoute';
 
 const App: React.FC = observer(() => {
   const { isOpen, message, toggleAlert } = alertStore;
@@ -18,14 +22,14 @@ const App: React.FC = observer(() => {
   return (
     <>
       <Routes>
-        <Route path='/login' element={<Auth />} />
-        <Route path='/registration' element={<Auth />} />
         <Route
           path={Paths.ROOT}
           element={
-            <div className={[styles.app, isOpen && styles.openAlert].join(' ')}>
-              <ContentBlock />
-            </div>
+            <ProtectedRouteElementForUnauthorized>
+              <div className={[styles.app, isOpen && styles.openAlert].join(' ')}>
+                <ContentBlock />
+              </div>
+            </ProtectedRouteElementForUnauthorized>
           }
         >
           <Route
@@ -42,7 +46,22 @@ const App: React.FC = observer(() => {
           <Route path={Paths.USER_DOCUMENTS} element={'Компонент добавления документа (Юзер)'} />
           <Route path={Paths.DOCUMENTS_VOTE} element={'Компонент голосования за документ (Юзер)'} />
         </Route>
-        <Route path={Paths.LOGIN} element={'Компонент авторизации (для незалогинившихся)'} />
+        <Route
+          path={Paths.LOGIN}
+          element={
+            <ProtectedRouteElementForAuthorized>
+              <Auth />
+            </ProtectedRouteElementForAuthorized>
+          }
+        />
+        <Route
+          path={Paths.REGISTRATION}
+          element={
+            <ProtectedRouteElementForAuthorized>
+              <Auth />
+            </ProtectedRouteElementForAuthorized>
+          }
+        />
       </Routes>
       <Footer />
       {isOpen && <Alert message={message} toggleAlert={toggleAlert} />}
