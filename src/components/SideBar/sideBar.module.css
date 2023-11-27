@@ -8,6 +8,19 @@
   position: relative;
 }
 
+.button {
+  margin-top: 20px;
+  border: none;
+  background-color: transparent;
+  width: fit-content;
+  transition: opacity 0.3s;
+}
+
+.button:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
 @media (max-width: 1000px) {
   .sideBar {
     width: 35%;

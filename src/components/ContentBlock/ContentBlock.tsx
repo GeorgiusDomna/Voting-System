@@ -1,11 +1,14 @@
 import { Outlet, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import SideBar from '../SideBar/SideBar';
+import { observer } from 'mobx-react-lite';
 
 import AddUserModal from './AddUserModal/AddUserModal';
 
 import styles from './contentBlock.module.css';
-import { Paths } from '@/enums/Paths';
+import userStore from '@/stores/UserStore';
+import { getUserMe } from '@/api/documentService';
+import alertStore from '@/stores/AlertStore';
 
 const ContentBlock: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,11 +20,21 @@ const ContentBlock: React.FC = () => {
 
   const navigate = useNavigate();
 
+const ContentBlock: React.FC = observer(() => {
   useEffect(() => {
-    if (!role) {
-      navigate(Paths.LOGIN);
+    if (userStore.token) {
+      getUserMe(userStore.token)
+        .then((res) => {
+          userStore.setUserInfo(res);
+          userStore.setIsLoggedIn(true);
+        })
+        .catch((error) => {
+          alertStore.toggleAlert(error);
+          userStore.setIsLoggedIn(false);
+          userStore.deleteToken();
+        });
     }
-  }, [role, navigate]);
+  }, [userStore.isLoggedIn]);
 
   return (
     <div className={styles.contentBlock}>
@@ -33,6 +46,6 @@ const ContentBlock: React.FC = () => {
       <AddUserModal isOpen={isOpen} toggle={toggle} departmentId={1} />
     </div>
   );
-};
+});
 
 export default ContentBlock;

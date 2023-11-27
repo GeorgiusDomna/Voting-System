@@ -6,6 +6,7 @@ import departments from '../interfaces/departmentsData';
 import AddUserToDepartmentParams from '../interfaces/addUserToDepartament';
 import GetUserParams from '../interfaces/GetUsers';
 import IUser from '../interfaces/IUser';
+import { IRegistartion, ILogin } from '../interfaces/auth';
 
 //const OAuth_token: string = import.meta.env.VITE_OAUTH_TOKEN;
 const baseUrl = 'http://5.35.83.142:8082/api/';
@@ -94,6 +95,69 @@ export async function addUserToDepartment(params: AddUserToDepartmentParams) {
       return Promise.reject(error.message);
     }
     return response.status;
+  } catch (error) {
+    alertStore.toggleAlert((error as Error).message);
+  }
+}
+
+export async function registartion(params: IRegistartion) {
+  try {
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(`${baseUrl}registration`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      return Promise.reject(error.message);
+    }
+    return await response.json();
+  } catch (error) {
+    alertStore.toggleAlert((error as Error).message);
+  }
+}
+
+export async function login(params: ILogin) {
+  try {
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(`${baseUrl}login`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      return Promise.reject(error.message);
+    }
+    return await response.json();
+  } catch (error) {
+    alertStore.toggleAlert((error as Error).message);
+  }
+}
+
+export async function getUserMe(token: string) {
+  try {
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(`${baseUrl}user/me`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      return Promise.reject(error.message);
+    }
+    return await response.json();
   } catch (error) {
     alertStore.toggleAlert((error as Error).message);
   }
