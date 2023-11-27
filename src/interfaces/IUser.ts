@@ -9,4 +9,3 @@ export default interface CreateUserParams {
   patronymic: string;
   birthDate: string; // Format: "2023-11-25"
 }
-

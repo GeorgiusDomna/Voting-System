@@ -5,7 +5,7 @@ import alertStore from '@/stores/AlertStore';
 import departments from '../interfaces/departmentsData';
 import AddUserToDepartmentParams from '../interfaces/addUserToDepartament';
 import GetUserParams from '../interfaces/GetUsers';
-import CreateUserParams from '../interfaces/CreateUser';
+import IUser from '../interfaces/IUser';
 import { IRegistartion, ILogin } from '../interfaces/auth';
 
 const OAuth_token: string = import.meta.env.VITE_OAUTH_TOKEN;
@@ -25,11 +25,16 @@ headers.set('Authorization', OAuth_token);
     alertStore.toggleAlert((error as Error).message);
   }
 */
-export async function CreateUser(params: CreateUserParams) {
+export async function createUser(params: IUser, token: string) {
   try {
-    const response = await fetch(`${baseUrl}user`, {
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(`${baseUrl}user/`, {
       method: 'POST',
-      headers,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify(params),
     });
     if (!response.ok) {
