@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react-lite';
-
+import AddUserModal from '../../AddUserModal/AddUserModal';
 import styles from './departmentItem.module.css';
+import { useState } from 'react';
 
 interface DepartmentItemProps {
   name: string;
@@ -8,11 +9,17 @@ interface DepartmentItemProps {
 }
 
 const DepartmentItem: React.FC<DepartmentItemProps> = observer(({ name }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  function toggle() {
+    setIsOpen(!isOpen);
+  }
+
   return (
     <li className={styles.document}>
       <div className={styles.document__item}>
         <div className={styles.document__titleContainer}>
-          <div className={styles.document__iconDocument}></div>
+          <button onClick={toggle}>Клик</button>
+          <AddUserModal isOpen={isOpen} toggle={toggle} departmentId={1} />
           <p className={styles.document__title} title={name}>
             {name}
           </p>
