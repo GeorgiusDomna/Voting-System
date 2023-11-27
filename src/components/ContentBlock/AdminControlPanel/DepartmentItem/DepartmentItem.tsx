@@ -12,7 +12,7 @@ const DepartmentItem: React.FC<DepartmentItemProps> = observer(({ name }) => {
     <li className={styles.document}>
       <div className={styles.document__item}>
         <div className={styles.document__titleContainer}>
-          {/* <div className={styles.document__iconDocument}></div> */}
+          <div className={styles.document__iconDocument}></div>
           <p className={styles.document__title} title={name}>
             {name}
           </p>

@@ -16,7 +16,7 @@ const AdminControlPanel: React.FC = observer(() => {
       </div>
       <div className={styles.listDepartment}>
         {listDepartment.map((item) => (
-          <DepartmentItem key={item.id} id={item.id} name={item.name}  />
+          <DepartmentItem key={item.id} id={item.id} name={item.name} />
         ))}
       </div>
     </div>
