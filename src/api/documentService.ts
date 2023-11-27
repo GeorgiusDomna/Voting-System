@@ -68,12 +68,16 @@ export async function getUsersByDepartment(params: GetUserParams) {
   }
 }
 
-export async function createNewDepartment(params: departments) {
+export async function createNewDepartment(params: departments, token: string) {
   try {
     if (!isOnline()) throw new NetworkError();
     const response = await fetch(baseUrl + 'department/', {
       method: 'POST',
-      headers,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify(params),
     });
     if (!response.ok) {
@@ -104,12 +108,16 @@ export async function addUserToDepartment(params: AddUserToDepartmentParams) {
   }
 }
 
-export async function getAllDepartments() {
+export async function getAllDepartments(token: string) {
   try {
     if (!isOnline()) throw new NetworkError();
     const response = await fetch(baseUrl + 'department/', {
       method: 'GET',
-      headers,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
     });
     if (!response.ok) {
       const error: IFailedServerResponse = await response.json();

@@ -2,11 +2,23 @@ import styles from './adminControlPanel.module.css';
 import FormDepartment from '../Form/FormDepartment';
 import DepartmentItem from './DepartmentItem/DepartmentItem';
 import { observer } from 'mobx-react-lite';
-import { departaments } from '@/dataBase/departaments';
-// import { useState, useEffect } from 'react';
+import userStore from '@/stores/UserStore';
+import { useState } from 'react';
+import { getAllDepartments } from '@/api/documentService';
+import alertStore from '@/stores/AlertStore';
 
 const AdminControlPanel: React.FC = observer(() => {
-  const listDepartment = departaments;
+  const [listDepartment, setListDepartment] = useState([]);
+
+  if (userStore.token) {
+    getAllDepartments(userStore.token)
+      .then((data) => {
+        setListDepartment(data);
+      })
+      .catch((error) => {
+        alertStore.toggleAlert((error as Error).message);
+      });
+  }
 
   return (
     <div className={styles.contentBlock}>
