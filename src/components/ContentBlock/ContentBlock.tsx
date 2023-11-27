@@ -1,26 +1,21 @@
-import { Outlet, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
-import SideBar from '../SideBar/SideBar';
+import { Outlet } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-
+import SideBar from '../SideBar/SideBar';
 import AddUserModal from './AddUserModal/AddUserModal';
 
-import styles from './contentBlock.module.css';
 import userStore from '@/stores/UserStore';
 import { getUserMe } from '@/api/documentService';
 import alertStore from '@/stores/AlertStore';
 
-const ContentBlock: React.FC = () => {
+import styles from './contentBlock.module.css';
+
+const ContentBlock: React.FC = observer(() => {
   const [isOpen, setIsOpen] = useState(false);
   function toggle() {
     setIsOpen(!isOpen);
   }
 
-  const role: string = 'ADMIN'; //TODO: заменить на роль получаемую после логина
-
-  const navigate = useNavigate();
-
-const ContentBlock: React.FC = observer(() => {
   useEffect(() => {
     if (userStore.token) {
       getUserMe(userStore.token)

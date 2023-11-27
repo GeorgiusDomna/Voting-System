@@ -8,16 +8,13 @@ import GetUserParams from '../interfaces/GetUsers';
 import IUser from '../interfaces/IUser';
 import { IRegistartion, ILogin } from '../interfaces/auth';
 
-//const OAuth_token: string = import.meta.env.VITE_OAUTH_TOKEN;
+const OAuth_token: string = import.meta.env.VITE_OAUTH_TOKEN;
 const baseUrl = 'http://5.35.83.142:8082/api/';
 
 const headers: Headers = new Headers();
 headers.set('Accept', 'application/json');
 headers.set('Content-Type', 'application/json');
-headers.set(
-  'Authorization',
-  'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJGZWRvdCIsInJvbGVzIjpbIlJPTEVfQURNSU4iLCJST0xFX1VTRVIiXSwiZXhwIjoxNzAxMDg4Njc1LCJpYXQiOjE3MDEwODY4NzV9.1umFyf-Z4rISfid3Ci_JYFJUuJGH5j7ze-TYvgqt6M8'
-);
+headers.set('Authorization', OAuth_token);
 
 /* Проверка сети
   if (!isOnline()) throw new NetworkError();
