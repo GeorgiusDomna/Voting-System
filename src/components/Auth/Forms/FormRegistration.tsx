@@ -1,4 +1,4 @@
-import { registartion, login } from '@/api/documentService';
+import { registration, login } from '@/api/documentService';
 import styles from '../auth.module.css';
 import InputPassword from '../Inputs/InputPassword';
 import InputText from '../Inputs/InputText';
@@ -32,7 +32,7 @@ const FormRegistration = observer(() => {
   });
 
   const handleSubmit = (values: valuesLogin) => {
-    registartion({
+    registration({
       username: values.loginName,
       password: values.password,
       confirmPassword: values.repeatPassword,
