@@ -5,10 +5,10 @@ import { useState } from 'react';
 
 interface DepartmentItemProps {
   name: string;
-  id: string;
+  id: number;
 }
 
-const DepartmentItem: React.FC<DepartmentItemProps> = observer(({ name }) => {
+const DepartmentItem: React.FC<DepartmentItemProps> = observer(({ name, id }) => {
   const [isOpen, setIsOpen] = useState(false);
   function toggle() {
     setIsOpen(!isOpen);
@@ -19,7 +19,7 @@ const DepartmentItem: React.FC<DepartmentItemProps> = observer(({ name }) => {
       <div className={styles.document__item}>
         <div className={styles.document__titleContainer}>
           <button onClick={toggle}>Клик</button>
-          <AddUserModal isOpen={isOpen} toggle={toggle} departmentId={1} />
+          <AddUserModal isOpen={isOpen} toggle={toggle} departmentId={id} />
           <p className={styles.document__title} title={name}>
             {name}
           </p>

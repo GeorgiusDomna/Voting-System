@@ -1,5 +1,5 @@
 export default interface DepartmentResponseDto {
-  id: string;
+  id: number;
   name: string;
-  amountOfEmployee: string;
+  amountOfEmployee: number;
 }
