@@ -27,6 +27,7 @@ headers.set('Authorization', OAuth_token);
 */
 export async function createUser(params: IUser) {
   try {
+    if (!isOnline()) throw new NetworkError();
     const response = await fetch(`${baseUrl}user`, {
       method: 'POST',
       headers,
