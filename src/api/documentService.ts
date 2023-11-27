@@ -4,6 +4,7 @@ import { isOnline } from '@/utils/networkStatus';
 import alertStore from '@/stores/AlertStore';
 import departments from '../interfaces/departmentsData';
 import AddUserToDepartmentParams from '../interfaces/addUserToDepartament';
+import getAllUsersDepartmentsParams from '@/interfaces/GetAllUsersDepartments';
 import GetUserParams from '../interfaces/GetUsers';
 import CreateUserParams from '../interfaces/CreateUser';
 import { IRegistartion, ILogin } from '../interfaces/auth';
@@ -43,10 +44,10 @@ export async function CreateUser(params: CreateUserParams) {
   }
 }
 
-export async function getUsersByDepartment(params: GetUserParams) {
+export async function getUsersByDepartment(params: getAllUsersDepartmentsParams) {
   try {
     const response = await fetch(
-      `${baseUrl}user/?departmentName=${params.departmentName}&limit=${params.limit}&page=${params.page}`,
+      `${baseUrl}department/${params.departmentId}/users?page=${params.page}&limit=${params.limit}&recordState=${params.recordState}`,
       {
         method: 'GET',
         headers,
@@ -97,7 +98,7 @@ export async function addUserToDepartment(params: AddUserToDepartmentParams) {
   }
 }
 
-export async function registartion(params: IRegistartion) {
+export async function registration(params: IRegistartion) {
   try {
     if (!isOnline()) throw new NetworkError();
     const response = await fetch(`${baseUrl}registration`, {
