@@ -46,10 +46,13 @@ export async function CreateUser(params:CreateUserParams) {
 
 export async function getUsersByDepartment(params:GetUserParams){ 
   try {
-    const response = await fetch(`${baseUrl}user/?departmentName=${params.departmentName}&limit=${params.limit}&page=${params.page}`, {
-      method: 'GET',
-      headers
-    });
+    const response = await fetch(
+      `${baseUrl}user/?departmentName=${params.departmentName}&limit=${params.limit}&page=${params.page}&recordState=ACTIVE`,
+      {
+        method: 'GET',
+        headers,
+      }
+    );
     if (!response.ok) {
       const error: IFailedServerResponse = await response.json();
       return Promise.reject(error.message);
