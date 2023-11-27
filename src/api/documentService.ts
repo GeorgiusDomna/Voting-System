@@ -25,12 +25,16 @@ headers.set('Authorization', OAuth_token);
     alertStore.toggleAlert((error as Error).message);
   }
 */
-export async function createUser(params: IUser) {
+export async function createUser(params: IUser, token: string) {
   try {
     if (!isOnline()) throw new NetworkError();
-    const response = await fetch(`${baseUrl}user`, {
+    const response = await fetch(`${baseUrl}user/`, {
       method: 'POST',
-      headers,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify(params),
     });
     if (!response.ok) {

@@ -2,6 +2,7 @@
 import Modal from 'react-modal';
 import closeIcon from '@/assets/cancel.svg';
 import alertStore from '@/stores/AlertStore';
+import userStore from '@/stores/UserStore';
 import { observer } from 'mobx-react-lite';
 
 import * as Yup from 'yup';
@@ -52,16 +53,15 @@ const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, de
       ],
     };
 
-    console.log(userParams);
-
-    createUser(userParams)
-      .then((data) => {
-        console.log(data);
-        //addUserToDepartment({ userId: data.id as number, departmentId }); //TODO: изменение списка юзеров
-      })
-      .catch((error) => {
-        alertStore.toggleAlert((error as Error).message);
-      });
+    if (userStore.token) {
+      createUser(userParams, userStore.token)
+        .then((data) => {
+          //addUserToDepartment({ userId: data.id as number, departmentId }); //TODO: изменение списка юзеров
+        })
+        .catch((error) => {
+          alertStore.toggleAlert((error as Error).message);
+        });
+    }
   }
 
   return (
