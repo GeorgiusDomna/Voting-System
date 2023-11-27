@@ -63,7 +63,7 @@ export async function getUsersByDepartment(params: GetUserParams) {
   }
 }
 
-export async function createNewDeportment(params: departments) {
+export async function createNewDepartment(params: departments) {
   try {
     if (!isOnline()) throw new NetworkError();
     const response = await fetch(baseUrl + 'department/', {
