@@ -5,15 +5,18 @@ import alertStore from '@/stores/AlertStore';
 import departments from '../interfaces/departmentsData';
 import AddUserToDepartmentParams from '../interfaces/addUserToDepartament';
 import GetUserParams from '../interfaces/GetUsers';
-import CreateUserParams from '../interfaces/CreateUser';
+import IUser from '../interfaces/IUser';
 
-const OAuth_token: string = import.meta.env.VITE_OAUTH_TOKEN;
+//const OAuth_token: string = import.meta.env.VITE_OAUTH_TOKEN;
 const baseUrl = 'http://5.35.83.142:8082/api/';
 
 const headers: Headers = new Headers();
 headers.set('Accept', 'application/json');
 headers.set('Content-Type', 'application/json');
-headers.set('Authorization', OAuth_token);
+headers.set(
+  'Authorization',
+  'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJGZWRvdCIsInJvbGVzIjpbIlJPTEVfQURNSU4iLCJST0xFX1VTRVIiXSwiZXhwIjoxNzAxMDg4Njc1LCJpYXQiOjE3MDEwODY4NzV9.1umFyf-Z4rISfid3Ci_JYFJUuJGH5j7ze-TYvgqt6M8'
+);
 
 /* Проверка сети
   if (!isOnline()) throw new NetworkError();
@@ -24,44 +27,43 @@ headers.set('Authorization', OAuth_token);
     alertStore.toggleAlert((error as Error).message);
   }
 */
-export async function CreateUser(params:CreateUserParams) {
-  try{
-    const response= await fetch(`${baseUrl}user`,{
-      method:'POST',
-      headers,
-      body:JSON.stringify(params)
-    })
-    if (!response.ok) {
-      const error: IFailedServerResponse = await response.json();
-      return Promise.reject(error.message);
-    }
-    const createdUser = await response.json();
-      return createdUser;
-  }
-  catch(error){
-    alertStore.toggleAlert((error as Error).message);
-  }
-  
-}
-
-export async function getUsersByDepartment(params:GetUserParams){ 
+export async function createUser(params: IUser) {
   try {
-    const response = await fetch(`${baseUrl}user/?departmentName=${params.departmentName}&limit=${params.limit}&page=${params.page}`, {
-      method: 'GET',
-      headers
+    const response = await fetch(`${baseUrl}user`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(params),
     });
     if (!response.ok) {
       const error: IFailedServerResponse = await response.json();
       return Promise.reject(error.message);
     }
-    const data =await response.json()
-    return data;
+    const createdUser = await response.json();
+    return createdUser;
   } catch (error) {
     alertStore.toggleAlert((error as Error).message);
   }
 }
 
-
+export async function getUsersByDepartment(params: GetUserParams) {
+  try {
+    const response = await fetch(
+      `${baseUrl}user/?departmentName=${params.departmentName}&limit=${params.limit}&page=${params.page}`,
+      {
+        method: 'GET',
+        headers,
+      }
+    );
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      return Promise.reject(error.message);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    alertStore.toggleAlert((error as Error).message);
+  }
+}
 
 export async function createNewDeportment(params: departments) {
   try {
