@@ -9,11 +9,11 @@ const FormDepartment: React.FC = observer(() => {
   const [newDepartmentName, setNewDepartmentName] = useState('');
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const departmentParams = {
+    const DepartmentRequestDto = {
       name: newDepartmentName,
-    }
+    };
     if (userStore.token) {
-      createNewDepartment(departmentParams, userStore.token)
+      createNewDepartment(DepartmentRequestDto, userStore.token)
         .then(() => {
           setNewDepartmentName('');
         })

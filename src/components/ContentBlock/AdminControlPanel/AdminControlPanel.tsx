@@ -6,9 +6,10 @@ import userStore from '@/stores/UserStore';
 import { useState } from 'react';
 import { getAllDepartments } from '@/api/documentService';
 import alertStore from '@/stores/AlertStore';
+import DepartmentResponseDto from '@/interfaces/DepartmentResponseDto';
 
 const AdminControlPanel: React.FC = observer(() => {
-  const [listDepartment, setListDepartment] = useState([]);
+  const [listDepartment, setListDepartment] = useState<DepartmentResponseDto[]>([]);
 
   if (userStore.token) {
     getAllDepartments(userStore.token)

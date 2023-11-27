@@ -1,4 +1,4 @@
-import departaments from '@/interfaces/departmentsData';
+import departaments from '@/interfaces/DepartmentResponseDto';
 import { makeObservable, observable, action } from 'mobx';
 
 class DepartmentsStore {

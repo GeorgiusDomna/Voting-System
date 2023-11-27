@@ -2,7 +2,8 @@ import { NetworkError } from '@/errors/NetworkError';
 import { IFailedServerResponse } from '@/interfaces/IFailedServerResponse';
 import { isOnline } from '@/utils/networkStatus';
 import alertStore from '@/stores/AlertStore';
-import departments from '../interfaces/departmentsData';
+// import departments from '../interfaces/departmentsData';
+import DepartmentRequestDto from '@/interfaces/DepartmentRequestDto';
 import AddUserToDepartmentParams from '../interfaces/addUserToDepartament';
 import GetUserParams from '../interfaces/GetUsers';
 import IUser from '../interfaces/IUser';
@@ -68,7 +69,7 @@ export async function getUsersByDepartment(params: GetUserParams) {
   }
 }
 
-export async function createNewDepartment(params: departments, token: string) {
+export async function createNewDepartment(params: DepartmentRequestDto, token: string) {
   try {
     if (!isOnline()) throw new NetworkError();
     const response = await fetch(baseUrl + 'department/', {
