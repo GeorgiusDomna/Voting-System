@@ -5,8 +5,9 @@ import styles from './sideBar.module.css';
 import { observer } from 'mobx-react-lite';
 import Navigation from './Navigation/Navigation';
 import userStore from '@/stores/AuthStore';
+import authStore from '@/stores/AuthStore';
 
-const SideBar: React.FC = observer(() => {
+const SideBar: React.FC = () => {
   const [isShown, setIsShown] = useState(false);
 
   function clickHandler() {
@@ -23,6 +24,9 @@ const SideBar: React.FC = observer(() => {
       className={[styles.sideBar, isShown ? styles.sideBar_shown : ''].join(' ')}
       data-testid={'SideBar'}
     >
+      <button onClick={() => authStore.roletoggle()}>
+        {authStore.role === 'ADMIN' ? 'Сейчас ты Админ' : 'Сейчас ты Юзер'}
+      </button>
       <Navigation />
       <SideBarButton clickHandler={clickHandler} />
       <LanguageSwitch />
@@ -31,6 +35,6 @@ const SideBar: React.FC = observer(() => {
       </button>
     </div>
   );
-});
+};
 
-export default SideBar;
+export default observer(SideBar);

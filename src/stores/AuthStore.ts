@@ -8,16 +8,19 @@ class AuthStore {
   userInfo: IUserInfo | null = null;
   isLoggedIn: boolean = !!localStorage.getItem('token');
   token: string | null = localStorage.getItem('token');
+  role: 'ADMIN' | '' = 'ADMIN'; /// ВРЕМЕННАЯ ЗАГЛУШКА ДЛЯ РАЗРАБОТКИ -------------------
 
   constructor() {
     makeObservable(this, {
       userInfo: observable,
       isLoggedIn: observable,
+      role: observable,
       token: observable,
       setUserInfo: action.bound,
       setIsLoggedIn: action.bound,
       setToken: action.bound,
       deleteToken: action.bound,
+      roletoggle: action.bound, /// ВРЕМЕННАЯ ЗАГЛУШКА ДЛЯ РАЗРАБОТКИ -------------------
     });
   }
 
@@ -54,6 +57,15 @@ class AuthStore {
   deleteToken() {
     this.token = null;
     localStorage.removeItem('token');
+  }
+
+  /// ВРЕМЕННАЯ ЗАГЛУШКА ДЛЯ РАЗРАБОТКИ --------------------
+  roletoggle() {
+    if (this.role === 'ADMIN') {
+      this.role = '';
+    } else {
+      this.role = 'ADMIN';
+    }
   }
 }
 

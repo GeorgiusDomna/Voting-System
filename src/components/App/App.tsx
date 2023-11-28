@@ -15,11 +15,12 @@ import {
 import FormLogin from '../Auth/Forms/FormLogin';
 import FormRegistration from '../Auth/Forms/FormRegistration';
 import DocumentPanel from '@/Pages/DocumentPanel/DocumentPanel';
+import authStore from '@/stores/AuthStore';
 
 const App: React.FC = () => {
   const { isOpen, message, toggleAlert } = alertStore;
 
-  const role: string = 'ADMIN'; //TODO: заменить на роль получаемую после логина
+  const role = authStore.role; /// ВРЕМЕННАЯ ЗАГЛУШКА ДЛЯ РАЗРАБОТКИ -------------------
 
   return (
     <>
