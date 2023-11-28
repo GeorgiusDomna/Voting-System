@@ -3,11 +3,9 @@ export default interface IUserInfo {
   position: string;
   username: string;
   email: string;
-  roles: [
-    {
-      name: string;
-    },
-  ];
+  roles: {
+    name: string;
+  }[];
   firstName: string;
   lastName: string;
   patronymic: string;

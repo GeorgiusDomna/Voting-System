@@ -3,8 +3,8 @@ import { useEffect } from 'react';
 import SideBar from '../SideBar/SideBar';
 import { observer } from 'mobx-react-lite';
 import styles from './contentBlock.module.css';
-import userStore from '@/stores/UserStore';
-import { getUserMe } from '@/api/documentService';
+import userStore from '@/stores/AuthStore';
+import { getUserMe } from '@/api/otherServices';
 import alertStore from '@/stores/AlertStore';
 
 const ContentBlock: React.FC = observer(() => {

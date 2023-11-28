@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import ContentBlock from '../ContentBlock/ContentBlock';
-import AdminControlPanel from '../ContentBlock/AdminControlPanel/AdminControlPanel';
+import DepartmentPanel from '../../Pages/DepartmentPanel/DepartmentPanel';
 import AdminDocumentPanel from '../ContentBlock/AdminDocumentPanel/AdminDocumentPanel';
 import Footer from '../Footer/Footer';
 import Alert from '../Alert/Alert';
@@ -15,8 +15,9 @@ import {
 } from './ProtectedRoute';
 import FormLogin from '../Auth/Forms/FormLogin';
 import FormRegistration from '../Auth/Forms/FormRegistration';
+import DocumentPanel from '@/Pages/DocumentPanel/DocumentPanel';
 
-const App: React.FC = observer(() => {
+const App: React.FC = () => {
   const { isOpen, message, toggleAlert } = alertStore;
 
   const role: string = 'ADMIN'; //TODO: заменить на роль получаемую после логина
@@ -35,16 +36,7 @@ const App: React.FC = observer(() => {
             </ProtectedRouteElementForUnauthorized>
           }
         >
-          <Route
-            index
-            element={
-              role === 'ADMIN' ? (
-                <AdminControlPanel />
-              ) : (
-                'Компонент просмотра всех документов (Юзер)'
-              )
-            }
-          />
+          <Route index element={role === 'ADMIN' ? <DepartmentPanel /> : <DocumentPanel />} />
           <Route path={Paths.DOCUMENTS} element={<AdminDocumentPanel />} />
           <Route path={Paths.USER_DOCUMENTS} element={'Компонент добавления документа (Юзер)'} />
           <Route path={Paths.DOCUMENTS_VOTE} element={'Компонент голосования за документ (Юзер)'} />
@@ -65,6 +57,6 @@ const App: React.FC = observer(() => {
       {isOpen && <Alert message={message} toggleAlert={toggleAlert} />}
     </>
   );
-});
+};
 
-export default App;
+export default observer(App);

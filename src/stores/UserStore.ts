@@ -1,89 +1,68 @@
 import { makeObservable, observable, action } from 'mobx';
-import IUserInfo from '@/interfaces/userInfo';
+import IUserInfo from '@/interfaces/IUserInfo';
 
 class UserStore {
   /**
-   * Объект, содержащий информацию о пользователе.
+   * Массив, содержащий данные всех сотрудниках в хранилище.
    */
-  userInfo: IUserInfo | null = null;
-  isLoggedIn: boolean = !!localStorage.getItem('token');
-  token: string | null = localStorage.getItem('token');
+  userList: IUserInfo[] = [];
 
   constructor() {
     makeObservable(this, {
-      userInfo: observable,
-      isLoggedIn: observable,
-      token: observable,
-      setUserInfo: action.bound,
-      setIsLoggedIn: action.bound,
-      setToken: action.bound,
-      deleteToken: action.bound,
+      userList: observable,
+      setUserList: action.bound,
+      addUser: action.bound,
+      deleteUser: action.bound,
     });
   }
 
   /**
-   * Устанавливает информацию о пользователе в хранилище.
-   * @param {IUserInfo} userInfo - Данные о пользователе.
+   * Устанавливает список весех сотрудников в хранилище.
+   * @param {IUserInfo[]} userList - Новый список сотрудников для установки.
    */
-  setUserInfo(userInfo: IUserInfo) {
-    this.userInfo = userInfo;
+  setUserList(userList: IUserInfo[]) {
+    this.userList = userList;
   }
 
   /**
-   * Устанавливает информацию об авторизации пользователя.
-   * @param {boolean} isLoggedIn - Данные об авторизации пользователя.
+   * Добавляет нового сотрудника в хранилище сотрудников.
+   * @param {IUserInfo} newUser - Данные о новом сотруднике для добавления.
    */
-  setIsLoggedIn(isLoggedIn: boolean) {
-    this.isLoggedIn = isLoggedIn;
+  addUser(newUser: IUserInfo) {
+    this.userList.push(newUser);
   }
 
   /**
-   * Устанавливает токен пользователя.
-   * @param {string | null} token - Токен пользователя.
+   * Удаляет сотрудника из хранилища на основе его id.
+   * @param {number} id - Id сотрудника, которого нужно удалить.
    */
-  setToken(token: string | null) {
-    this.token = token;
-    if (token) {
-      localStorage.setItem('token', token);
-    }
-  }
-
-  /**
-   * Удаляет токен пользователя.
-   */
-  deleteToken() {
-    this.token = null;
-    localStorage.removeItem('token');
+  deleteUser(id: number) {
+    this.userList = this.userList.filter((item) => item.id !== id);
   }
 }
 
 /**
- * `userStore`- экземпляр класса `UserStore`, предоставляющий интерфейс для управления данными о пользователе.
- * Каждый пользователь представлен объектом типа `IUserInfo`.
- * Позволяет устанавливать новые данные о пользователе.
+ * `userStore`- экземпляр класса `UserStore`, предоставляющий интерфейс для управления списком сотрудников.
+ * Каждый сотрудник представлен объектом типа `IUserInfo`.
+ * Позволяет устанавливать новый список сотрудников, добавлять, удалять и редактировать сотрудников.
  * Реализован с использованием MobX для управления состоянием.
  *
  * @example
- * // Создание нового хранилища информации о пользователе
+ * // Создание нового хранилища сотрудников
  * const userStore = new UserStore();
  *
- *  * // Установка данных о пользователе
- * userStore.setUserInfo({
- *  id: 0;
-    position: 'string';
-    username: 'string';
-    email: 'string';
-    ...
- * });
+ *  * // Установка нового списка сотрудников
+ * userStore.setUserList([
+ *   { id: '1', name: 'Egor' },
+ *   { id: '2', name: 'Fedot' }
+ * ]);
  *
- *  * // Установка данных об авторизации пользователя
- * userStore.setIsLoggedIn(true);
+ * // Добавление нового сотрудника
+ * userStore.addUser({ id: '3', name: 'Evklid' });
  *
- *  * // Установка токена пользователя
- * userStore.setToken('string');
+ * // Удаление сотрудника по id
+ * userStore.deleteUser('2');
  *
- *  * // Удаление токена пользователя
- * userStore.deleteToken('string');
  *
  */
 const userStore = new UserStore();
