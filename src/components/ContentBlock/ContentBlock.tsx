@@ -1,27 +1,31 @@
-import { Outlet } from 'react-router-dom';
 import { useEffect } from 'react';
-import SideBar from '../SideBar/SideBar';
 import { observer } from 'mobx-react-lite';
-import styles from './contentBlock.module.css';
-import userStore from '@/stores/UserStore';
-import { getUserMe } from '@/api/documentService';
+import { Outlet } from 'react-router-dom';
+
+import SideBar from '../SideBar/SideBar';
+
 import alertStore from '@/stores/AlertStore';
+import authStore from '@/stores/AuthStore';
+
+import { getUserMe } from '@/api/authService';
+
+import styles from './contentBlock.module.css';
 
 const ContentBlock: React.FC = observer(() => {
   useEffect(() => {
-    if (userStore.token) {
-      getUserMe(userStore.token)
+    if (authStore.token) {
+      getUserMe(authStore.token)
         .then((res) => {
-          userStore.setUserInfo(res);
-          userStore.setIsLoggedIn(true);
+          authStore.setUserInfo(res);
+          authStore.setIsLoggedIn(true);
         })
         .catch((error) => {
           alertStore.toggleAlert(error);
-          userStore.setIsLoggedIn(false);
-          userStore.deleteToken();
+          authStore.setIsLoggedIn(false);
+          authStore.deleteToken();
         });
     }
-  }, [userStore.isLoggedIn]);
+  }, [authStore.isLoggedIn]);
 
   return (
     <div className={styles.contentBlock}>

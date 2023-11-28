@@ -1,0 +1,18 @@
+.tabel {
+  width: 100%;
+  border-collapse: collapse;
+}
+.tableHeader {
+  background-color: rgb(224, 224, 224);
+}
+.tabel th,
+.tabel td {
+  padding: 10px;
+  transition: 0.1s;
+}
+.tabel td {
+  text-align: center;
+}
+.th_name {
+  text-align: left;
+}

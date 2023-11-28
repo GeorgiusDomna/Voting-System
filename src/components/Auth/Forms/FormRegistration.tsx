@@ -1,4 +1,4 @@
-import { registartion, login } from '@/api/documentService';
+import { login, registartion } from '@/api/authService';
 import styles from '../auth.module.css';
 import InputPassword from '../Inputs/InputPassword';
 import InputText from '../Inputs/InputText';
@@ -8,7 +8,7 @@ import alertStore from '@/stores/AlertStore';
 import { useNavigate } from 'react-router-dom';
 import { Paths } from '@/enums/Paths';
 import { observer } from 'mobx-react-lite';
-import userStore from '@/stores/UserStore';
+import authStore from '@/stores/AuthStore';
 
 interface valuesLogin {
   loginName: string;
@@ -44,9 +44,9 @@ const FormRegistration = observer(() => {
           password: values.password,
         })
           .then((res) => {
-            userStore.setToken(res.token);
+            authStore.setToken(res.token);
             navigate(Paths.ROOT);
-            userStore.setIsLoggedIn(true);
+            authStore.setIsLoggedIn(true);
           })
           .catch((error) => alertStore.toggleAlert(error));
       })

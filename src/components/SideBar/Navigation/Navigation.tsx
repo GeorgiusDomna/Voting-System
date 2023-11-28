@@ -3,9 +3,10 @@ import { observer } from 'mobx-react-lite';
 import styles from './navigation.module.css';
 import { ReactElement } from 'react';
 import { Paths } from '@/enums/Paths';
+import authStore from '@/stores/AuthStore';
 
 const Navigation: React.FC = observer(() => {
-  const role: string = 'ADMIN'; //TODO: заменить на роль получаемую после логина
+  const role = authStore.role; /// ВРЕМЕННАЯ ЗАГЛУШКА ДЛЯ РАЗРАБОТКИ -------------------
   let navItems: ReactElement;
 
   if (role === 'ADMIN') {

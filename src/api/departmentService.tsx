@@ -1,6 +1,6 @@
 import { NetworkError } from '@/errors/NetworkError';
 import { IFailedServerResponse } from '@/interfaces/IFailedServerResponse';
-import documentData from '@/interfaces/IdocumentData';
+import departamentData from '@/interfaces/IdepartmentData';
 
 import alertStore from '@/stores/AlertStore';
 import userStore from '@/stores/AuthStore';
@@ -15,16 +15,16 @@ const headers = {
 };
 
 /**
- * Получает список всех документов.
+ * Получает список всех отделов с сервера.
  *
- * @returns {Promise<documentData[] | void>} Промис, который разрешается массивом данных всех документов.
+ * @returns {Promise<departamentData[] | void>} Промис, который разрешается массивом данных об отделах.
  * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
  *
  */
-export async function getAllDocuments(): Promise<documentData[] | void> {
+export async function getAllDepartments(): Promise<departamentData[] | void> {
   try {
-    const url = `${baseUrl}/doc/filter?page=0&limit=20&state=ACTIVE`;
     if (!isOnline()) throw new NetworkError();
+    const url = `${baseUrl}/department/`;
     const response = await fetch(url, {
       method: 'GET',
       headers,
@@ -33,7 +33,8 @@ export async function getAllDocuments(): Promise<documentData[] | void> {
       const error: IFailedServerResponse = await response.json();
       return Promise.reject(error.message);
     }
-    return await response.json();
+    const data = await response.json();
+    return data.content;
   } catch (error) {
     alertStore.toggleAlert((error as Error).message);
   }
