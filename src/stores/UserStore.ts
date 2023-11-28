@@ -1,68 +1,97 @@
-import { makeObservable, observable, action } from 'mobx';
-import IUserInfo from '@/interfaces/IUserInfo';
+import { makeObservable, observable, action, computed } from 'mobx';
+import IUserInfo from '@/interfaces/userInfo';
 
 class UserStore {
   /**
-   * Массив, содержащий данные всех сотрудниках в хранилище.
+   * Объект, содержащий информацию о пользователе.
    */
-  userList: IUserInfo[] = [];
+  userInfo: IUserInfo | null = null;
+  isLoggedIn: boolean = !!localStorage.getItem('token');
+  token: string | null = localStorage.getItem('token');
 
   constructor() {
     makeObservable(this, {
-      userList: observable,
-      setUserList: action.bound,
-      addUser: action.bound,
-      deleteUser: action.bound,
+      userInfo: observable,
+      isLoggedIn: observable,
+      token: observable,
+      isUserAdmin: computed,
+      setUserInfo: action.bound,
+      setIsLoggedIn: action.bound,
+      setToken: action.bound,
+      deleteToken: action.bound,
     });
   }
 
   /**
-   * Устанавливает список весех сотрудников в хранилище.
-   * @param {IUserInfo[]} userList - Новый список сотрудников для установки.
+   * Устанавливает информацию о пользователе в хранилище.
+   * @param {IUserInfo} userInfo - Данные о пользователе.
    */
-  setUserList(userList: IUserInfo[]) {
-    this.userList = userList;
+  setUserInfo(userInfo: IUserInfo) {
+    this.userInfo = userInfo;
   }
 
   /**
-   * Добавляет нового сотрудника в хранилище сотрудников.
-   * @param {IUserInfo} newUser - Данные о новом сотруднике для добавления.
+   * Вычисляет, является ли пользователь админом.
    */
-  addUser(newUser: IUserInfo) {
-    this.userList.push(newUser);
+  get isUserAdmin() {
+    return !!this.userInfo?.roles.find((el) => el.name === 'ROLE_ADMIN');
   }
 
   /**
-   * Удаляет сотрудника из хранилища на основе его id.
-   * @param {number} id - Id сотрудника, которого нужно удалить.
+   * Устанавливает информацию об авторизации пользователя.
+   * @param {boolean} isLoggedIn - Данные об авторизации пользователя.
    */
-  deleteUser(id: number) {
-    this.userList = this.userList.filter((item) => item.id !== id);
+  setIsLoggedIn(isLoggedIn: boolean) {
+    this.isLoggedIn = isLoggedIn;
+  }
+
+  /**
+   * Устанавливает токен пользователя.
+   * @param {string | null} token - Токен пользователя.
+   */
+  setToken(token: string | null) {
+    this.token = token;
+    if (token) {
+      localStorage.setItem('token', token);
+    }
+  }
+
+  /**
+   * Удаляет токен пользователя.
+   */
+  deleteToken() {
+    this.token = null;
+    localStorage.removeItem('token');
   }
 }
 
 /**
- * `userStore`- экземпляр класса `UserStore`, предоставляющий интерфейс для управления списком сотрудников.
- * Каждый сотрудник представлен объектом типа `IUserInfo`.
- * Позволяет устанавливать новый список сотрудников, добавлять, удалять и редактировать сотрудников.
+ * `userStore`- экземпляр класса `UserStore`, предоставляющий интерфейс для управления данными о пользователе.
+ * Каждый пользователь представлен объектом типа `IUserInfo`.
+ * Позволяет устанавливать новые данные о пользователе.
  * Реализован с использованием MobX для управления состоянием.
  *
  * @example
- * // Создание нового хранилища сотрудников
+ * // Создание нового хранилища информации о пользователе
  * const userStore = new UserStore();
  *
- *  * // Установка нового списка сотрудников
- * userStore.setUserList([
- *   { id: '1', name: 'Egor' },
- *   { id: '2', name: 'Fedot' }
- * ]);
+ *  * // Установка данных о пользователе
+ * userStore.setUserInfo({
+ *  id: 0;
+    position: 'string';
+    username: 'string';
+    email: 'string';
+    ...
+ * });
  *
- * // Добавление нового сотрудника
- * userStore.addUser({ id: '3', name: 'Evklid' });
+ *  * // Установка данных об авторизации пользователя
+ * userStore.setIsLoggedIn(true);
  *
- * // Удаление сотрудника по id
- * userStore.deleteUser('2');
+ *  * // Установка токена пользователя
+ * userStore.setToken('string');
  *
+ *  * // Удаление токена пользователя
+ * userStore.deleteToken('string');
  *
  */
 const userStore = new UserStore();

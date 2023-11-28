@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 
 import Loading from '@/components/ContentBlock/Loading/Loading';
 
-import { getAllDocuments } from '@/api/documentService';
+import { getAllDocuments } from '@/api/docuService';
 import documentStore from '@/stores/DocumentStore';
 import authStore from '@/stores/AuthStore';
 

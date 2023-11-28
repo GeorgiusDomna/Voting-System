@@ -6,7 +6,7 @@ import Table from '@/components/Table/Table';
 
 import { getUsersByDepartment } from '@/api/userService';
 
-import userStore from '@/stores/UserStore';
+import userStore from '@/stores/EmployeeStore';
 
 import style from './UserPanel.module.css';
 import authStore from '@/stores/AuthStore';
@@ -25,7 +25,7 @@ const UserPanel: React.FC = () => {
       setIsLoading(false);
     };
     fetchData();
-  }, [authStore.isLoggedIn]);
+  }, []);
 
   return (
     <div className={style.UserPanel}>
