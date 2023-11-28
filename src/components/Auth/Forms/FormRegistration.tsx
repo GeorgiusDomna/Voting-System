@@ -1,4 +1,4 @@
-import { registartion, login } from '@/api/otherServices';
+import { login, registartion } from '@/api/authService';
 import styles from '../auth.module.css';
 import InputPassword from '../Inputs/InputPassword';
 import InputText from '../Inputs/InputText';

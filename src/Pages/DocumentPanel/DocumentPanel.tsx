@@ -24,7 +24,7 @@ const DocumentPanel: React.FC = () => {
       setIsLoading(false);
     };
     fetchData();
-  }, []);
+  }, [authStore.isLoggedIn]);
 
   return (
     <div className={style.documentPanel}>
