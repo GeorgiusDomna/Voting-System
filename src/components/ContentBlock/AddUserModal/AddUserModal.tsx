@@ -56,7 +56,12 @@ const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, de
     if (userStore.token) {
       createUser(userParams, userStore.token)
         .then((data) => {
-          //addUserToDepartment({ userId: data.id as number, departmentId }); //TODO: изменение списка юзеров
+          addUserToDepartment(
+            { userId: data.id as number, departmentId },
+            userStore.token as string
+          ).catch((error) => {
+            alertStore.toggleAlert((error as Error).message);
+          });
         })
         .catch((error) => {
           alertStore.toggleAlert((error as Error).message);

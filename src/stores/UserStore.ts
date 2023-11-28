@@ -1,4 +1,4 @@
-import { makeObservable, observable, action } from 'mobx';
+import { makeObservable, observable, action, computed } from 'mobx';
 import IUserInfo from '@/interfaces/userInfo';
 
 class UserStore {
@@ -14,6 +14,7 @@ class UserStore {
       userInfo: observable,
       isLoggedIn: observable,
       token: observable,
+      isUserAdmin: computed,
       setUserInfo: action.bound,
       setIsLoggedIn: action.bound,
       setToken: action.bound,
@@ -27,6 +28,13 @@ class UserStore {
    */
   setUserInfo(userInfo: IUserInfo) {
     this.userInfo = userInfo;
+  }
+
+  /**
+   * Вычисляет, является ли пользователь админом.
+   */
+  get isUserAdmin() {
+    return !!this.userInfo?.roles.find((el) => el.name === 'ROLE_ADMIN');
   }
 
   /**

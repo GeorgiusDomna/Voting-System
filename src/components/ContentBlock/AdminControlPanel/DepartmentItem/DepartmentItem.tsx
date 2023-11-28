@@ -18,7 +18,7 @@ const DepartmentItem: React.FC<DepartmentItemProps> = observer(({ name, id }) =>
     <li className={styles.document}>
       <div className={styles.document__item}>
         <div className={styles.document__titleContainer}>
-          <button onClick={toggle}>Клик</button>
+          <button onClick={toggle}>+</button>
           <AddUserModal isOpen={isOpen} toggle={toggle} departmentId={id} />
           <p className={styles.document__title} title={name}>
             {name}

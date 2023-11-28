@@ -1,25 +1,24 @@
+import { ReactElement } from 'react';
 import CategoryItem from '../CategoryItem/CategoryItem';
 import { observer } from 'mobx-react-lite';
+import userStore from '@/stores/UserStore';
 import styles from './navigation.module.css';
-import { ReactElement } from 'react';
 import { Paths } from '@/enums/Paths';
 
 const Navigation: React.FC = observer(() => {
-  const role: string = 'ADMIN'; //TODO: заменить на роль получаемую после логина
   let navItems: ReactElement;
 
-  if (role === 'ADMIN') {
+  if (userStore.isUserAdmin) {
     navItems = (
       <>
-        <CategoryItem path={Paths.ROOT} category='Управление персоналом и департаментами' />
-        <CategoryItem path={Paths.DOCUMENTS} category='Управление документами' />
+        <CategoryItem path={Paths.ROOT} category='Управление документами' />
+        <CategoryItem path={Paths.ADMIN_PANEL} category='Управление персоналом и департаментами' />
       </>
     );
   } else {
     navItems = (
       <>
-        <CategoryItem path={Paths.ROOT} category='Просмотр документов' />
-        <CategoryItem path={Paths.USER_DOCUMENTS} category='Работа с документами' />
+        <CategoryItem path={Paths.ROOT} category='Управление документами' />
         <CategoryItem path={Paths.DOCUMENTS_VOTE} category='Документы на рассмотрении' />
       </>
     );

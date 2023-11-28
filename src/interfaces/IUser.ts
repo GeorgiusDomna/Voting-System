@@ -1,4 +1,4 @@
-export default interface CreateUserParams {
+export default interface IUser {
   position: string;
   username: string;
   password: string;
@@ -7,5 +7,5 @@ export default interface CreateUserParams {
   firstName: string;
   lastName: string;
   patronymic: string;
-  birthDate: string; // Format: "2023-11-25"
+  birthDate: string;
 }

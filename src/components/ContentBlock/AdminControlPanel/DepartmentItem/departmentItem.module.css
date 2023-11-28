@@ -3,6 +3,8 @@
   width: 100%;
   flex-direction: column;
   gap: 5px;
+
+  cursor: pointer;
 }
 
 .document__item {

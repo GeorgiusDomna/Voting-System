@@ -91,13 +91,20 @@ export async function createNewDepartment(params: DepartmentRequestDto, token: s
   }
 }
 
-export async function addUserToDepartment(params: AddUserToDepartmentParams) {
+export async function addUserToDepartment(
+  { userId, departmentId }: AddUserToDepartmentParams,
+  token: string
+) {
   try {
     if (!isOnline()) throw new NetworkError();
-    const response = await fetch(baseUrl + `user/${params.userId}`, {
+    const response = await fetch(baseUrl + `user/${userId}`, {
       method: 'PUT',
-      headers,
-      body: JSON.stringify(params.departmentId),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ departmentId }),
     });
     if (!response.ok) {
       const error: IFailedServerResponse = await response.json();

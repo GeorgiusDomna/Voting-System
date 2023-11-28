@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import ContentBlock from '../ContentBlock/ContentBlock';
 import AdminControlPanel from '../ContentBlock/AdminControlPanel/AdminControlPanel';
-import AdminDocumentPanel from '../ContentBlock/AdminDocumentPanel/AdminDocumentPanel';
+import DocumentPanel from '../ContentBlock/DocumentPanel/DocumentPanel';
 import Footer from '../Footer/Footer';
 import Alert from '../Alert/Alert';
 import { observer } from 'mobx-react-lite';
@@ -19,8 +19,6 @@ import FormRegistration from '../Auth/Forms/FormRegistration';
 const App: React.FC = observer(() => {
   const { isOpen, message, toggleAlert } = alertStore;
 
-  const role: string = 'ADMIN'; //TODO: заменить на роль получаемую после логина
-
   return (
     <>
       <Routes>
@@ -35,18 +33,8 @@ const App: React.FC = observer(() => {
             </ProtectedRouteElementForUnauthorized>
           }
         >
-          <Route
-            index
-            element={
-              role === 'ADMIN' ? (
-                <AdminControlPanel />
-              ) : (
-                'Компонент просмотра всех документов (Юзер)'
-              )
-            }
-          />
-          <Route path={Paths.DOCUMENTS} element={<AdminDocumentPanel />} />
-          <Route path={Paths.USER_DOCUMENTS} element={'Компонент добавления документа (Юзер)'} />
+          <Route index element={<DocumentPanel />} />
+          <Route path={Paths.ADMIN_PANEL} element={<AdminControlPanel />} />
           <Route path={Paths.DOCUMENTS_VOTE} element={'Компонент голосования за документ (Юзер)'} />
         </Route>
         <Route
