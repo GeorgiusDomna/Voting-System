@@ -5,13 +5,18 @@ import styles from './formDepartment.module.css';
 import alertStore from '@/stores/AlertStore';
 import departmentsStore from '@/stores/DepartmentStore';
 import DepartmentRequestDto from '@/interfaces/DepartmentRequestDto';
+// import { isOnline } from '@/utils/networkStatus';
+// import { NetworkError } from '@/errors/NetworkError';
 
 const FormDepartment: React.FC = observer(() => {
   const [newName, setNewName] = useState('');
+  const [isFormEmpty, setFormEmpty] = useState(true);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-
+    if (!newName) {
+      return;
+    }
     const newDep: DepartmentRequestDto = {
       name: newName,
     };
@@ -26,6 +31,11 @@ const FormDepartment: React.FC = observer(() => {
       });
   }
 
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setNewName(e.target.value);
+    setFormEmpty(e.target.value === '');
+  }
+
   return (
     <>
       <form onSubmit={handleSubmit} className={styles.formDepartment}>
@@ -34,11 +44,11 @@ const FormDepartment: React.FC = observer(() => {
           name='newDepartment'
           id='newDepartment'
           value={newName}
-          onChange={(e) => setNewName(e.target.value)}
+          onChange={handleInputChange}
           className={styles.inputName}
           placeholder='Название нового департамента'
         />
-        <button type='submit' className={styles.btn}>
+        <button type='submit' className={styles.btn} disabled={isFormEmpty}>
           Создать
         </button>
       </form>
