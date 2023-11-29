@@ -1,5 +1,5 @@
 import { makeObservable, observable, action } from 'mobx';
-import IUserInfo from '@/interfaces/IUserInfo';
+import IUserInfo from '@/interfaces/IUser';
 
 class AuthStore {
   /**

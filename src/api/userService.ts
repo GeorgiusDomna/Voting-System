@@ -1,6 +1,6 @@
 import { NetworkError } from '@/errors/NetworkError';
 import { IFailedServerResponse } from '@/interfaces/IFailedServerResponse';
-import IUserInfo from '@/interfaces/IUserInfo';
+import IUserInfo from '@/interfaces/IUser';
 
 import alertStore from '@/stores/AlertStore';
 import userStore from '@/stores/AuthStore';
