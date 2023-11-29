@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import ContentBlock from '../ContentBlock/ContentBlock';
 import AdminControlPanel from '../ContentBlock/AdminControlPanel/AdminControlPanel';
 import DocumentPanel from '../ContentBlock/DocumentPanel/DocumentPanel';
+import DepartmentPanel from '../../Pages/DepartmentPanel/DepartmentPanel';
 import Footer from '../Footer/Footer';
 import Alert from '../Alert/Alert';
 import { observer } from 'mobx-react-lite';
@@ -15,8 +16,10 @@ import {
 } from './ProtectedRoute';
 import FormLogin from '../Auth/Forms/FormLogin';
 import FormRegistration from '../Auth/Forms/FormRegistration';
+import DocumentPanel from '@/Pages/DocumentPanel/DocumentPanel';
+import authStore from '@/stores/AuthStore';
 
-const App: React.FC = observer(() => {
+const App: React.FC = () => {
   const { isOpen, message, toggleAlert } = alertStore;
 
   return (
@@ -53,6 +56,6 @@ const App: React.FC = observer(() => {
       {isOpen && <Alert message={message} toggleAlert={toggleAlert} />}
     </>
   );
-});
+};
 
-export default App;
+export default observer(App);

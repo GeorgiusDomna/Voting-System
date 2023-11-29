@@ -1,0 +1,25 @@
+.listItem {
+  background-color: rgb(247, 247, 247);
+  border-top: 5px solid white;
+  transition: 0.1s;
+}
+.listItem:hover {
+  background-color: rgb(243, 243, 243);
+}
+.nameContainer {
+  display: flex;
+  align-items: center;
+  margin-left: 5px;
+  gap: 15px;
+}
+.logoItem {
+  height: 1.6rem;
+}
+.logoItem_option:hover {
+  opacity: 0.5;
+  cursor: pointer;
+  transition: 0.1s;
+}
+.btnOption {
+  padding: 0;
+}

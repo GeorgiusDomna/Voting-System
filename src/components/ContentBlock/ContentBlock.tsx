@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
 import { Outlet } from 'react-router-dom';
 import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
@@ -11,19 +13,19 @@ import styles from './contentBlock.module.css';
 
 const ContentBlock: React.FC = observer(() => {
   useEffect(() => {
-    if (userStore.token) {
-      getUserMe(userStore.token)
+    if (authStore.token) {
+      getUserMe(authStore.token)
         .then((res) => {
-          userStore.setUserInfo(res);
-          userStore.setIsLoggedIn(true);
+          authStore.setUserInfo(res);
+          authStore.setIsLoggedIn(true);
         })
         .catch((error) => {
           alertStore.toggleAlert(error);
-          userStore.setIsLoggedIn(false);
-          userStore.deleteToken();
+          authStore.setIsLoggedIn(false);
+          authStore.deleteToken();
         });
     }
-  }, [userStore.isLoggedIn]);
+  }, [authStore.isLoggedIn]);
 
   return (
     <div className={styles.contentBlock}>

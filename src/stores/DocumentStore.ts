@@ -1,5 +1,5 @@
 import { makeObservable, observable, action } from 'mobx';
-import documentData from '@/interfaces/documentData';
+import documentData from '@/interfaces/IdocumentData';
 
 class DocumentStore {
   /**
