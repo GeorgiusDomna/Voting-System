@@ -8,7 +8,7 @@ import userIcon from '@/assets/user.svg';
 import departIcon from '@/assets/depart.svg';
 import docIcon from '@/assets/docIcon.svg';
 import style from './table.module.css';
-import IUserInfo from '@/interfaces/IUser';
+import IUserInfo from '@/interfaces/userInfo';
 
 interface Itype_el {
   title?: string;

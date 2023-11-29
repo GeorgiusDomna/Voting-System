@@ -1,7 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
 import ContentBlock from '../ContentBlock/ContentBlock';
-import AdminControlPanel from '../ContentBlock/AdminControlPanel/AdminControlPanel';
-import DocumentPanel from '../ContentBlock/DocumentPanel/DocumentPanel';
 import DepartmentPanel from '../../Pages/DepartmentPanel/DepartmentPanel';
 import Footer from '../Footer/Footer';
 import Alert from '../Alert/Alert';
@@ -17,7 +15,6 @@ import {
 import FormLogin from '../Auth/Forms/FormLogin';
 import FormRegistration from '../Auth/Forms/FormRegistration';
 import DocumentPanel from '@/Pages/DocumentPanel/DocumentPanel';
-import authStore from '@/stores/AuthStore';
 
 const App: React.FC = () => {
   const { isOpen, message, toggleAlert } = alertStore;
@@ -37,7 +34,7 @@ const App: React.FC = () => {
           }
         >
           <Route index element={<DocumentPanel />} />
-          <Route path={Paths.ADMIN_PANEL} element={<AdminControlPanel />} />
+          <Route path={Paths.DEPARTMENTS} element={<DepartmentPanel />} />
           <Route path={Paths.DOCUMENTS_VOTE} element={'Компонент голосования за документ (Юзер)'} />
         </Route>
         <Route

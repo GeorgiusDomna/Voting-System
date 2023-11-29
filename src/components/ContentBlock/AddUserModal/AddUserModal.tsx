@@ -2,14 +2,13 @@
 import Modal from 'react-modal';
 import closeIcon from '@/assets/cancel.svg';
 import alertStore from '@/stores/AlertStore';
-import userStore from '@/stores/UserStore';
 import { observer } from 'mobx-react-lite';
 
 import * as Yup from 'yup';
 import { Form, Formik } from 'formik';
 
 import IUser from '@/interfaces/IUser';
-import { createUser, addUserToDepartment } from '@/api/documentService';
+import { createUser, addUserToDepartment } from '@/api/userService';
 import styles from './addUserModal.module.css';
 
 interface addUserModalProps {
@@ -53,20 +52,15 @@ const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, de
       ],
     };
 
-    if (userStore.token) {
-      createUser(userParams, userStore.token)
-        .then((data) => {
-          addUserToDepartment(
-            { userId: data.id as number, departmentId },
-            userStore.token as string
-          ).catch((error) => {
-            alertStore.toggleAlert((error as Error).message);
-          });
-        })
-        .catch((error) => {
+    createUser(userParams)
+      .then((data) => {
+        addUserToDepartment({ userId: data.id as number, departmentId }).catch((error) => {
           alertStore.toggleAlert((error as Error).message);
         });
-    }
+      })
+      .catch((error) => {
+        alertStore.toggleAlert((error as Error).message);
+      });
   }
 
   return (

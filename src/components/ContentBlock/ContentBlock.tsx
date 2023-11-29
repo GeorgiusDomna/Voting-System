@@ -1,12 +1,10 @@
 import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Outlet } from 'react-router-dom';
-import { useEffect } from 'react';
-import { observer } from 'mobx-react-lite';
 import SideBar from '../SideBar/SideBar';
 
-import userStore from '@/stores/UserStore';
-import { getUserMe } from '@/api/documentService';
+import authStore from '@/stores/AuthStore';
+import { getUserMe } from '@/api/authService';
 import alertStore from '@/stores/AlertStore';
 
 import styles from './contentBlock.module.css';

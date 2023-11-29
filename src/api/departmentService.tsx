@@ -1,6 +1,7 @@
 import { NetworkError } from '@/errors/NetworkError';
 import { IFailedServerResponse } from '@/interfaces/IFailedServerResponse';
 import departamentData from '@/interfaces/IdepartmentData';
+import DepartmentRequestDto from '@/interfaces/DepartmentRequestDto';
 
 import alertStore from '@/stores/AlertStore';
 import userStore from '@/stores/AuthStore';
@@ -13,6 +14,24 @@ const headers = {
   'Content-Type': 'application/json',
   Authorization: `Bearer ${userStore.token}`,
 };
+
+export async function createNewDepartment(params: DepartmentRequestDto) {
+  try {
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(baseUrl + 'department/', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(params),
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      return Promise.reject(error.message);
+    }
+    return response.status;
+  } catch (error) {
+    alertStore.toggleAlert((error as Error).message);
+  }
+}
 
 /**
  * Получает список всех отделов с сервера.
