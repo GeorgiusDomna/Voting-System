@@ -1,27 +1,30 @@
 import { observer } from 'mobx-react-lite';
-import { createNewDepartment } from '@/api/documentService';
+import { useState } from 'react';
+import { createNewDepartment } from '@/api/departmentService';
 import styles from './formDepartment.module.css';
 import alertStore from '@/stores/AlertStore';
-import { useState } from 'react';
-import userStore from '@/stores/UserStore';
+import departmentsStore from '@/stores/DepartmentStore';
+import DepartmentRequestDto from '@/interfaces/DepartmentRequestDto';
 
 const FormDepartment: React.FC = observer(() => {
-  const [newDepartmentName, setNewDepartmentName] = useState('');
-  const handleSubmit = async (e: React.FormEvent) => {
+  const [newName, setNewName] = useState('');
+
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const DepartmentRequestDto = {
-      name: newDepartmentName,
+
+    const newDep: DepartmentRequestDto = {
+      name: newName,
     };
-    if (userStore.token) {
-      createNewDepartment(DepartmentRequestDto, userStore.token)
-        .then(() => {
-          setNewDepartmentName('');
-        })
-        .catch((error) => {
-          alertStore.toggleAlert((error as Error).message);
-        });
-    }
-  };
+
+    createNewDepartment(newDep)
+      .then((data) => {
+        departmentsStore.addNewDepartment(data);
+        setNewName('');
+      })
+      .catch((error) => {
+        alertStore.toggleAlert((error as Error).message);
+      });
+  }
 
   return (
     <>
@@ -30,12 +33,14 @@ const FormDepartment: React.FC = observer(() => {
           type='text'
           name='newDepartment'
           id='newDepartment'
-          value={newDepartmentName}
-          onChange={(e) => setNewDepartmentName(e.target.value)}
+          value={newName}
+          onChange={(e) => setNewName(e.target.value)}
           className={styles.inputName}
           placeholder='Название нового департамента'
         />
-        <button className={styles.btn}>Создать</button>
+        <button type='submit' className={styles.btn}>
+          Создать
+        </button>
       </form>
     </>
   );
