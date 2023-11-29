@@ -1,7 +1,6 @@
 import { ReactElement } from 'react';
 import CategoryItem from '../CategoryItem/CategoryItem';
 import { observer } from 'mobx-react-lite';
-import userStore from '@/stores/UserStore';
 import styles from './navigation.module.css';
 import { Paths } from '@/enums/Paths';
 import authStore from '@/stores/AuthStore';
@@ -9,11 +8,11 @@ import authStore from '@/stores/AuthStore';
 const Navigation: React.FC = observer(() => {
   let navItems: ReactElement;
 
-  if (userStore.isUserAdmin) {
+  if (authStore.isUserAdmin) {
     navItems = (
       <>
         <CategoryItem path={Paths.ROOT} category='Управление документами' />
-        <CategoryItem path={Paths.ADMIN_PANEL} category='Управление персоналом и департаментами' />
+        <CategoryItem path={Paths.DEPARTMENTS} category='Управление департаментами' />
       </>
     );
   } else {
