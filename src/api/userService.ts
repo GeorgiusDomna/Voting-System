@@ -1,6 +1,8 @@
 import { NetworkError } from '@/errors/NetworkError';
 import { IFailedServerResponse } from '@/interfaces/IFailedServerResponse';
-import IUserInfo from '@/interfaces/IUserInfo';
+import IUser from '@/interfaces/IUser';
+import IUserInfo from '@/interfaces/userInfo';
+import AddUserToDepartmentParams from '@/interfaces/addUserToDepartament';
 
 import alertStore from '@/stores/AlertStore';
 import userStore from '@/stores/AuthStore';
@@ -13,6 +15,43 @@ const headers = {
   'Content-Type': 'application/json',
   Authorization: `Bearer ${userStore.token}`,
 };
+
+export async function createUser(params: IUser) {
+  try {
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(`${baseUrl}user/`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(params),
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      return Promise.reject(error.message);
+    }
+    const createdUser = await response.json();
+    return createdUser;
+  } catch (error) {
+    alertStore.toggleAlert((error as Error).message);
+  }
+}
+
+export async function addUserToDepartment({ userId, departmentId }: AddUserToDepartmentParams) {
+  try {
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(baseUrl + `user/${userId}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({ departmentId }),
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      return Promise.reject(error.message);
+    }
+    return response.status;
+  } catch (error) {
+    alertStore.toggleAlert((error as Error).message);
+  }
+}
 
 /**
  * Получает список сотрудников департамента.

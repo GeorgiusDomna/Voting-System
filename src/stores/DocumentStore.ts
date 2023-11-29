@@ -34,9 +34,9 @@ class DocumentStore {
 
   /**
    * Удаляет документ из хранилища на основе его имени.
-   * @param {string} id - Id документа, который нужно удалить.
+   * @param {number} id - Id документа, который нужно удалить.
    */
-  deleteDocument(id: string) {
+  deleteDocument(id: number) {
     this.documentList = this.documentList.filter((item) => item.id !== id);
   }
 }

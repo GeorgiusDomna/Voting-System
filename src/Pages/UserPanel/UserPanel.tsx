@@ -1,19 +1,39 @@
 import { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
+import { useNavigate } from 'react-router';
 
 import Loading from '@/components/ContentBlock/Loading/Loading';
 import Table from '@/components/Table/Table';
 
 import { getUsersByDepartment } from '@/api/userService';
+import { getUserMe } from '@/api/authService';
 
-import userStore from '@/stores/UserStore';
+import userStore from '@/stores/EmployeeStore';
+import alertStore from '@/stores/AlertStore';
+import authStore from '@/stores/AuthStore';
+
+import { Paths } from '@/enums/Paths';
 
 import style from './UserPanel.module.css';
-import authStore from '@/stores/AuthStore';
 
 const UserPanel: React.FC = () => {
   const { userList, setUserList } = userStore;
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (authStore.token) {
+      getUserMe(authStore.token)
+        .then((res) => {
+          authStore.setUserInfo(res);
+          if (!authStore.isUserAdmin) navigate(Paths.ROOT);
+        })
+        .catch((error) => {
+          alertStore.toggleAlert(error);
+          authStore.deleteToken();
+        });
+    }
+  }, [authStore.isLoggedIn]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -25,7 +45,7 @@ const UserPanel: React.FC = () => {
       setIsLoading(false);
     };
     fetchData();
-  }, [authStore.isLoggedIn]);
+  }, []);
 
   return (
     <div className={style.UserPanel}>

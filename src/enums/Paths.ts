@@ -2,8 +2,7 @@ export enum Paths {
   ROOT = '/',
   LOGIN = '/login',
   REGISTRATION = '/registration',
-  DOCUMENTS = '/documents',
-  USER_DOCUMENTS = '/user-documents',
+  DEPARTMENTS = '/departments',
   DOCUMENTS_VOTE = '/documents-vote',
   ANY = '*',
 }

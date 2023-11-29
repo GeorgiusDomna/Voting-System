@@ -15,12 +15,9 @@ import {
 import FormLogin from '../Auth/Forms/FormLogin';
 import FormRegistration from '../Auth/Forms/FormRegistration';
 import DocumentPanel from '@/Pages/DocumentPanel/DocumentPanel';
-import authStore from '@/stores/AuthStore';
 
 const App: React.FC = () => {
   const { isOpen, message, toggleAlert } = alertStore;
-
-  const role = authStore.role; /// ВРЕМЕННАЯ ЗАГЛУШКА ДЛЯ РАЗРАБОТКИ -------------------
 
   return (
     <>
@@ -36,9 +33,8 @@ const App: React.FC = () => {
             </ProtectedRouteElementForUnauthorized>
           }
         >
-          <Route index element={role === 'ADMIN' ? <DepartmentPanel /> : <DocumentPanel />} />
-          <Route path={Paths.DOCUMENTS} element={<DocumentPanel />} />
-          <Route path={Paths.USER_DOCUMENTS} element={'Компонент добавления документа (Юзер)'} />
+          <Route index element={<DocumentPanel />} />
+          <Route path={Paths.DEPARTMENTS} element={<DepartmentPanel />} />
           <Route path={Paths.DOCUMENTS_VOTE} element={'Компонент голосования за документ (Юзер)'} />
         </Route>
         <Route
