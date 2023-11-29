@@ -3,3 +3,8 @@
   margin-top: 0;
   margin-left: 0.8rem;
 }
+
+.UserPanel__img {
+  width: 40px;
+  height: 40px;
+}

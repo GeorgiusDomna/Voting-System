@@ -37,11 +37,16 @@ const DepartmentPanel: React.FC = () => {
   useEffect(() => {
     setIsLoading(true);
     const fetchData = async () => {
-      if (authStore.isLoggedIn) {
-        const res = await getAllDepartments();
-        res && setDepartments(res);
+      try {
+        if (authStore.isLoggedIn) {
+          const res = await getAllDepartments();
+          res && setDepartments(res);
+        }
+      } catch (err) {
+        alertStore.toggleAlert((err as Error).message);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
     fetchData();
   }, [authStore.isLoggedIn]);

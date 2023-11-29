@@ -1,5 +1,6 @@
 import TableItem from './TableItem/TableItem';
 import { observer } from 'mobx-react-lite';
+import { useNavigate } from 'react-router-dom';
 
 import IdocumentData from '@/interfaces/IdocumentData';
 import IdepartamentData from '@/interfaces/IdepartmentData';
@@ -9,6 +10,7 @@ import departIcon from '@/assets/depart.svg';
 import docIcon from '@/assets/docIcon.svg';
 import style from './table.module.css';
 import IUserInfo from '@/interfaces/userInfo';
+import { Paths } from '@/enums/Paths';
 
 interface Itype_el {
   title?: string;
@@ -28,11 +30,12 @@ const dateFormater = (inputDate: string): string => {
   return inputDate.split('T')[0].split('-').join('.');
 };
 const roleCheck = (role: { name: string }[]): string => {
-  if (role.length > 1) return 'Admin';
-  else return 'User';
+  return role.find((el) => el.name === 'ROLE_ADMIN') ? 'Admin' : 'User';
 };
 
 const Table: React.FC<ITableProps> = ({ dataList, type }) => {
+  const navigate = useNavigate();
+
   let type_el: Itype_el = {};
   let tabelItems;
   switch (type) {
@@ -92,7 +95,9 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
           td1={data.name}
           td2={data.amountOfEmployee}
           img={type_el.img}
-          callback={() => {}}
+          callback={() => {
+            navigate(`${Paths.DEPARTMENTS}/${data.id}`, { state: { name: data.name } });
+          }}
         />
       ));
     }
