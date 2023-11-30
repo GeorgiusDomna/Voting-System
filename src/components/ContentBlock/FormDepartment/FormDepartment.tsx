@@ -17,6 +17,11 @@ const FormDepartment: React.FC = observer(() => {
     if (!newName) {
       return;
     }
+    if (!navigator.onLine) {
+      alertStore.toggleAlert('Нет подключения к интернету');
+      return;
+    }
+
     const newDep: DepartmentRequestDto = {
       name: newName,
     };
