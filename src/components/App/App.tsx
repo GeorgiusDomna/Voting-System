@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import ContentBlock from '../ContentBlock/ContentBlock';
 import DepartmentPanel from '../../Pages/DepartmentPanel/DepartmentPanel';
 import Footer from '../Footer/Footer';
+import Header from '../Header/Header';
 import Alert from '../Alert/Alert';
 import { observer } from 'mobx-react-lite';
 import alertStore from '@/stores/AlertStore';
@@ -27,6 +28,7 @@ const App: React.FC = () => {
           element={
             <ProtectedRouteElementForUnauthorized>
               <div className={[styles.app, isOpen && styles.openAlert].join(' ')}>
+                <Header />
                 <ContentBlock />
                 <Footer />
               </div>
