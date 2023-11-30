@@ -5,8 +5,6 @@ import styles from './formDepartment.module.css';
 import alertStore from '@/stores/AlertStore';
 import departmentsStore from '@/stores/DepartmentStore';
 import DepartmentRequestDto from '@/interfaces/DepartmentRequestDto';
-// import { isOnline } from '@/utils/networkStatus';
-// import { NetworkError } from '@/errors/NetworkError';
 
 const FormDepartment: React.FC = observer(() => {
   const [newName, setNewName] = useState('');
@@ -14,9 +12,7 @@ const FormDepartment: React.FC = observer(() => {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!newName) {
-      return;
-    }
+
     if (!navigator.onLine) {
       alertStore.toggleAlert('Нет подключения к интернету');
       return;
