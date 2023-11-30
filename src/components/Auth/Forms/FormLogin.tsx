@@ -9,6 +9,8 @@ import { Paths } from '@/enums/Paths';
 import alertStore from '@/stores/AlertStore';
 import { observer } from 'mobx-react-lite';
 import userStore from '@/stores/UserStore';
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
 
 interface valuesLogin {
   loginName: string;
@@ -17,10 +19,15 @@ interface valuesLogin {
 
 const FormLogin = observer(() => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const FormLoginSchema = Yup.object().shape({
-    loginName: Yup.string().min(2, 'Минимум 2 символа').required('Поле обязательно для заполнения'),
-    password: Yup.string().min(8, 'Минимум 8 символов').required('Поле обязательно для заполнения'),
+    loginName: Yup.string()
+      .min(2, t(Localization.Min2Chars))
+      .required(t(Localization.FieldRequired)),
+    password: Yup.string()
+      .min(8, t(Localization.Min8Chars))
+      .required(t(Localization.FieldRequired)),
   });
 
   const handleSubmit = (values: valuesLogin) => {
@@ -52,7 +59,7 @@ const FormLogin = observer(() => {
           <InputText
             type='text'
             name='loginName'
-            placeholder='Введите login'
+            placeholder={t(Localization.EnterLogin)}
             value={values.loginName}
             error={errors.loginName}
             handleChange={handleChange}
@@ -60,14 +67,14 @@ const FormLogin = observer(() => {
           />
           <InputPassword
             name='password'
-            placeholder='Введите пароль'
+            placeholder={t(Localization.EnterPassword)}
             value={values.password}
             error={errors.password}
             handleChange={handleChange}
             submitCount={submitCount}
           />
           <button type='submit' className={styles.button} disabled={submitCount >= 1 && !isValid}>
-            Войти
+            {t(Localization.LOGIN)}
           </button>
         </Form>
       )}

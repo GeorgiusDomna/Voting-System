@@ -9,6 +9,8 @@ import { useNavigate } from 'react-router-dom';
 import { Paths } from '@/enums/Paths';
 import { observer } from 'mobx-react-lite';
 import userStore from '@/stores/UserStore';
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
 
 interface valuesLogin {
   loginName: string;
@@ -19,16 +21,23 @@ interface valuesLogin {
 
 const FormRegistration = observer(() => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  let test = t(Localization.Min2Chars);
+  console.log(test);
 
   const FormRegistrationSchema = Yup.object().shape({
-    loginName: Yup.string().min(2, 'Минимум 2 символа').required('Поле обязательно для заполнения'),
-    password: Yup.string().min(8, 'Минимум 8 символов').required('Поле обязательно для заполнения'),
+    loginName: Yup.string()
+      .min(2, t(Localization.Min2Chars))
+      .required(t(Localization.FieldRequired)),
+    password: Yup.string()
+      .min(8, t(Localization.Min8Chars))
+      .required(t(Localization.FieldRequired)),
     repeatPassword: Yup.string()
-      .required('Поле обязательно для заполнения')
-      .oneOf([Yup.ref('password')], 'Пароли не совпадают'),
+      .required(t(Localization.FieldRequired))
+      .oneOf([Yup.ref('password')], t(Localization.PasswordsNotMatch)),
     email: Yup.string()
-      .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Проверьте правильность email адреса')
-      .required('Поле обязательно для заполнения'),
+      .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, t(Localization.CheckEmail))
+      .required(t(Localization.FieldRequired)),
   });
 
   const handleSubmit = (values: valuesLogin) => {
@@ -71,7 +80,7 @@ const FormRegistration = observer(() => {
           <InputText
             type='text'
             name='loginName'
-            placeholder='Введите login'
+            placeholder={t(Localization.EnterLogin)}
             value={values.loginName}
             error={errors.loginName}
             handleChange={handleChange}
@@ -80,7 +89,7 @@ const FormRegistration = observer(() => {
           <InputText
             type='email'
             name='email'
-            placeholder='Введите email'
+            placeholder={t(Localization.EnterEmail)}
             value={values.email}
             error={errors.email}
             handleChange={handleChange}
@@ -88,7 +97,7 @@ const FormRegistration = observer(() => {
           />
           <InputPassword
             name='password'
-            placeholder='Введите пароль'
+            placeholder={t(Localization.EnterPassword)}
             value={values.password}
             error={errors.password}
             handleChange={handleChange}
@@ -96,14 +105,14 @@ const FormRegistration = observer(() => {
           />
           <InputPassword
             name='repeatPassword'
-            placeholder='Повторите пароль'
+            placeholder={t(Localization.RepeatPassword)}
             value={values.repeatPassword}
             error={errors.repeatPassword}
             handleChange={handleChange}
             submitCount={submitCount}
           />
           <button type='submit' className={styles.button} disabled={submitCount >= 1 && !isValid}>
-            Зарегистрироваться
+            {t(Localization.REGISTRATION)}
           </button>
         </Form>
       )}

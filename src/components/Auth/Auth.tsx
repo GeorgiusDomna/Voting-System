@@ -1,9 +1,12 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import styles from './auth.module.css';
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
 
 const Auth = () => {
   const location = useLocation();
   const navigation = useNavigate();
+  const { t } = useTranslation();
 
   const toggleTab = () => {
     if (location.pathname === '/login') {
@@ -26,7 +29,7 @@ const Auth = () => {
             ].join(' ')}
             onClick={toggleTab}
           >
-            Войти
+            {t(Localization.LOGIN)}
           </button>
           <button
             type='button'
@@ -37,7 +40,7 @@ const Auth = () => {
             ].join(' ')}
             onClick={toggleTab}
           >
-            Регистрация
+            {t(Localization.REG)}
           </button>
         </div>
         <Outlet />
