@@ -17,7 +17,7 @@ export async function createNewDepartment(params: DepartmentRequestDto, token: s
   const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
   try {
     if (!isOnline()) throw new NetworkError();
-    const response = await fetch(baseUrl + 'department/', {
+    const response = await fetch(baseUrl + '/department/', {
       method: 'POST',
       headers: headersWithToken,
       body: JSON.stringify(params),
@@ -26,7 +26,8 @@ export async function createNewDepartment(params: DepartmentRequestDto, token: s
       const error: IFailedServerResponse = await response.json();
       return Promise.reject(error.message);
     }
-    return response.status;
+    const data = await response.json();
+    return data;
   } catch (error) {
     alertStore.toggleAlert((error as Error).message);
   }

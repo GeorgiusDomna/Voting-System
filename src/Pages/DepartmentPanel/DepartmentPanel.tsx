@@ -4,6 +4,7 @@ import { observer } from 'mobx-react-lite';
 
 import Loading from '@/components/ContentBlock/Loading/Loading';
 import Table from '@/components/Table/Table';
+import FormDepartment from '@/components/ContentBlock/FormDepartment/FormDepartment';
 
 import { getAllDepartments } from '@/api/departmentService';
 import { getUserMe } from '@/api/authService';
@@ -54,6 +55,7 @@ const DepartmentPanel: React.FC = () => {
   return (
     <div className={style.DepartmentPanel}>
       <h2 className={style.DepartmentPanel__title}>Работа с департаментами</h2>
+      <FormDepartment></FormDepartment>
       {isLoading ? (
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />
       ) : (
