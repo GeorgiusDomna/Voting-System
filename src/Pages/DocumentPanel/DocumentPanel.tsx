@@ -34,8 +34,8 @@ const DocumentPanel: React.FC = () => {
   useEffect(() => {
     setIsLoading(true);
     const fetchData = async () => {
-      if (authStore.isLoggedIn) {
-        const res = await getAllDocuments();
+      if (authStore.token) {
+        const res = await getAllDocuments(authStore.token);
         res && setDocumentList(res);
       }
       setIsLoading(false);

@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import ContentBlock from '../ContentBlock/ContentBlock';
 import DepartmentPanel from '../../Pages/DepartmentPanel/DepartmentPanel';
+import UserPanel from '@/Pages/UserPanel/UserPanel';
 import Footer from '../Footer/Footer';
 import Alert from '../Alert/Alert';
 import { observer } from 'mobx-react-lite';
@@ -35,6 +36,7 @@ const App: React.FC = () => {
         >
           <Route index element={<DocumentPanel />} />
           <Route path={Paths.DEPARTMENTS} element={<DepartmentPanel />} />
+          <Route path={`${Paths.DEPARTMENTS}/:name/:id`} element={<UserPanel />} />
           <Route path={Paths.DOCUMENTS_VOTE} element={'Компонент голосования за документ (Юзер)'} />
         </Route>
         <Route
