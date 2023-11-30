@@ -12,11 +12,20 @@ import authStore from '@/stores/AuthStore';
 import alertStore from '@/stores/AlertStore';
 
 import style from './documentPanel.module.css';
-import docuImg from '@/assets/testDocument.jpg';
 
 const DocumentPanel: React.FC = () => {
   const { documentList, setDocumentList } = documentStore;
-  const [isOpenModalWindow, setIsOpenModalWindow] = useState(true);
+  const [dataDocument, setDataDocument] = useState({
+    creationDate: '2023-11-29T07:28:25.459817',
+    creatorId: 36,
+    documentConstructorTypeId: 1,
+    fieldsValues: { doc: '' },
+    files: [],
+    id: 10,
+    name: 'docForTest',
+    updateDate: '2023-11-29T07:28:25.459884',
+  }); ////////////////////////////////////////////////////////////// Заглушка на время разработки
+  const [isOpenModalWindow, setIsOpenModalWindow] = useState(false);
   const [isAdmin, setIsAdmin] = useState<boolean | undefined>();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -59,10 +68,9 @@ const DocumentPanel: React.FC = () => {
         <>
           <Table dataList={documentList} type='document' />
           <DocumentModal
-            data='фото'
+            data={dataDocument}
             isOpenModalWindow={isOpenModalWindow}
             toggleModalWindow={toggleModalWindow}
-            file={docuImg}
           />
         </>
       )}

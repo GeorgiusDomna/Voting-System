@@ -58,3 +58,28 @@ export async function getAllDepartments(): Promise<departamentData[] | void> {
     alertStore.toggleAlert((error as Error).message);
   }
 }
+
+/**
+ * Получает объект данных о департаменте.
+ *
+ * @returns {Promise<departamentData | void>} Промис, который разрешается объект данных о департаменте.
+ * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
+ *
+ */
+export async function getDepartmentInfo(id: number): Promise<departamentData | void> {
+  try {
+    if (!isOnline()) throw new NetworkError();
+    const url = `${baseUrl}/department/${id}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers,
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      throw new Error(error.message);
+    }
+    return await response.json();
+  } catch (error) {
+    alertStore.toggleAlert((error as Error).message);
+  }
+}
