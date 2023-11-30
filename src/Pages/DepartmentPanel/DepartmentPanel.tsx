@@ -55,7 +55,7 @@ const DepartmentPanel: React.FC = () => {
   return (
     <div className={style.DepartmentPanel}>
       <h2 className={style.DepartmentPanel__title}>Работа с департаментами</h2>
-      <FormDepartment></FormDepartment>
+      <FormDepartment />
       {isLoading ? (
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />
       ) : (
