@@ -43,8 +43,8 @@ const UserPanel: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (id) {
-        if (authStore.isLoggedIn) {
-          const res = await getUsersByDepartment(+id);
+        if (authStore.token) {
+          const res = await getUsersByDepartment(authStore.token, +id);
           res && setUserList(res);
         }
       } else {

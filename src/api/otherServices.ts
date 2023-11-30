@@ -10,7 +10,6 @@ const baseUrl = 'http://5.35.83.142:8082/api/';
 const headers = {
   Accept: 'application/json',
   'Content-Type': 'application/json',
-  Authorization: `Bearer ${authStore.token}`,
 };
 
 export async function empty() {}

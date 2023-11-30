@@ -38,8 +38,8 @@ const DepartmentPanel: React.FC = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        if (authStore.isLoggedIn) {
-          const res = await getAllDepartments();
+        if (authStore.token) {
+          const res = await getAllDepartments(authStore.token);
           res && setDepartments(res);
         }
       } catch (err) {

@@ -8,6 +8,7 @@ import InputPassword from '@/components/Auth/Inputs/InputPassword';
 import InputText from '@/components/Auth/Inputs/InputText';
 
 import alertStore from '@/stores/AlertStore';
+import authStore from '@/stores/AuthStore';
 import { createUser, addUserToDepartment } from '@/api/userService';
 
 import IUser from '@/interfaces/IUser';
@@ -56,19 +57,24 @@ const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, de
       ],
     };
 
-    createUser(userParams)
-      .then((data) => {
-        addUserToDepartment({ userId: data.id as number, departmentId })
-          .then(() => {
-            alertStore.toggleAlert('Пользователь успешно добавлен');
-          })
-          .catch((error) => {
-            alertStore.toggleAlert((error as Error).message);
-          });
-      })
-      .catch((error) => {
-        alertStore.toggleAlert((error as Error).message);
-      });
+    if (authStore.token) {
+      createUser(userParams, authStore.token)
+        .then((data) => {
+          addUserToDepartment(
+            { userId: data.id as number, departmentId },
+            authStore.token as string
+          )
+            .then(() => {
+              alertStore.toggleAlert('Пользователь успешно добавлен');
+            })
+            .catch((error) => {
+              alertStore.toggleAlert((error as Error).message);
+            });
+        })
+        .catch((error) => {
+          alertStore.toggleAlert((error as Error).message);
+        });
+    }
   }
 
   return (
