@@ -3,6 +3,7 @@ import greenAtomLogo from '../../assets/logoGreenColor.png';
 import userStore from '@/stores/AuthStore';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Paths } from '@/enums/Paths';
 
 const Header: React.FC = () => {
   const { i18n } = useTranslation();
@@ -25,9 +26,9 @@ const Header: React.FC = () => {
 
   return (
     <header className={styles.header}>
-      <div>
+      <a href={Paths.ROOT}>
         <img src={greenAtomLogo} alt='GreenAtom logo' />
-      </div>
+      </a>
       <div>
         <ul className={styles.headerlist}>
           {/*<li className={`${styles.header_icon} ${styles.header_icon_menu}`}></li>*/}
