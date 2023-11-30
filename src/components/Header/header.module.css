@@ -1,0 +1,50 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 35px;
+    position: absolute;
+    top: -95px;
+    width: 100%;
+}
+
+.headerlist {
+    list-style: none;
+    display: flex;
+    gap: 5px;
+}
+
+.header_icon {
+    min-width: 3rem;
+    min-height: 3rem;
+    background-size: 1.5rem;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.header_icon_lang {
+    background-image: url('@/assets/lang.svg');
+    background-size: 1.9rem;
+    position: relative;
+}
+
+.header_icon_logout {
+    background-image: url('@/assets/logout.svg');
+    background-size: 1.9rem;
+}
+
+.header_icon_menu {
+    background-image: url('@/assets/menu.svg');
+    background-size: 1.9rem;
+}
+
+.lang_button {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    opacity: 0;
+}
