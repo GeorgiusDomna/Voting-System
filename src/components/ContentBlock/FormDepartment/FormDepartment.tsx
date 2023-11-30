@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { createNewDepartment } from '@/api/departmentService';
 import styles from './formDepartment.module.css';
 import alertStore from '@/stores/AlertStore';
+import authStore from '@/stores/AuthStore';
 import departmentsStore from '@/stores/DepartmentStore';
 import DepartmentRequestDto from '@/interfaces/DepartmentRequestDto';
 
@@ -22,14 +23,16 @@ const FormDepartment: React.FC = observer(() => {
       name: newName,
     };
 
-    createNewDepartment(newDep)
-      .then((data) => {
-        departmentsStore.addNewDepartment(data);
-        setNewName('');
-      })
-      .catch((error) => {
-        alertStore.toggleAlert((error as Error).message);
-      });
+    if (authStore.token) {
+      createNewDepartment(newDep, authStore.token)
+        .then((data) => {
+          departmentsStore.addNewDepartment(data);
+          setNewName('');
+        })
+        .catch((error) => {
+          alertStore.toggleAlert((error as Error).message);
+        });
+    }
   }
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
