@@ -1,15 +1,19 @@
 // import { useState } from 'react';
 import Modal from 'react-modal';
-import closeIcon from '@/assets/cancel.svg';
-import alertStore from '@/stores/AlertStore';
 import { observer } from 'mobx-react-lite';
-
 import * as Yup from 'yup';
 import { Form, Formik } from 'formik';
 
-import IUser from '@/interfaces/IUser';
+import InputPassword from '@/components/Auth/Inputs/InputPassword';
+import InputText from '@/components/Auth/Inputs/InputText';
+
+import alertStore from '@/stores/AlertStore';
 import { createUser, addUserToDepartment } from '@/api/userService';
+
+import IUser from '@/interfaces/IUser';
+
 import styles from './addUserModal.module.css';
+import closeIcon from '@/assets/cancel.svg';
 
 interface addUserModalProps {
   departmentId: number;
@@ -54,9 +58,13 @@ const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, de
 
     createUser(userParams)
       .then((data) => {
-        addUserToDepartment({ userId: data.id as number, departmentId }).catch((error) => {
-          alertStore.toggleAlert((error as Error).message);
-        });
+        addUserToDepartment({ userId: data.id as number, departmentId })
+          .then(() => {
+            alertStore.toggleAlert('Пользователь успешно добавлен');
+          })
+          .catch((error) => {
+            alertStore.toggleAlert((error as Error).message);
+          });
       })
       .catch((error) => {
         alertStore.toggleAlert((error as Error).message);
@@ -65,9 +73,7 @@ const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, de
 
   return (
     <Modal isOpen={isOpen} contentLabel='Модальное окно' className={styles.modal}>
-      <div className={styles.modal__header}>
-        <img src={closeIcon} className={styles.modal__close} onClick={toggle} />
-      </div>
+      <img src={closeIcon} className={styles.modal__close} onClick={toggle} />
       <Formik
         initialValues={{
           username: '',
@@ -82,56 +88,67 @@ const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, de
         validationSchema={AddUserSchema}
         onSubmit={handleSubmit}
       >
-        {({ handleChange, values, isValid }) => (
+        {({ handleChange, values, isValid, errors, submitCount }) => (
           <Form className={styles.addUser} name='addUser'>
-            <p>
-              <input
+            <div className={styles.addUser__container}>
+              <InputText
                 type='text'
                 name='username'
-                placeholder='Username'
+                placeholder='Введите login'
                 value={values.username}
-                onChange={handleChange}
+                error={errors.username}
+                handleChange={handleChange}
+                submitCount={submitCount}
               />
-              <input
-                type='password'
+              <InputPassword
                 name='password'
-                placeholder='Password'
+                placeholder='Введите пароль'
                 value={values.password}
-                onChange={handleChange}
+                error={errors.password}
+                handleChange={handleChange}
+                submitCount={submitCount}
               />
-            </p>
-            <p>
-              <input
+            </div>
+            <div className={styles.addUser__container}>
+              <InputText
                 type='email'
                 name='email'
-                placeholder='Email'
+                placeholder='Введите email'
                 value={values.email}
-                onChange={handleChange}
+                error={errors.email}
+                handleChange={handleChange}
+                submitCount={submitCount}
               />
-              <input
+              <InputText
                 type='date'
                 name='birthDate'
                 value={values.birthDate}
-                onChange={handleChange}
+                error={errors.birthDate}
+                handleChange={handleChange}
+                submitCount={submitCount}
               />
-            </p>
-            <p>
-              <input
+            </div>
+            <div className={styles.addUser__container}>
+              <InputText
                 type='text'
                 name='firstName'
-                placeholder='Name'
+                placeholder='Введите имя'
                 value={values.firstName}
-                onChange={handleChange}
+                error={errors.firstName}
+                handleChange={handleChange}
+                submitCount={submitCount}
               />
-              <input
+              <InputText
                 type='text'
                 name='lastName'
-                placeholder='Lastname'
+                placeholder='Введите фамилию'
                 value={values.lastName}
-                onChange={handleChange}
+                error={errors.lastName}
+                handleChange={handleChange}
+                submitCount={submitCount}
               />
-            </p>
-            <button type='submit' className={styles.addUser__button} disabled={!isValid}>
+            </div>
+            <button type='submit' className={styles.button} disabled={submitCount >= 1 && !isValid}>
               Добавить пользователя
             </button>
           </Form>

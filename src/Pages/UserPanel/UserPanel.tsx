@@ -64,9 +64,9 @@ const UserPanel: React.FC = () => {
   return (
     <div className={style.UserPanel}>
       <h2 className={style.UserPanel__title}>{state.name}</h2>
-      <div className={style.UserPanel__controls}>
+      <div className={style.UserPanel__controls} onClick={toggle}>
         <img className={style.UserPanel__img} src={plusIcon} alt='+' />
-        <button onClick={toggle}>Добавить пользователя</button>
+        <button className={style.UserPanel__button}>Добавить пользователя</button>
       </div>
       {isLoading ? (
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />

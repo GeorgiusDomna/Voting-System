@@ -35,8 +35,8 @@ const DepartmentPanel: React.FC = () => {
   }, [authStore.isLoggedIn]);
 
   useEffect(() => {
-    setIsLoading(true);
     const fetchData = async () => {
+      setIsLoading(true);
       try {
         if (authStore.isLoggedIn) {
           const res = await getAllDepartments();

@@ -19,7 +19,7 @@ const headers = {
 export async function createUser(params: IUser) {
   try {
     if (!isOnline()) throw new NetworkError();
-    const response = await fetch(`${baseUrl}user/`, {
+    const response = await fetch(`${baseUrl}/user/`, {
       method: 'POST',
       headers,
       body: JSON.stringify(params),
@@ -38,7 +38,7 @@ export async function createUser(params: IUser) {
 export async function addUserToDepartment({ userId, departmentId }: AddUserToDepartmentParams) {
   try {
     if (!isOnline()) throw new NetworkError();
-    const response = await fetch(baseUrl + `user/${userId}`, {
+    const response = await fetch(`${baseUrl}/user/${userId}`, {
       method: 'PUT',
       headers,
       body: JSON.stringify({ departmentId }),
