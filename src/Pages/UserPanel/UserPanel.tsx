@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { useNavigate, useParams, useLocation } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 import Loading from '@/components/ContentBlock/Loading/Loading';
 import Table from '@/components/Table/Table';
@@ -22,9 +22,8 @@ const UserPanel: React.FC = () => {
   const { userList, setUserList } = userStore;
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const { id } = useParams();
+  const { id, name } = useParams();
   const navigate = useNavigate();
-  const { state } = useLocation();
 
   useEffect(() => {
     if (authStore.token) {
@@ -63,7 +62,7 @@ const UserPanel: React.FC = () => {
 
   return (
     <div className={style.UserPanel}>
-      <h2 className={style.UserPanel__title}>{state.name}</h2>
+      <h2 className={style.UserPanel__title}>{decodeURIComponent(name as string)}</h2>
       <div className={style.UserPanel__controls} onClick={toggle}>
         <img className={style.UserPanel__img} src={plusIcon} alt='+' />
         <button className={style.UserPanel__button}>Добавить пользователя</button>

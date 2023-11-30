@@ -2,13 +2,14 @@
 import Modal from 'react-modal';
 import { observer } from 'mobx-react-lite';
 import * as Yup from 'yup';
-import { Form, Formik } from 'formik';
+import { Form, Formik, FormikHelpers } from 'formik';
 
 import InputPassword from '@/components/Auth/Inputs/InputPassword';
 import InputText from '@/components/Auth/Inputs/InputText';
 
 import alertStore from '@/stores/AlertStore';
 import authStore from '@/stores/AuthStore';
+import userStore from '@/stores/EmployeeStore';
 import { createUser, addUserToDepartment } from '@/api/userService';
 
 import IUser from '@/interfaces/IUser';
@@ -45,7 +46,7 @@ const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, de
     lastName: Yup.string().min(2, 'Минимум 2 символа').required('Поле обязательно для заполнения'),
   });
 
-  function handleSubmit(values: userValues) {
+  function handleSubmit(values: userValues, { resetForm }: FormikHelpers<userValues>) {
     const userParams: IUser = {
       ...values,
       position: '',
@@ -65,6 +66,8 @@ const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, de
             authStore.token as string
           )
             .then(() => {
+              userStore.addUser({ ...data, departmentId });
+              resetForm();
               alertStore.toggleAlert('Пользователь успешно добавлен');
             })
             .catch((error) => {
