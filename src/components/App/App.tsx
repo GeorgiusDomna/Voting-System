@@ -1,4 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
+import { useEffect } from 'react';
+import authStore from '@/stores/AuthStore';
+import { getUserMe } from '@/api/authService';
 import ContentBlock from '../ContentBlock/ContentBlock';
 import DepartmentPanel from '../../Pages/DepartmentPanel/DepartmentPanel';
 import UserPanel from '@/Pages/UserPanel/UserPanel';
@@ -19,6 +22,21 @@ import DocumentPanel from '@/Pages/DocumentPanel/DocumentPanel';
 
 const App: React.FC = () => {
   const { isOpen, message, toggleAlert } = alertStore;
+
+  useEffect(() => {
+    if (authStore.token) {
+      getUserMe(authStore.token)
+        .then((res) => {
+          authStore.setUserInfo(res);
+          authStore.setIsLoggedIn(true);
+        })
+        .catch((error) => {
+          alertStore.toggleAlert(error);
+          authStore.setIsLoggedIn(false);
+          authStore.deleteToken();
+        });
+    }
+  }, [authStore.isLoggedIn]);
 
   return (
     <>

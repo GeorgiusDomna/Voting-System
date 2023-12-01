@@ -66,5 +66,6 @@ export async function getUserMe(token: string) {
     return await response.json();
   } catch (error) {
     alertStore.toggleAlert((error as Error).message);
+    return Promise.reject((error as Error).message);
   }
 }
