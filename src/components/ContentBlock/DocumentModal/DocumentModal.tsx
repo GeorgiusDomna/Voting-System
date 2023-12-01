@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import Modal from 'react-modal';
 
 import IdocumentData from '@/interfaces/IdocumentData';
@@ -6,73 +7,90 @@ import IdepartmentData from '@/interfaces/IdepartmentData';
 import userInfo from '@/interfaces/userInfo';
 
 import { getUserInfo } from '@/api/userService';
-import { getDepartmentInfo } from '@/api/departmentService';
+import { getDepartmentData } from '@/api/departmentService';
+import { getDocumetData } from '@/api/docuService';
 
 import alertStore from '@/stores/AlertStore';
+import authStore from '@/stores/AuthStore';
+import { Paths } from '@/enums/Paths';
 import { dateFormater } from '@/utils/dateFormater';
 
 import closeIcon from '@/assets/cancel.svg';
+import docuImg from '@/assets/testDocument.png';
 import style from './documentModal.module.css';
-import docuImg from '@/assets/testDocument.jpg';
 
 interface DocumentModalProps {
-  data: IdocumentData;
   isOpenModalWindow: boolean;
   toggleModalWindow: () => void;
 }
 if (process.env.NODE_ENV !== 'test') Modal.setAppElement('#root');
 
-const DocumentModal: React.FC<DocumentModalProps> = ({
-  data,
-  isOpenModalWindow,
-  toggleModalWindow,
-}) => {
+const DocumentModal: React.FC<DocumentModalProps> = ({ isOpenModalWindow, toggleModalWindow }) => {
   const [dataUser, setDataUser] = useState<userInfo>();
   const [dataDepartament, setDataDepartament] = useState<IdepartmentData>();
+  const [dataDocument, setDataDocument] = useState<IdocumentData>();
+  const navigate = useNavigate();
+  const { id } = useParams();
 
-  const closeModalEsc = (event: KeyboardEvent) => {
-    event.key === 'Escape' && toggleModalWindow();
-    window.removeEventListener('keyup', closeModalEsc);
+  const closeModal = () => {
+    toggleModalWindow();
+    navigate(Paths.ROOT);
+  };
+
+  const closeModalEsc = (event: KeyboardEvent) => event.key === 'Escape' && closeModal();
+
+  const handleImageError = () => {
+    closeModal();
+    alertStore.toggleAlert('Ошибка при загрузке изображения');
   };
 
   useEffect(() => {
     (async () => {
-      const resUser = await getUserInfo(data.creatorId);
-      if (resUser) {
-        setDataUser(resUser);
-        const resDepartament = await getDepartmentInfo(resUser.departmentId);
-        resDepartament && setDataDepartament(resDepartament);
+      if (id && authStore.token) {
+        const resDoc = await getDocumetData(+id);
+        if (resDoc) {
+          setDataDocument(resDoc);
+          toggleModalWindow();
+          const resUser = await getUserInfo(resDoc.creatorId);
+          if (resUser) {
+            setDataUser(resUser);
+            const resDepart = await getDepartmentData(resUser.departmentId, authStore.token);
+            resDepart && setDataDepartament(resDepart);
+          }
+        }
       }
     })();
     window.addEventListener('keyup', closeModalEsc);
-  }, [data.creatorId]);
-
-  const handleImageError = () => {
-    toggleModalWindow();
-    alertStore.toggleAlert('Ошибка при загрузке изображения');
-  };
+  }, [id]);
 
   return (
     <Modal isOpen={isOpenModalWindow} contentLabel='Модальное окно' className={style.modal}>
-      <img src={closeIcon} className={style.modal__close} onClick={toggleModalWindow} />
+      <img src={closeIcon} className={style.modal__close} onClick={closeModal} />
       <div className={style.modal__document}>
-        <img src={docuImg} onError={handleImageError} />
+        <img
+          src={dataDocument?.files[0] ? dataDocument?.files[0].name : docuImg}
+          onError={handleImageError}
+        />
         <div className={style.documentInfo}>
-          <h1 className={style.title}>Информация о документе:</h1>
-          <div className={style.info}>
-            <div className={style.info_item}>
-              Название: <i>{data.name}</i>
-            </div>
-            <div className={style.info_item}>
-              id: <i>{data.id}</i>
-            </div>
-            <div className={style.info_item}>
-              Создан: <i>{dateFormater(data.creationDate)}</i>
-            </div>
-            <div className={style.info_item}>
-              Обновлён: <i>{dateFormater(data.updateDate)}</i>
-            </div>
-          </div>
+          {dataDocument && (
+            <>
+              <h1 className={style.title}>Информация о документе:</h1>
+              <div className={style.info}>
+                <div className={style.info_item}>
+                  Название: <i>{dataDocument.name}</i>
+                </div>
+                <div className={style.info_item}>
+                  id: <i>{dataDocument.id}</i>
+                </div>
+                <div className={style.info_item}>
+                  Создан: <i>{dateFormater(dataDocument.creationDate)}</i>
+                </div>
+                <div className={style.info_item}>
+                  Обновлён: <i>{dateFormater(dataDocument.updateDate)}</i>
+                </div>
+              </div>
+            </>
+          )}
           {dataUser && (
             <>
               <h1 className={style.title}>Информация об авторе:</h1>
@@ -83,9 +101,11 @@ const DocumentModal: React.FC<DocumentModalProps> = ({
                 <div className={style.info_item}>
                   Логин: <i>{dataUser.username}</i>
                 </div>
-                <div className={style.info_item}>
-                  Департамент: <i>{dataDepartament?.name}</i>
-                </div>
+                {dataDepartament && (
+                  <div className={style.info_item}>
+                    Департамент: <i>{dataDepartament?.name}</i>
+                  </div>
+                )}
                 <div className={style.info_item}>
                   Email: <i>{dataUser.email}</i>
                 </div>

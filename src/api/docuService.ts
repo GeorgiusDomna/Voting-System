@@ -39,3 +39,27 @@ export async function getAllDocuments(token: string): Promise<documentData[] | v
     alertStore.toggleAlert((error as Error).message);
   }
 }
+/**
+ * Получает данные о документе принимая его id.
+ *
+ * @returns {Promise<documentData | void>} Промис, который разрешается объектом данных о документе.
+ * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
+ *
+ */
+export async function getDocumetData(id: number): Promise<documentData | void> {
+  try {
+    const url = `${baseUrl}/doc/${id}`;
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(url, {
+      method: 'GET',
+      headers,
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      throw new Error(error.message);
+    }
+    return await response.json();
+  } catch (error) {
+    alertStore.toggleAlert((error as Error).message);
+  }
+}
