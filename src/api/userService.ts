@@ -80,7 +80,7 @@ export async function getUsersByDepartment(
     if (!response.ok) {
       const error: IFailedServerResponse = await response.json();
       return Promise.reject(error.message);
-    }
+    } else if (response.status === 204) return [];
     const data = await response.json();
     return data.content;
   } catch (error) {
