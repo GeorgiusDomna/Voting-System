@@ -84,7 +84,9 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
           td3={dateFormater(data.creationDate)}
           td4={dateFormater(data.updateDate)}
           img={type_el.img}
-          callback={() => {}}
+          callback={() => {
+            navigate(`${Paths.DOCUMENTS}/${encodeURIComponent(data.id)}`);
+          }}
         />
       ));
     }

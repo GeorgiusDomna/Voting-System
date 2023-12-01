@@ -6,11 +6,13 @@ import DepartmentRequestDto from '@/interfaces/DepartmentRequestDto';
 import alertStore from '@/stores/AlertStore';
 
 import { isOnline } from '@/utils/networkStatus';
+import authStore from '@/stores/AuthStore';
 
 const baseUrl = 'http://5.35.83.142:8082/api';
 const headers = {
   Accept: 'application/json',
   'Content-Type': 'application/json',
+  Authorization: `Bearer ${authStore.token}`,
 };
 
 export async function createNewDepartment(params: DepartmentRequestDto, token: string) {
@@ -55,6 +57,35 @@ export async function getAllDepartments(token: string): Promise<departamentData[
     }
     const data = await response.json();
     return data.content;
+  } catch (error) {
+    alertStore.toggleAlert((error as Error).message);
+  }
+}
+
+/**
+ * Получает объект данных о департаменте.
+ *
+ * @returns {Promise<departamentData | void>} Промис, который разрешается объект данных о департаменте.
+ * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
+ *
+ */
+export async function getDepartmentData(
+  id: number,
+  token: string
+): Promise<departamentData | void> {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
+  try {
+    if (!isOnline()) throw new NetworkError();
+    const url = `${baseUrl}/department/${id}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: headersWithToken,
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      throw new Error(error.message);
+    }
+    return await response.json();
   } catch (error) {
     alertStore.toggleAlert((error as Error).message);
   }
