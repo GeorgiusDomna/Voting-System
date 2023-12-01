@@ -4,6 +4,7 @@ import { observer } from 'mobx-react-lite';
 
 import Loading from '@/components/ContentBlock/Loading/Loading';
 import Table from '@/components/Table/Table';
+import FormDepartment from '@/components/ContentBlock/FormDepartment/FormDepartment';
 
 import { getAllDepartments } from '@/api/departmentService';
 import { getUserMe } from '@/api/authService';
@@ -35,13 +36,18 @@ const DepartmentPanel: React.FC = () => {
   }, [authStore.isLoggedIn]);
 
   useEffect(() => {
-    setIsLoading(true);
     const fetchData = async () => {
-      if (authStore.isLoggedIn) {
-        const res = await getAllDepartments();
-        res && setDepartments(res);
+      setIsLoading(true);
+      try {
+        if (authStore.token) {
+          const res = await getAllDepartments(authStore.token);
+          res && setDepartments(res);
+        }
+      } catch (err) {
+        alertStore.toggleAlert((err as Error).message);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
     fetchData();
   }, [authStore.isLoggedIn]);
@@ -49,6 +55,7 @@ const DepartmentPanel: React.FC = () => {
   return (
     <div className={style.DepartmentPanel}>
       <h2 className={style.DepartmentPanel__title}>Работа с департаментами</h2>
+      <FormDepartment />
       {isLoading ? (
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />
       ) : (
