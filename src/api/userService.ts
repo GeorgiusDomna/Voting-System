@@ -34,6 +34,31 @@ export async function createUser(params: IUser, token: string) {
   }
 }
 
+/**
+ * Получает данные о сотруднике.
+ *
+ * @returns {Promise<IUserInfo[] | void>} Промис, который разрешается объектом типа `IUserInfo` данных о сотруднике.
+ * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
+ *
+ */
+export async function getUserInfo(id: number): Promise<IUserInfo | void> {
+  try {
+    if (!isOnline()) throw new NetworkError();
+    const url = `${baseUrl}/user/${id}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers,
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      throw new Error(error.message);
+    }
+    return await response.json();
+  } catch (error) {
+    alertStore.toggleAlert((error as Error).message);
+  }
+}
+
 export async function addUserToDepartment(
   { userId, departmentId }: AddUserToDepartmentParams,
   token: string
