@@ -1,0 +1,43 @@
+.form-container {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #f4f4f4;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.form-header {
+  color: #009FDF;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: inline-block;
+  margin: 10px;
+  font-size: 18px;
+  color: #333;
+}
+
+.form-radio {
+  margin: 0 5px;
+}
+
+.form-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background: #009FDF;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.form-button:hover {
+  background-color: #007bb5;
+}
