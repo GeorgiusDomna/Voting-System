@@ -1,6 +1,6 @@
 import React from 'react';
 import { Formik, Form, Field } from 'formik';
-import './VotingForm.css'; // Импортируем стили
+import './VotingForm.css'; 
 
 interface VotingFormProps {
   documentId: string;
@@ -8,7 +8,7 @@ interface VotingFormProps {
 
 const VotingForm:React.FC<VotingFormProps> = ({ documentId }) => {
   const handleSubmit = (values: { vote: string }) => {
-    // Здесь можно добавить логику для отправки данных на сервер
+    //  логика для отправки данных на сервер
     console.log(`Документ ID: ${documentId}, Выбор: ${values.vote}`);
   };
 
