@@ -35,6 +35,7 @@ const App: React.FC = () => {
           }
         >
           <Route index element={<DocumentPanel />} />
+          <Route path={`${Paths.DOCUMENTS}/:id`} element={<DocumentPanel />} />
           <Route path={Paths.DEPARTMENTS} element={<DepartmentPanel />} />
           <Route path={`${Paths.DEPARTMENTS}/:name/:id`} element={<UserPanel />} />
           <Route path={Paths.DOCUMENTS_VOTE} element={'Компонент голосования за документ (Юзер)'} />

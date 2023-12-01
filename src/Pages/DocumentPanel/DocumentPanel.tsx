@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 
+import Table from '@/components/Table/Table';
 import Loading from '@/components/ContentBlock/Loading/Loading';
+import DocumentModal from '@/components/ContentBlock/DocumentModal/DocumentModal';
 
 import { getAllDocuments } from '@/api/docuService';
 import { getUserMe } from '@/api/authService';
@@ -10,12 +12,16 @@ import authStore from '@/stores/AuthStore';
 import alertStore from '@/stores/AlertStore';
 
 import style from './documentPanel.module.css';
-import Table from '@/components/Table/Table';
 
 const DocumentPanel: React.FC = () => {
   const { documentList, setDocumentList } = documentStore;
+  const [isOpenModalWindow, setIsOpenModalWindow] = useState(false);
   const [isAdmin, setIsAdmin] = useState<boolean | undefined>();
   const [isLoading, setIsLoading] = useState(false);
+
+  const toggleModalWindow = () => {
+    setIsOpenModalWindow(!isOpenModalWindow);
+  };
 
   useEffect(() => {
     if (authStore.token) {
@@ -49,7 +55,13 @@ const DocumentPanel: React.FC = () => {
       {isLoading ? (
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />
       ) : (
-        <Table dataList={documentList} type='document' />
+        <>
+          <Table dataList={documentList} type='document' />
+          <DocumentModal
+            isOpenModalWindow={isOpenModalWindow}
+            toggleModalWindow={toggleModalWindow}
+          />
+        </>
       )}
     </div>
   );
