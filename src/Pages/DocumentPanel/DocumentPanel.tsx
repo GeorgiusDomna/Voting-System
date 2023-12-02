@@ -11,6 +11,9 @@ import documentStore from '@/stores/DocumentStore';
 import authStore from '@/stores/AuthStore';
 import alertStore from '@/stores/AlertStore';
 
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
+
 import style from './documentPanel.module.css';
 
 const DocumentPanel: React.FC = () => {
@@ -18,7 +21,7 @@ const DocumentPanel: React.FC = () => {
   const [isOpenModalWindow, setIsOpenModalWindow] = useState(false);
   const [isAdmin, setIsAdmin] = useState<boolean | undefined>();
   const [isLoading, setIsLoading] = useState(false);
-
+  const { t } = useTranslation();
   const toggleModalWindow = () => {
     setIsOpenModalWindow(!isOpenModalWindow);
   };
@@ -51,7 +54,7 @@ const DocumentPanel: React.FC = () => {
 
   return (
     <div className={style.documentPanel}>
-      <h2 className={style.dataList__title}>Документы</h2>
+      <h2 className={style.dataList__title}>{t(Localization.Documents)}</h2>
       {isLoading ? (
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />
       ) : (

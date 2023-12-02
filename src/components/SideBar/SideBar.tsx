@@ -5,10 +5,12 @@ import styles from './sideBar.module.css';
 import { observer } from 'mobx-react-lite';
 import Navigation from './Navigation/Navigation';
 import userStore from '@/stores/AuthStore';
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
 
 const SideBar: React.FC = () => {
   const [isShown, setIsShown] = useState(false);
-
+  const { t } = useTranslation();
   function clickHandler() {
     setIsShown(!isShown);
   }
@@ -27,7 +29,7 @@ const SideBar: React.FC = () => {
       <SideBarButton clickHandler={clickHandler} />
       <LanguageSwitch />
       <button type='button' className={styles.button} onClick={logout}>
-        Выход
+        {t(Localization.LogOut)}
       </button>
     </div>
   );

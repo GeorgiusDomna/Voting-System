@@ -11,4 +11,13 @@ export enum Localization {
   RepeatPassword = 'RepeatPassword',
   CheckEmail = 'CheckEmail',
   EnterEmail = 'EnterEmail',
+  Documents = 'Documents',
+  ManagementDocuments = 'ManagementDocuments',
+  ManagementDepartments = 'ManagementDepartments',
+  DocumentsInReview = 'DocumentsInReview',
+  FunctionsTitle = 'FunctionsTitle',
+  DocumentTable = 'DocumentTable',
+  DepartmentTable = 'DepartmentTable',
+  UserTable = 'UserTable',
+  LogOut = 'LogOut',
 }

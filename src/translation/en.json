@@ -10,5 +10,27 @@
   "PasswordsNotMatch": "Passwords do not match",
   "RepeatPassword":"Repeat your password",
   "CheckEmail": "Check the correctness of the email address",
-  "EnterEmail":"Enter your email"
+  "EnterEmail":"Enter your email",
+  "Documents":"Documents",
+  "ManagementDocuments": "Document Management!",
+  "ManagementDepartments": "Department Management!",
+  "DocumentsInReview": "Documents In Review",
+  "FunctionsTitle": "Functions",
+  "LogOut":"Logout",
+  "DocumentTable": {
+    "th1": "Title",
+    "th2": "Author",
+    "th3": "Creation Date",
+    "th4": "Last Update",
+    "DepartmentTable": {
+      "th1": "Title",
+      "th2": "Number of Employees"
+    },
+    "UserTable": {
+      "th1": "Name",
+      "th2": "Role",
+      "th3": "Department",
+      "th4": "Email"
+    }
+  }
 }

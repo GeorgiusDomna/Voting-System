@@ -11,6 +11,8 @@ import docIcon from '@/assets/docIcon.svg';
 import style from './table.module.css';
 import IUserInfo from '@/interfaces/userInfo';
 import { Paths } from '@/enums/Paths';
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
 
 interface Itype_el {
   title?: string;
@@ -35,32 +37,33 @@ const roleCheck = (role: { name: string }[]): string => {
 
 const Table: React.FC<ITableProps> = ({ dataList, type }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   let type_el: Itype_el = {};
   let tabelItems;
   switch (type) {
     case 'document':
       type_el = {
-        th1: 'Название',
-        th2: 'Автор',
-        th3: 'Дата создания',
-        th4: 'Обновление',
+        th1: t(`${Localization.DocumentTable}.th1`),
+        th2: t(`${Localization.DocumentTable}.th2`),
+        th3: t(`${Localization.DocumentTable}.th3`),
+        th4: t(`${Localization.DocumentTable}.th4`),
         img: docIcon,
       };
       break;
     case 'department':
       type_el = {
-        th1: 'Название',
-        th2: 'Количество сотрудников',
+        th1: t(`${Localization.DepartmentTable}.th1`),
+        th2: t(`${Localization.DepartmentTable}.th2`),
         img: departIcon,
       };
       break;
     case 'user':
       type_el = {
-        th1: 'Имя',
-        th2: 'Роль',
-        th3: 'Департамент',
-        th4: 'email',
+        th1: t(`${Localization.UserTable}.th1`),
+        th2: t(`${Localization.DepartmentTable}.th2`),
+        th3: t(`${Localization.DepartmentTable}.th3`),
+        th4: t(`${Localization.DepartmentTable}.th4`),
         img: userIcon,
       };
       break;

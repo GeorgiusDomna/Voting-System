@@ -10,6 +10,28 @@
   "PasswordsNotMatch": "Пароли не совпадают",
   "RepeatPassword":"Повторите пароль",
   "CheckEmail": "Проверьте правильность email адреса",
-  "EnterEmail":"Введите email"
+  "EnterEmail":"Введите email",
+  "Documents":"Документы",
+  "ManagementDocuments": "Управление документами",
+  "ManagementDepartments": "Управление департаментами",
+  "DocumentsInReview": "Документы на рассмотрении",
+  "FunctionsTitle": "Функции",
+  "LogOut":"Выйти",
+  "DocumentTable": {
+    "th1": "Название",
+    "th2": "Автор",
+    "th3": "Дата создания",
+    "th4": "Обновление",
+    "DepartmentTable": {
+      "th1": "Название",
+      "th2": "Количество сотрудников"
+    },
+    "UserTable": {
+      "th1": "Имя",
+      "th2": "Роль",
+      "th3": "Департамент",
+      "th4": "Email"
+    }
+  }
   
 }
