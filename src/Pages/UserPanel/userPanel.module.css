@@ -7,10 +7,12 @@
 .UserPanel__img {
   width: 1.5rem;
   height: 1.5rem;
+  margin: 5px auto 5px 2px;
 }
 
 .UserPanel__control{
-  display: block;
+  display: flex;
+  height: fit-content;
   background-color: rgb(224, 224, 224);
 }
 
