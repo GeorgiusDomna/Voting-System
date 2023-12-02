@@ -8,19 +8,13 @@ import DocumentModal from '@/components/ContentBlock/DocumentModal/DocumentModal
 import { getAllDocuments } from '@/api/docuService';
 import documentStore from '@/stores/DocumentStore';
 import authStore from '@/stores/AuthStore';
-import alertStore from '@/stores/AlertStore';
 
 import style from './documentPanel.module.css';
 
 const DocumentPanel: React.FC = () => {
   const { documentList, setDocumentList } = documentStore;
-  const [isOpenModalWindow, setIsOpenModalWindow] = useState(false);
   const [isAdmin, setIsAdmin] = useState<boolean | undefined>();
   const [isLoading, setIsLoading] = useState(false);
-
-  const toggleModalWindow = () => {
-    setIsOpenModalWindow(!isOpenModalWindow);
-  };
 
   useEffect(() => {
     if (authStore.userInfo) {
@@ -48,10 +42,7 @@ const DocumentPanel: React.FC = () => {
       ) : (
         <>
           <Table dataList={documentList} type='document' />
-          <DocumentModal
-            isOpenModalWindow={isOpenModalWindow}
-            toggleModalWindow={toggleModalWindow}
-          />
+          <DocumentModal />
         </>
       )}
     </div>
