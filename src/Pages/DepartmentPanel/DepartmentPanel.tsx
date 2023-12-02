@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import Loading from '@/components/ContentBlock/Loading/Loading';
 import Table from '@/components/Table/Table';
@@ -8,6 +9,7 @@ import departmentsStore from '@/stores/DepartmentStore';
 import authStore from '@/stores/AuthStore';
 import alertStore from '@/stores/AlertStore';
 import style from './departmentPanel.module.css';
+import { Paths } from '@/enums/Paths';
 
 const DepartmentPanel: React.FC = () => {
   const { departmentList, setDepartments } = departmentsStore;

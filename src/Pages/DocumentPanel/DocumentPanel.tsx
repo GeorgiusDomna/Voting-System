@@ -15,11 +15,15 @@ const DocumentPanel: React.FC = () => {
   const { documentList, setDocumentList } = documentStore;
   const [isOpenModalWindow, setIsOpenModalWindow] = useState(false);
   const [isOpenModalCreateDocument, setIsOpenModalCreateDocument] = useState(false);
-
+  const [isAdmin, setIsAdmin] = useState<boolean | undefined>();
   const [isLoading, setIsLoading] = useState(false);
 
   const toggleModalWindow = () => {
     setIsOpenModalWindow(!isOpenModalWindow);
+  };
+
+  const toggleModalCreateDocument = () => {
+    setIsOpenModalCreateDocument(!isOpenModalCreateDocument);
   };
 
   useEffect(() => {
@@ -27,9 +31,6 @@ const DocumentPanel: React.FC = () => {
       setIsAdmin(authStore.isUserAdmin);
     }
   }, [authStore.userInfo]);
-  const toggleModalCreateDocument = () => {
-    setIsOpenModalCreateDocument(!isOpenModalCreateDocument);
-  };
 
   useEffect(() => {
     setIsLoading(true);
