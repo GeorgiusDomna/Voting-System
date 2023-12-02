@@ -10,11 +10,16 @@ import documentStore from '@/stores/DocumentStore';
 import authStore from '@/stores/AuthStore';
 import style from './documentPanel.module.css';
 import plusIcon from '@/assets/plus.png';
+import ModalConfirmAddApplication from '@/components/ContentBlock/CreateDocumentModal/ModalConfirmAddApplication/ModalConfirmAddApplication';
+import CreateApplicationModal from '@/components/ContentBlock/CreateApplicationModal/CreateApplicationModal';
 
 const DocumentPanel: React.FC = () => {
   const { documentList, setDocumentList } = documentStore;
   const [isOpenModalWindow, setIsOpenModalWindow] = useState(false);
   const [isOpenModalCreateDocument, setIsOpenModalCreateDocument] = useState(false);
+  const [isOpenModalConfirmAddApplication, setIsOpenModalConfirmAddApplication] = useState(false);
+  const [isOpenModalCreateApplication, setIsOpenModalCreateApplication] = useState(false);
+  const [idDoc, setIdDoc] = useState<number | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean | undefined>();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -24,6 +29,19 @@ const DocumentPanel: React.FC = () => {
 
   const toggleModalCreateDocument = () => {
     setIsOpenModalCreateDocument(!isOpenModalCreateDocument);
+  };
+
+  const toggleModalConfirmAddApplication = (id: number | null = null) => {
+    setIsOpenModalConfirmAddApplication(!isOpenModalConfirmAddApplication);
+    if (id) {
+      setIdDoc(id);
+    } else {
+      setIdDoc(null);
+    }
+  };
+
+  const toggleModalCreateApplication = () => {
+    setIsOpenModalCreateApplication(!isOpenModalCreateApplication);
   };
 
   useEffect(() => {
@@ -63,6 +81,18 @@ const DocumentPanel: React.FC = () => {
           <CreateDocumentModal
             isOpen={isOpenModalCreateDocument}
             toggle={toggleModalCreateDocument}
+            toggleConfirm={toggleModalConfirmAddApplication}
+          />
+          <ModalConfirmAddApplication
+            isOpen={isOpenModalConfirmAddApplication}
+            toggle={toggleModalConfirmAddApplication}
+            toggleCreateApp={toggleModalCreateApplication}
+            idDoc={idDoc}
+          />
+          <CreateApplicationModal
+            isOpen={isOpenModalCreateApplication}
+            toggle={toggleModalCreateApplication}
+            idDoc={idDoc}
           />
         </>
       )}
