@@ -6,7 +6,6 @@ import Loading from '@/components/ContentBlock/Loading/Loading';
 import DocumentModal from '@/components/ContentBlock/DocumentModal/DocumentModal';
 
 import { getAllDocuments } from '@/api/docuService';
-import { getUserMe } from '@/api/authService';
 import documentStore from '@/stores/DocumentStore';
 import authStore from '@/stores/AuthStore';
 import alertStore from '@/stores/AlertStore';
@@ -24,18 +23,10 @@ const DocumentPanel: React.FC = () => {
   };
 
   useEffect(() => {
-    if (authStore.token) {
-      getUserMe(authStore.token)
-        .then((res) => {
-          authStore.setUserInfo(res);
-          setIsAdmin(authStore.isUserAdmin);
-        })
-        .catch((error) => {
-          alertStore.toggleAlert(error);
-          authStore.deleteToken();
-        });
+    if (authStore.userInfo) {
+      setIsAdmin(authStore.isUserAdmin);
     }
-  }, [authStore.isLoggedIn]);
+  }, [authStore.userInfo]);
 
   useEffect(() => {
     setIsLoading(true);

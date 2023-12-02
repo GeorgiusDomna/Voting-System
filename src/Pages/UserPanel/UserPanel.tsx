@@ -7,7 +7,6 @@ import Table from '@/components/Table/Table';
 import AddUserModal from '@/components/ContentBlock/AddUserModal/AddUserModal';
 
 import { getUsersByDepartment } from '@/api/userService';
-import { getUserMe } from '@/api/authService';
 
 import userStore from '@/stores/EmployeeStore';
 import alertStore from '@/stores/AlertStore';
@@ -27,18 +26,10 @@ const UserPanel: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (authStore.token) {
-      getUserMe(authStore.token)
-        .then((res) => {
-          authStore.setUserInfo(res);
-          if (!authStore.isUserAdmin) navigate(Paths.ROOT);
-        })
-        .catch((error) => {
-          alertStore.toggleAlert(error);
-          authStore.deleteToken();
-        });
+    if (authStore.userInfo) {
+      if (!authStore.isUserAdmin) navigate(Paths.ROOT);
     }
-  }, [authStore.isLoggedIn]);
+  }, [authStore.userInfo]);
 
   useEffect(() => {
     const fetchData = async () => {
