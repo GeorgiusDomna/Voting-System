@@ -113,7 +113,6 @@ export async function createFile(token: string, docId: number, value: File): Pro
       method: 'POST',
       headers: {
         Accept: '*/*',
-        'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       },
       body: formData,
@@ -121,6 +120,36 @@ export async function createFile(token: string, docId: number, value: File): Pro
     if (!response.ok) {
       const error: IFailedServerResponse = await response.json();
       throw new Error(error.message);
+    }
+    return await response.json();
+  } catch (error) {
+    return Promise.reject('Что-то пошло не так');
+  }
+}
+
+/**
+ * Скачивает файл в документе.
+ *
+ * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
+ *
+ */
+export async function downloadFile(token: string, docId: number, fileId: number) {
+  try {
+    const url = `${baseUrl}/doc/${docId}/file/${fileId}/download`;
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Accept: '*/*',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      throw new Error(error.message);
+    }
+    if (!response.statusText) {
+      return await response.blob();
     }
     return await response.json();
   } catch (error) {
