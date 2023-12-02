@@ -15,6 +15,7 @@
 .modal__close {
   margin-left: auto;
   margin-bottom: 20px;
+  cursor: pointer;
 }
 
 .modal {
@@ -47,4 +48,8 @@
 .button:hover {
   cursor: pointer;
   opacity: 0.8;
+}
+
+.button:disabled{
+  background: gray;
 }
