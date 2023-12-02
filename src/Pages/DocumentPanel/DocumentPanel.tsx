@@ -15,17 +15,12 @@ import CreateApplicationModal from '@/components/ContentBlock/CreateApplicationM
 
 const DocumentPanel: React.FC = () => {
   const { documentList, setDocumentList } = documentStore;
-  const [isOpenModalWindow, setIsOpenModalWindow] = useState(false);
   const [isOpenModalCreateDocument, setIsOpenModalCreateDocument] = useState(false);
   const [isOpenModalConfirmAddApplication, setIsOpenModalConfirmAddApplication] = useState(false);
   const [isOpenModalCreateApplication, setIsOpenModalCreateApplication] = useState(false);
   const [idDoc, setIdDoc] = useState<number | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean | undefined>();
   const [isLoading, setIsLoading] = useState(false);
-
-  const toggleModalWindow = () => {
-    setIsOpenModalWindow(!isOpenModalWindow);
-  };
 
   const toggleModalCreateDocument = () => {
     setIsOpenModalCreateDocument(!isOpenModalCreateDocument);
@@ -74,10 +69,7 @@ const DocumentPanel: React.FC = () => {
       ) : (
         <>
           <Table dataList={documentList} type='document' />
-          <DocumentModal
-            isOpenModalWindow={isOpenModalWindow}
-            toggleModalWindow={toggleModalWindow}
-          />
+          <DocumentModal />
           <CreateDocumentModal
             isOpen={isOpenModalCreateDocument}
             toggle={toggleModalCreateDocument}

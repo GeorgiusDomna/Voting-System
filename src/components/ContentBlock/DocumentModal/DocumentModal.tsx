@@ -16,28 +16,29 @@ import { Paths } from '@/enums/Paths';
 import { dateFormater } from '@/utils/dateFormater';
 
 import closeIcon from '@/assets/cancel.svg';
-import docuImg from '@/assets/testDocument.png';
+import defaultImg from '@/assets/testDocument.png';
 import style from './documentModal.module.css';
 
-interface DocumentModalProps {
-  isOpenModalWindow: boolean;
-  toggleModalWindow: () => void;
-}
 if (process.env.NODE_ENV !== 'test') Modal.setAppElement('#root');
 
-const DocumentModal: React.FC<DocumentModalProps> = ({ isOpenModalWindow, toggleModalWindow }) => {
-  const [dataUser, setDataUser] = useState<userInfo>();
-  const [dataDepartament, setDataDepartament] = useState<IdepartmentData>();
-  const [dataDocument, setDataDocument] = useState<IdocumentData>();
+const DocumentModal: React.FC = () => {
+  const [dataDoc, setDataDoc] = useState<IdocumentData | null>();
+  const [dataUser, setDataUser] = useState<userInfo | null>();
+  const [dataDepart, setDataDepart] = useState<IdepartmentData | null>();
   const navigate = useNavigate();
   const { id } = useParams();
 
   const closeModal = () => {
-    toggleModalWindow();
     navigate(Paths.ROOT);
+    setDataDoc(null);
+    setDataUser(null);
+    setDataDepart(null);
+    window.removeEventListener('keyup', closeModalEsc);
   };
 
-  const closeModalEsc = (event: KeyboardEvent) => event.key === 'Escape' && closeModal();
+  function closeModalEsc(event: KeyboardEvent) {
+    event.key === 'Escape' && closeModal();
+  }
 
   const handleImageError = () => {
     closeModal();
@@ -49,13 +50,14 @@ const DocumentModal: React.FC<DocumentModalProps> = ({ isOpenModalWindow, toggle
       if (id && authStore.token) {
         const resDoc = await getDocumetData(+id);
         if (resDoc) {
-          setDataDocument(resDoc);
-          toggleModalWindow();
+          setDataDoc(resDoc);
           const resUser = await getUserInfo(resDoc.creatorId);
           if (resUser) {
             setDataUser(resUser);
-            const resDepart = await getDepartmentData(resUser.departmentId, authStore.token);
-            resDepart && setDataDepartament(resDepart);
+            if (resUser.departmentId) {
+              const resDepart = await getDepartmentData(resUser.departmentId, authStore.token);
+              resDepart && setDataDepart(resDepart);
+            }
           }
         }
       }
@@ -63,30 +65,31 @@ const DocumentModal: React.FC<DocumentModalProps> = ({ isOpenModalWindow, toggle
     window.addEventListener('keyup', closeModalEsc);
   }, [id]);
 
+  const docUrl: string = dataDoc?.files[0]
+    ? `http://5.35.83.142:8082/api/doc/${dataDoc.id}/file/1/download`
+    : defaultImg;
+
   return (
-    <Modal isOpen={isOpenModalWindow} contentLabel='Модальное окно' className={style.modal}>
+    <Modal isOpen={Boolean(id)} contentLabel='Модальное окно' className={style.modal}>
       <img src={closeIcon} className={style.modal__close} onClick={closeModal} />
       <div className={style.modal__document}>
-        <img
-          src={dataDocument?.files[0] ? dataDocument?.files[0].name : docuImg}
-          onError={handleImageError}
-        />
+        <img src={docUrl} onError={handleImageError} />
         <div className={style.documentInfo}>
-          {dataDocument && (
+          {dataDoc && (
             <>
               <h1 className={style.title}>Информация о документе:</h1>
               <div className={style.info}>
                 <div className={style.info_item}>
-                  Название: <i>{dataDocument.name}</i>
+                  Название: <i>{dataDoc.name}</i>
                 </div>
                 <div className={style.info_item}>
-                  id: <i>{dataDocument.id}</i>
+                  id: <i>{dataDoc.id}</i>
                 </div>
                 <div className={style.info_item}>
-                  Создан: <i>{dateFormater(dataDocument.creationDate)}</i>
+                  Создан: <i>{dateFormater(dataDoc.creationDate)}</i>
                 </div>
                 <div className={style.info_item}>
-                  Обновлён: <i>{dateFormater(dataDocument.updateDate)}</i>
+                  Обновлён: <i>{dateFormater(dataDoc.updateDate)}</i>
                 </div>
               </div>
             </>
@@ -101,9 +104,9 @@ const DocumentModal: React.FC<DocumentModalProps> = ({ isOpenModalWindow, toggle
                 <div className={style.info_item}>
                   Логин: <i>{dataUser.username}</i>
                 </div>
-                {dataDepartament && (
+                {dataDepart && (
                   <div className={style.info_item}>
-                    Департамент: <i>{dataDepartament?.name}</i>
+                    Департамент: <i>{dataDepart?.name}</i>
                   </div>
                 )}
                 <div className={style.info_item}>
