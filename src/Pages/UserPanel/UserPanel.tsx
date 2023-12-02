@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router';
 import Loading from '@/components/ContentBlock/Loading/Loading';
 import Table from '@/components/Table/Table';
 import AddUserModal from '@/components/ContentBlock/AddUserModal/AddUserModal';
+import DeleteDepartmentModal from '@/components/ContentBlock/DeleteDepartmentModal/DeleteDepartmentModal';
 
 import { getUsersByDepartment } from '@/api/userService';
 
@@ -22,6 +23,7 @@ const UserPanel: React.FC = () => {
   const { userList, setUserList } = userStore;
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const { id, name } = useParams();
   const navigate = useNavigate();
 
@@ -52,6 +54,10 @@ const UserPanel: React.FC = () => {
     setIsOpen(!isOpen);
   }
 
+  function toggleDeleteModal() {
+    setIsDeleteModalOpen(!isDeleteModalOpen);
+  }
+
   return (
     <div className={style.UserPanel}>
       <h2 className={style.UserPanel__title}>{decodeURIComponent(name as string)}</h2>
@@ -60,7 +66,7 @@ const UserPanel: React.FC = () => {
           <img className={style.UserPanel__img} src={plusIcon} alt='+' />
           <button className={style.UserPanel__button}>Добавить пользователя</button>
         </div>
-        <div className={style.UserPanel__control}>
+        <div className={style.UserPanel__control} onClick={toggleDeleteModal}>
           <img className={style.UserPanel__img} src={trashIcon} />
           <button className={style.UserPanel__button}>Удалить департамент</button>
         </div>
@@ -71,6 +77,13 @@ const UserPanel: React.FC = () => {
         <Table dataList={userList} type='user' />
       )}
       {id && <AddUserModal departmentId={+id} toggle={toggle} isOpen={isOpen} />}
+      {id && (
+        <DeleteDepartmentModal
+          departmentId={+id}
+          toggle={toggleDeleteModal}
+          isOpen={isDeleteModalOpen}
+        />
+      )}
     </div>
   );
 };
