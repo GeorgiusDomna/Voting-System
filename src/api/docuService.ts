@@ -1,6 +1,8 @@
 import { NetworkError } from '@/errors/NetworkError';
 import { IFailedServerResponse } from '@/interfaces/IFailedServerResponse';
 import documentData from '@/interfaces/IdocumentData';
+import ICreateDoc from '@/interfaces/createDoc';
+import ICreateFile from '@/interfaces/createFile';
 
 import alertStore from '@/stores/AlertStore';
 import userStore from '@/stores/AuthStore';
@@ -61,5 +63,67 @@ export async function getDocumetData(id: number): Promise<documentData | void> {
     return await response.json();
   } catch (error) {
     alertStore.toggleAlert((error as Error).message);
+  }
+}
+
+/**
+ * Создает документ.
+ *
+ * @returns {Promise<ICreateDoc>} Промис, который разрешается объектом данных о созданном документе.
+ * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
+ *
+ */
+export async function createDoc(token: string, value: string): Promise<ICreateDoc> {
+  try {
+    const url = `${baseUrl}/doc/`;
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ name: value, constructorTypeId: 1 }),
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      throw new Error(error.message);
+    }
+    return await response.json();
+  } catch (error) {
+    return Promise.reject('Что-то пошло не так');
+  }
+}
+
+/**
+ * Создает файл в документе.
+ *
+ * @returns {Promise<ICreateFile>} Промис, который разрешается объектом данных о созданном файле.
+ * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
+ *
+ */
+export async function createFile(token: string, docId: number, value: File): Promise<ICreateFile> {
+  try {
+    const url = `${baseUrl}/doc/${docId}/file/`;
+    if (!isOnline()) throw new NetworkError();
+    const formData = new FormData();
+    formData.append('file', value);
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: '*/*',
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      throw new Error(error.message);
+    }
+    return await response.json();
+  } catch (error) {
+    return Promise.reject('Что-то пошло не так');
   }
 }
