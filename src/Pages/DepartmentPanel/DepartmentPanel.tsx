@@ -10,6 +10,8 @@ import { getAllDepartments } from '@/api/departmentService';
 import departmentsStore from '@/stores/DepartmentStore';
 import authStore from '@/stores/AuthStore';
 import alertStore from '@/stores/AlertStore';
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
 
 import { Paths } from '@/enums/Paths';
 
@@ -19,7 +21,7 @@ const DepartmentPanel: React.FC = () => {
   const { departmentList, setDepartments } = departmentsStore;
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
+  const { t } = useTranslation();
   useEffect(() => {
     if (authStore.userInfo) {
       if (!authStore.isUserAdmin) navigate(Paths.ROOT);
@@ -45,7 +47,7 @@ const DepartmentPanel: React.FC = () => {
 
   return (
     <div className={style.DepartmentPanel}>
-      <h2 className={style.DepartmentPanel__title}>Работа с департаментами</h2>
+      <h2 className={style.DepartmentPanel__title}>{t(`${Localization.DepartmentPanel}.title`)}</h2>
       <FormDepartment />
       {isLoading ? (
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />

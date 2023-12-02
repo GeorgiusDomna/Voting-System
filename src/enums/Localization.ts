@@ -20,4 +20,6 @@ export enum Localization {
   DepartmentTable = 'DepartmentTable',
   UserTable = 'UserTable',
   LogOut = 'LogOut',
+  FormDepartment = 'FormDepartment',
+  DepartmentPanel = 'DepartmentPanel',
 }

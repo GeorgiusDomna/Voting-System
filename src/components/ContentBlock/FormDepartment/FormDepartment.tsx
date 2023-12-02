@@ -6,16 +6,18 @@ import alertStore from '@/stores/AlertStore';
 import authStore from '@/stores/AuthStore';
 import departmentsStore from '@/stores/DepartmentStore';
 import DepartmentRequestDto from '@/interfaces/DepartmentRequestDto';
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
 
 const FormDepartment: React.FC = observer(() => {
   const [newName, setNewName] = useState('');
   const [isFormEmpty, setFormEmpty] = useState(true);
-
+  const { t } = useTranslation();
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
     if (!navigator.onLine) {
-      alertStore.toggleAlert('Нет подключения к интернету');
+      alertStore.toggleAlert(t(`${Localization.FormDepartment}.noInternetConnection`));
       return;
     }
 
@@ -50,10 +52,10 @@ const FormDepartment: React.FC = observer(() => {
           value={newName}
           onChange={handleInputChange}
           className={styles.inputName}
-          placeholder='Название нового департамента'
+          placeholder={t(`${Localization.FormDepartment}.newDepartmentPlaceholder`)}
         />
         <button type='submit' className={styles.btn} disabled={isFormEmpty}>
-          Создать
+          {t(`${Localization.FormDepartment}.createButton`)}
         </button>
       </form>
     </>

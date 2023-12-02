@@ -61,9 +61,9 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
     case 'user':
       type_el = {
         th1: t(`${Localization.UserTable}.th1`),
-        th2: t(`${Localization.DepartmentTable}.th2`),
-        th3: t(`${Localization.DepartmentTable}.th3`),
-        th4: t(`${Localization.DepartmentTable}.th4`),
+        th2: t(`${Localization.UserTable}.th2`),
+        th3: t(`${Localization.UserTable}.th3`),
+        th4: t(`${Localization.UserTable}.th4`),
         img: userIcon,
       };
       break;
