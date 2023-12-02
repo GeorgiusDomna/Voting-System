@@ -22,6 +22,11 @@ const DocumentPanel: React.FC = () => {
     setIsOpenModalWindow(!isOpenModalWindow);
   };
 
+  useEffect(() => {
+    if (authStore.userInfo) {
+      setIsAdmin(authStore.isUserAdmin);
+    }
+  }, [authStore.userInfo]);
   const toggleModalCreateDocument = () => {
     setIsOpenModalCreateDocument(!isOpenModalCreateDocument);
   };

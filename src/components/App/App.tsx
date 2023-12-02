@@ -1,4 +1,7 @@
 import { Route, Routes, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import authStore from '@/stores/AuthStore';
+import { getUserMe } from '@/api/authService';
 import ContentBlock from '../ContentBlock/ContentBlock';
 import DepartmentPanel from '../../Pages/DepartmentPanel/DepartmentPanel';
 import UserPanel from '@/Pages/UserPanel/UserPanel';
@@ -16,9 +19,6 @@ import {
 import FormLogin from '../Auth/Forms/FormLogin';
 import FormRegistration from '../Auth/Forms/FormRegistration';
 import DocumentPanel from '@/Pages/DocumentPanel/DocumentPanel';
-import { useEffect } from 'react';
-import authStore from '@/stores/AuthStore';
-import { getUserMe } from '@/api/authService';
 
 const App: React.FC = () => {
   const navigate = useNavigate();

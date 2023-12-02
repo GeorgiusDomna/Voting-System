@@ -5,6 +5,7 @@ import Loading from '@/components/ContentBlock/Loading/Loading';
 import Table from '@/components/Table/Table';
 import AddUserModal from '@/components/ContentBlock/AddUserModal/AddUserModal';
 import { getUsersByDepartment } from '@/api/userService';
+
 import userStore from '@/stores/EmployeeStore';
 import alertStore from '@/stores/AlertStore';
 import authStore from '@/stores/AuthStore';
@@ -16,6 +17,13 @@ const UserPanel: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { id, name } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (authStore.userInfo) {
+      if (!authStore.isUserAdmin) navigate(Paths.ROOT);
+    }
+  }, [authStore.userInfo]);
 
   useEffect(() => {
     const fetchData = async () => {

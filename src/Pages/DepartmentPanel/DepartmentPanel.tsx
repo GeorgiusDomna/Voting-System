@@ -12,6 +12,13 @@ import style from './departmentPanel.module.css';
 const DepartmentPanel: React.FC = () => {
   const { departmentList, setDepartments } = departmentsStore;
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (authStore.userInfo) {
+      if (!authStore.isUserAdmin) navigate(Paths.ROOT);
+    }
+  }, [authStore.userInfo]);
 
   useEffect(() => {
     const fetchData = async () => {
