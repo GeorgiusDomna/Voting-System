@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import CategoryItem from '../CategoryItem/CategoryItem';
 import { observer } from 'mobx-react-lite';
 import styles from './navigation.module.css';
