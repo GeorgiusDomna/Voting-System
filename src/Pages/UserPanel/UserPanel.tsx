@@ -1,20 +1,13 @@
 import { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { useNavigate, useParams } from 'react-router';
-
+import { useParams } from 'react-router';
 import Loading from '@/components/ContentBlock/Loading/Loading';
 import Table from '@/components/Table/Table';
 import AddUserModal from '@/components/ContentBlock/AddUserModal/AddUserModal';
-
 import { getUsersByDepartment } from '@/api/userService';
-import { getUserMe } from '@/api/authService';
-
 import userStore from '@/stores/EmployeeStore';
 import alertStore from '@/stores/AlertStore';
 import authStore from '@/stores/AuthStore';
-
-import { Paths } from '@/enums/Paths';
-
 import plusIcon from '@/assets/plus.png';
 import style from './userPanel.module.css';
 
@@ -23,21 +16,6 @@ const UserPanel: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { id, name } = useParams();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (authStore.token) {
-      getUserMe(authStore.token)
-        .then((res) => {
-          authStore.setUserInfo(res);
-          if (!authStore.isUserAdmin) navigate(Paths.ROOT);
-        })
-        .catch((error) => {
-          alertStore.toggleAlert(error);
-          authStore.deleteToken();
-        });
-    }
-  }, [authStore.isLoggedIn]);
 
   useEffect(() => {
     const fetchData = async () => {
