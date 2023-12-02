@@ -1,7 +1,6 @@
 import { NetworkError } from '@/errors/NetworkError';
 import { IFailedServerResponse } from '@/interfaces/IFailedServerResponse';
 import { ILogin, IRegistartion } from '@/interfaces/auth';
-import alertStore from '@/stores/AlertStore';
 import { isOnline } from '@/utils/networkStatus';
 
 const baseUrl = 'http://5.35.83.142:8082/api/';
@@ -23,7 +22,7 @@ export async function registration(params: IRegistartion) {
     }
     return await response.json();
   } catch (error) {
-    alertStore.toggleAlert((error as Error).message);
+    return Promise.reject('Что-то пошло не так');
   }
 }
 
@@ -44,7 +43,7 @@ export async function login(params: ILogin) {
     }
     return await response.json();
   } catch (error) {
-    alertStore.toggleAlert((error as Error).message);
+    return Promise.reject('Что-то пошло не так');
   }
 }
 
@@ -65,7 +64,6 @@ export async function getUserMe(token: string) {
     }
     return await response.json();
   } catch (error) {
-    alertStore.toggleAlert((error as Error).message);
-    return Promise.reject((error as Error).message);
+    return Promise.reject('Что-то пошло не так');
   }
 }
