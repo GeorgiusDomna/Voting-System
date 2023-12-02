@@ -34,6 +34,25 @@ export async function createUser(params: IUser, token: string) {
   }
 }
 
+export async function deleteUser(id: number, token: string) {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
+  try {
+    if (!isOnline()) throw new NetworkError();
+    const url = `${baseUrl}/user/${id}`;
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: headersWithToken,
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      throw new Error(error.message);
+    }
+    return response.status;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+}
+
 /**
  * Получает данные о сотруднике.
  *
@@ -41,13 +60,14 @@ export async function createUser(params: IUser, token: string) {
  * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
  *
  */
-export async function getUserInfo(id: number): Promise<IUserInfo | void> {
+export async function getUserInfo(id: number, token: string): Promise<IUserInfo | void> {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
   try {
     if (!isOnline()) throw new NetworkError();
     const url = `${baseUrl}/user/${id}`;
     const response = await fetch(url, {
       method: 'GET',
-      headers,
+      headers: headersWithToken,
     });
     if (!response.ok) {
       const error: IFailedServerResponse = await response.json();
