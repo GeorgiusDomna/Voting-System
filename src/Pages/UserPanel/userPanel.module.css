@@ -9,19 +9,24 @@
   height: 1.5rem;
 }
 
+.UserPanel__control{
+  display: block;
+  background-color: rgb(224, 224, 224);
+}
+
 .UserPanel__controls {
   padding: 4px;
   font-size: 1.2rem;
-  background-color: rgb(224, 224, 224);
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0px;
+  gap: 10px;
   margin-bottom: 15px;
   cursor: pointer;
   transition: all 0.3s ease;
+  text-align: center;
 }
 
-.UserPanel__controls:hover {
+.UserPanel__control:hover {
   background-color: rgb(247, 247, 247);
 }
 
@@ -29,4 +34,6 @@
   border: none;
   background-color: transparent;
   cursor: pointer;
+  text-align: center;
+  display: inline;
 }

@@ -16,6 +16,7 @@ import authStore from '@/stores/AuthStore';
 import { Paths } from '@/enums/Paths';
 
 import plusIcon from '@/assets/plus.png';
+import trashIcon from '@/assets/trash.svg';
 import style from './userPanel.module.css';
 
 const UserPanel: React.FC = () => {
@@ -63,9 +64,15 @@ const UserPanel: React.FC = () => {
   return (
     <div className={style.UserPanel}>
       <h2 className={style.UserPanel__title}>{decodeURIComponent(name as string)}</h2>
-      <div className={style.UserPanel__controls} onClick={toggle}>
-        <img className={style.UserPanel__img} src={plusIcon} alt='+' />
-        <button className={style.UserPanel__button}>Добавить пользователя</button>
+      <div className={style.UserPanel__controls}>
+        <div className={style.UserPanel__control} onClick={toggle}>
+          <img className={style.UserPanel__img} src={plusIcon} alt='+' />
+          <button className={style.UserPanel__button}>Добавить пользователя</button>
+        </div>
+        <div className={style.UserPanel__control}>
+          <img className={style.UserPanel__img} src={trashIcon} />
+          <button className={style.UserPanel__button}>Удалить департамент</button>
+        </div>
       </div>
       {isLoading ? (
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />
