@@ -7,7 +7,6 @@ import Table from '@/components/Table/Table';
 import FormDepartment from '@/components/ContentBlock/FormDepartment/FormDepartment';
 
 import { getAllDepartments } from '@/api/departmentService';
-import { getUserMe } from '@/api/authService';
 import departmentsStore from '@/stores/DepartmentStore';
 import authStore from '@/stores/AuthStore';
 import alertStore from '@/stores/AlertStore';
@@ -22,18 +21,10 @@ const DepartmentPanel: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (authStore.token) {
-      getUserMe(authStore.token)
-        .then((res) => {
-          authStore.setUserInfo(res);
-          if (!authStore.isUserAdmin) navigate(Paths.ROOT);
-        })
-        .catch((error) => {
-          alertStore.toggleAlert(error);
-          authStore.deleteToken();
-        });
+    if (authStore.userInfo) {
+      if (!authStore.isUserAdmin) navigate(Paths.ROOT);
     }
-  }, [authStore.isLoggedIn]);
+  }, [authStore.userInfo]);
 
   useEffect(() => {
     const fetchData = async () => {
