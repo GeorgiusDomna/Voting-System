@@ -1,0 +1,51 @@
+.input {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+}
+
+.inputFileBtn {
+  border: none;
+  background: url('@/assets/upload.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 24px;
+  height: 24px;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.inputFileBtnName {
+  margin: 0;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  width: max-content;
+}
+
+.nameFile {
+  width: 80%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.containerFlex {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.error {
+  margin: 0;
+  font-size: 0.875rem;
+  min-height: 1rem;
+  color: #cd2204;
+}
+
+.containerFlex:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
