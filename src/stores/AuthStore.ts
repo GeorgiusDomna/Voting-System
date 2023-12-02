@@ -1,9 +1,9 @@
-import { makeObservable, observable, action } from 'mobx';
+import { makeObservable, observable, action, computed } from 'mobx';
 import IUserInfo from '@/interfaces/userInfo';
 
-class UserStore {
+class AuthStore {
   /**
-   * Объект, содержащий информацию о пользователе.
+   * Объект, содержащий информацию об авторизованном пользователе.
    */
   userInfo: IUserInfo | null = null;
   isLoggedIn: boolean = !!localStorage.getItem('token');
@@ -13,6 +13,7 @@ class UserStore {
     makeObservable(this, {
       userInfo: observable,
       isLoggedIn: observable,
+      isUserAdmin: computed,
       token: observable,
       setUserInfo: action.bound,
       setIsLoggedIn: action.bound,
@@ -27,6 +28,13 @@ class UserStore {
    */
   setUserInfo(userInfo: IUserInfo) {
     this.userInfo = userInfo;
+  }
+
+  /**
+   * Вычисляет, является ли пользователь админом.
+   */
+  get isUserAdmin() {
+    return !!this.userInfo?.roles.find((el) => el.name === 'ROLE_ADMIN');
   }
 
   /**
@@ -58,17 +66,17 @@ class UserStore {
 }
 
 /**
- * `userStore`- экземпляр класса `UserStore`, предоставляющий интерфейс для управления данными о пользователе.
+ * `authStore`- экземпляр класса `AuthStore`, предоставляющий интерфейс для управления данными о пользователе.
  * Каждый пользователь представлен объектом типа `IUserInfo`.
  * Позволяет устанавливать новые данные о пользователе.
  * Реализован с использованием MobX для управления состоянием.
  *
  * @example
  * // Создание нового хранилища информации о пользователе
- * const userStore = new UserStore();
+ * const authStore = new AuthStore();
  *
  *  * // Установка данных о пользователе
- * userStore.setUserInfo({
+ * authStore.setUserInfo({
  *  id: 0;
     position: 'string';
     username: 'string';
@@ -77,15 +85,15 @@ class UserStore {
  * });
  *
  *  * // Установка данных об авторизации пользователя
- * userStore.setIsLoggedIn(true);
+ * authStore.setIsLoggedIn(true);
  *
  *  * // Установка токена пользователя
- * userStore.setToken('string');
+ * authStore.setToken('string');
  *
  *  * // Удаление токена пользователя
- * userStore.deleteToken('string');
+ * authStore.deleteToken('string');
  *
  */
-const userStore = new UserStore();
+const authStore = new AuthStore();
 
-export default userStore;
+export default authStore;

@@ -3,7 +3,7 @@ import InputPassword from '../Inputs/InputPassword';
 import InputText from '../Inputs/InputText';
 import styles from '../auth.module.css';
 import * as Yup from 'yup';
-import { login } from '@/api/documentService';
+
 import { useNavigate } from 'react-router-dom';
 import { Paths } from '@/enums/Paths';
 import alertStore from '@/stores/AlertStore';
@@ -11,6 +11,8 @@ import { observer } from 'mobx-react-lite';
 import userStore from '@/stores/UserStore';
 import { useTranslation } from 'react-i18next';
 import { Localization } from '@/enums/Localization';
+import authStore from '@/stores/AuthStore';
+import { login } from '@/api/authService';
 
 interface valuesLogin {
   loginName: string;
@@ -36,9 +38,9 @@ const FormLogin = observer(() => {
       password: values.password,
     })
       .then((res) => {
-        userStore.setToken(res.token);
+        authStore.setToken(res.token);
         navigate(Paths.ROOT);
-        userStore.setIsLoggedIn(true);
+        authStore.setIsLoggedIn(true);
       })
       .catch((error) => alertStore.toggleAlert(error));
   };

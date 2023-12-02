@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import ContentBlock from '../ContentBlock/ContentBlock';
-import AdminControlPanel from '../ContentBlock/AdminControlPanel/AdminControlPanel';
-import AdminDocumentPanel from '../ContentBlock/AdminDocumentPanel/AdminDocumentPanel';
+import DepartmentPanel from '../../Pages/DepartmentPanel/DepartmentPanel';
+import UserPanel from '@/Pages/UserPanel/UserPanel';
 import Footer from '../Footer/Footer';
 import Alert from '../Alert/Alert';
 import { observer } from 'mobx-react-lite';
@@ -15,11 +15,10 @@ import {
 } from './ProtectedRoute';
 import FormLogin from '../Auth/Forms/FormLogin';
 import FormRegistration from '../Auth/Forms/FormRegistration';
+import DocumentPanel from '@/Pages/DocumentPanel/DocumentPanel';
 
-const App: React.FC = observer(() => {
+const App: React.FC = () => {
   const { isOpen, message, toggleAlert } = alertStore;
-
-  const role: string = 'ADMIN'; //TODO: заменить на роль получаемую после логина
 
   return (
     <>
@@ -35,18 +34,10 @@ const App: React.FC = observer(() => {
             </ProtectedRouteElementForUnauthorized>
           }
         >
-          <Route
-            index
-            element={
-              role === 'ADMIN' ? (
-                <AdminControlPanel />
-              ) : (
-                'Компонент просмотра всех документов (Юзер)'
-              )
-            }
-          />
-          <Route path={Paths.DOCUMENTS} element={<AdminDocumentPanel />} />
-          <Route path={Paths.USER_DOCUMENTS} element={'Компонент добавления документа (Юзер)'} />
+          <Route index element={<DocumentPanel />} />
+          <Route path={`${Paths.DOCUMENTS}/:id`} element={<DocumentPanel />} />
+          <Route path={Paths.DEPARTMENTS} element={<DepartmentPanel />} />
+          <Route path={`${Paths.DEPARTMENTS}/:name/:id`} element={<UserPanel />} />
           <Route path={Paths.DOCUMENTS_VOTE} element={'Компонент голосования за документ (Юзер)'} />
         </Route>
         <Route
@@ -65,6 +56,6 @@ const App: React.FC = observer(() => {
       {isOpen && <Alert message={message} toggleAlert={toggleAlert} />}
     </>
   );
-});
+};
 
-export default App;
+export default observer(App);

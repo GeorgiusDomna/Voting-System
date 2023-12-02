@@ -4,9 +4,9 @@ import SideBarButton from './SideBarButton/SideBarButton';
 import styles from './sideBar.module.css';
 import { observer } from 'mobx-react-lite';
 import Navigation from './Navigation/Navigation';
-import userStore from '@/stores/UserStore';
+import userStore from '@/stores/AuthStore';
 
-const SideBar: React.FC = observer(() => {
+const SideBar: React.FC = () => {
   const [isShown, setIsShown] = useState(false);
 
   function clickHandler() {
@@ -31,6 +31,6 @@ const SideBar: React.FC = observer(() => {
       </button>
     </div>
   );
-});
+};
 
-export default SideBar;
+export default observer(SideBar);
