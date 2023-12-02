@@ -6,7 +6,7 @@ import { isOnline } from '@/utils/networkStatus';
 
 const baseUrl = 'http://5.35.83.142:8082/api/';
 
-export async function registartion(params: IRegistartion) {
+export async function registration(params: IRegistartion) {
   try {
     if (!isOnline()) throw new NetworkError();
     const response = await fetch(`${baseUrl}registration`, {

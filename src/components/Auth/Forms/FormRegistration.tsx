@@ -1,4 +1,4 @@
-import { login, registartion } from '@/api/authService';
+import { login, registration } from '@/api/authService';
 import styles from '../auth.module.css';
 import InputPassword from '../Inputs/InputPassword';
 import InputText from '../Inputs/InputText';
@@ -23,8 +23,6 @@ interface valuesLogin {
 const FormRegistration = observer(() => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  let test = t(Localization.Min2Chars);
-  console.log(test);
 
   const FormRegistrationSchema = Yup.object().shape({
     loginName: Yup.string()
