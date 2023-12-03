@@ -90,3 +90,21 @@ export async function getDepartmentData(
     alertStore.toggleAlert((error as Error).message);
   }
 }
+
+export async function deleteDepartment(id: number, token: string) {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
+  try {
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(baseUrl + '/department/' + id, {
+      method: 'DELETE',
+      headers: headersWithToken,
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      return Promise.reject(error.message);
+    }
+    return response.status;
+  } catch (error) {
+    alertStore.toggleAlert((error as Error).message);
+  }
+}
