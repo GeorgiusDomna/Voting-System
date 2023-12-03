@@ -26,6 +26,11 @@ const AddUserModal: React.FC<deleteDepartmentProps> = observer(
     const navigate = useNavigate();
 
     const handleDelete = () => {
+      if (!navigator.onLine) {
+        alertStore.toggleAlert('Нет подключения к интернету');
+        return;
+      }
+
       if (authStore.token) {
         if (confirmDelete) {
           if (deleteUsers) {
