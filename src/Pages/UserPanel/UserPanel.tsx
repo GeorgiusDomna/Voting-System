@@ -42,7 +42,7 @@ const UserPanel: React.FC = () => {
           res && setUserList(res);
         }
       } else {
-        alertStore.toggleAlert(t(`${Localization.AddUserModal}.errorAlert`));
+        alertStore.toggleAlert(t(`${Localization.UserPanel}.errorAlert`));
         setIsLoading(false);
       }
       setIsLoading(false);
@@ -66,13 +66,13 @@ const UserPanel: React.FC = () => {
         <div className={style.UserPanel__control} onClick={toggle}>
           <img className={style.UserPanel__img} src={plusIcon} alt='+' />
           <button className={style.UserPanel__button}>
-            {t(`${Localization.AddUserModal}.addUserButton`)}
+            {t(`${Localization.UserPanel}.addUserButton`)}
           </button>
         </div>
         <div className={style.UserPanel__control} onClick={toggleDeleteModal}>
           <img className={style.UserPanel__img} src={trashIcon} />
           <button className={style.UserPanel__button}>
-            {t(`${Localization.AddUserModal}.deleteDepartmentButton`)}
+            {t(`${Localization.UserPanel}.deleteDepartmentButton`)}
           </button>
         </div>
       </div>
