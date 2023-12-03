@@ -1,0 +1,31 @@
+.title {
+  margin: 0 0 1rem;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.subtitle {
+  text-align: center;
+}
+
+.containerButtons {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.button {
+  width: 30%;
+  height: 35px;
+  margin-left: 10px;
+  border-radius: 10px;
+  border: 1px solid #212529;
+}
+
+.button:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
