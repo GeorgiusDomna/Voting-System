@@ -17,6 +17,9 @@ import IUser from '@/interfaces/IUser';
 import styles from './addUserModal.module.css';
 import closeIcon from '@/assets/cancel.svg';
 
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
+
 interface addUserModalProps {
   departmentId: number;
   toggle: () => void;
@@ -35,15 +38,24 @@ interface userValues {
 if (process.env.NODE_ENV !== 'test') Modal.setAppElement('#root');
 
 const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, departmentId }) => {
+  const { t } = useTranslation();
   const AddUserSchema = Yup.object().shape({
-    username: Yup.string().min(2, 'Минимум 2 символа').required('Поле обязательно для заполнения'),
-    password: Yup.string().min(8, 'Минимум 8 символов').required('Поле обязательно для заполнения'),
+    username: Yup.string()
+      .min(2, t(Localization.Min2Chars))
+      .required(t(Localization.FieldRequired)),
+    password: Yup.string()
+      .min(8, t(Localization.Min8Chars))
+      .required(t(Localization.FieldRequired)),
     email: Yup.string()
-      .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Проверьте правильность email адреса')
-      .required('Поле обязательно для заполнения'),
-    birthDate: Yup.string().required('Поле обязательно для заполнения'),
-    firstName: Yup.string().min(2, 'Минимум 2 символа').required('Поле обязательно для заполнения'),
-    lastName: Yup.string().min(2, 'Минимум 2 символа').required('Поле обязательно для заполнения'),
+      .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, t(Localization.CheckEmail))
+      .required(t(Localization.FieldRequired)),
+    birthDate: Yup.string().required(t(Localization.FieldRequired)),
+    firstName: Yup.string()
+      .min(2, t(Localization.Min2Chars))
+      .required(t(Localization.FieldRequired)),
+    lastName: Yup.string()
+      .min(2, t(Localization.Min2Chars))
+      .required(t(Localization.FieldRequired)),
   });
 
   function handleSubmit(values: userValues, { resetForm }: FormikHelpers<userValues>) {
@@ -68,7 +80,7 @@ const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, de
             .then(() => {
               userStore.addUser({ ...data, departmentId });
               resetForm();
-              alertStore.toggleAlert('Пользователь успешно добавлен');
+              alertStore.toggleAlert(t(`${Localization.AddUserModal}.successMessage`));
             })
             .catch((error) => {
               alertStore.toggleAlert((error as Error).message);
@@ -81,7 +93,11 @@ const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, de
   }
 
   return (
-    <Modal isOpen={isOpen} contentLabel='Модальное окно' className={styles.modal}>
+    <Modal
+      isOpen={isOpen}
+      contentLabel={t(`${Localization.AddUserModal}.modalLabel`)}
+      className={styles.modal}
+    >
       <img src={closeIcon} className={styles.modal__close} onClick={toggle} />
       <Formik
         initialValues={{
@@ -103,7 +119,7 @@ const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, de
               <InputText
                 type='text'
                 name='username'
-                placeholder='Введите login'
+                placeholder={t(Localization.EnterLogin)}
                 value={values.username}
                 error={errors.username}
                 handleChange={handleChange}
@@ -111,7 +127,7 @@ const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, de
               />
               <InputPassword
                 name='password'
-                placeholder='Введите пароль'
+                placeholder={t(Localization.EnterPassword)}
                 value={values.password}
                 error={errors.password}
                 handleChange={handleChange}
@@ -122,7 +138,7 @@ const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, de
               <InputText
                 type='email'
                 name='email'
-                placeholder='Введите email'
+                placeholder={t(Localization.EnterEmail)}
                 value={values.email}
                 error={errors.email}
                 handleChange={handleChange}
@@ -141,7 +157,7 @@ const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, de
               <InputText
                 type='text'
                 name='firstName'
-                placeholder='Введите имя'
+                placeholder={t(`${Localization.AddUserModal}.firstNamePlaceholder`)}
                 value={values.firstName}
                 error={errors.firstName}
                 handleChange={handleChange}
@@ -150,7 +166,7 @@ const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, de
               <InputText
                 type='text'
                 name='lastName'
-                placeholder='Введите фамилию'
+                placeholder={t(`${Localization.AddUserModal}.lastNamePlaceholder`)}
                 value={values.lastName}
                 error={errors.lastName}
                 handleChange={handleChange}
@@ -158,7 +174,7 @@ const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, de
               />
             </div>
             <button type='submit' className={styles.button} disabled={submitCount >= 1 && !isValid}>
-              Добавить пользователя
+              {t(`${Localization.AddUserModal}.addUserButton`)}
             </button>
           </Form>
         )}

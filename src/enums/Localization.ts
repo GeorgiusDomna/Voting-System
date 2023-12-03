@@ -22,4 +22,6 @@ export enum Localization {
   LogOut = 'LogOut',
   FormDepartment = 'FormDepartment',
   DepartmentPanel = 'DepartmentPanel',
+  AddUserModal = 'AddUserModal',
+  UserPanel = 'UserPanel',
 }

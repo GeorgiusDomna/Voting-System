@@ -40,5 +40,26 @@
     },
     "DepartmentPanel": {
       "title": "Working with Departments"
+    },
+    "AddUserModal": {
+      "modalLabel": "Modal Window",
+      "closeIconAlt": "Close modal window",
+      "usernamePlaceholder": "Enter login",
+      "passwordPlaceholder": "Enter password",
+      "emailPlaceholder": "Enter email",
+      "birthDatePlaceholder": "Select birthdate",
+      "firstNamePlaceholder": "Enter first name",
+      "lastNamePlaceholder": "Enter last name",
+      "addUserButton": "Add User",
+      "successMessage": "User successfully added"
+    },
+    "UserPanel": {
+      "title": "User Management Panel",
+      "addUserButton": "Add User",
+      "deleteDepartmentButton": "Delete Department",
+      "errorAlert": "Error",
+      "loadingMessage": "Loading...",
+      "plusIconAlt": "Add",
+      "trashIconAlt": "Delete"
     }
 }

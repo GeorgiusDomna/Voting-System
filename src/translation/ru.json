@@ -40,6 +40,28 @@
     },
     "DepartmentPanel": {
       "title": "Работа с департаментами"
+    },
+    "AddUserModal": {
+      "modalLabel": "Модальное окно",
+      "closeIconAlt": "Закрыть модальное окно",
+      "usernamePlaceholder": "Введите логин",
+      "passwordPlaceholder": "Введите пароль",
+      "emailPlaceholder": "Введите email",
+      "birthDatePlaceholder": "Выберите дату рождения",
+      "firstNamePlaceholder": "Введите имя",
+      "lastNamePlaceholder": "Введите фамилию",
+      "addUserButton": "Добавить пользователя",
+      "successMessage": "Пользователь успешно добавлен"
+    },
+    "UserPanel": {
+      "title": "Панель управления пользователями",
+      "addUserButton": "Добавить пользователя",
+      "deleteDepartmentButton": "Удалить департамент",
+      "errorAlert": "Ошибка",
+      "loadingMessage": "Загрузка...",
+      "plusIconAlt": "Добавить",
+      "trashIconAlt": "Удалить"
     }
+
   }
   
