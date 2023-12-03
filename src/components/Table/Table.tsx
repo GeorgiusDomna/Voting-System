@@ -1,6 +1,8 @@
 import TableItem from './TableItem/TableItem';
+import UserInfoModal from '../userInfoModal/UserInfoModal';
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 import IdocumentData from '@/interfaces/IdocumentData';
 import IdepartamentData from '@/interfaces/IdepartmentData';
@@ -34,7 +36,28 @@ const roleCheck = (role: { name: string }[]): string => {
 };
 
 const Table: React.FC<ITableProps> = ({ dataList, type }) => {
+  const [isOpenUserInfo, setIsOpenUserInfo] = useState(false);
+  const [userInfo, setUserInfo] = useState<IUserInfo>({
+    id: -1,
+    position: '',
+    username: '',
+    email: '',
+    roles: [
+      {
+        name: '',
+      },
+    ],
+    firstName: '',
+    lastName: '',
+    patronymic: '',
+    departmentId: -1,
+    birthDate: '',
+  });
   const navigate = useNavigate();
+
+  function toggleUserInfo() {
+    setIsOpenUserInfo(!isOpenUserInfo);
+  }
 
   let type_el: Itype_el = {};
   let tabelItems;
@@ -104,7 +127,7 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
       ));
     }
     if (type === 'user') {
-      tabelItems = dataList.map((data: documentData) => (
+      tabelItems = dataList.map((data) => (
         <TableItem
           key={data.id}
           td1={data.username}
@@ -112,27 +135,35 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
           td3={data.departmentId}
           td4={data.email}
           img={type_el.img}
-          callback={() => {}}
+          callback={() => {
+            setUserInfo(data as IUserInfo);
+            toggleUserInfo();
+          }}
         />
       ));
     }
   }
 
   return (
-    <table className={style.tabel}>
-      <thead>
-        <tr className={style.tableHeader}>
-          <th className={style.th_name} style={{ paddingLeft: '3.4rem' }}>
-            {type_el.th1}
-          </th>
-          <th>{type_el.th2}</th>
-          {type_el.th3 && <th>{type_el.th3}</th>}
-          {type_el.th4 && <th>{type_el.th4}</th>}
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>{tabelItems}</tbody>
-    </table>
+    <>
+      <table className={style.tabel}>
+        <thead>
+          <tr className={style.tableHeader}>
+            <th className={style.th_name} style={{ paddingLeft: '3.4rem' }}>
+              {type_el.th1}
+            </th>
+            <th>{type_el.th2}</th>
+            {type_el.th3 && <th>{type_el.th3}</th>}
+            {type_el.th4 && <th>{type_el.th4}</th>}
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>{tabelItems}</tbody>
+      </table>
+      {type === 'user' && isOpenUserInfo && (
+        <UserInfoModal isOpen={isOpenUserInfo} toggle={toggleUserInfo} userInfo={userInfo} />
+      )}
+    </>
   );
 };
 
