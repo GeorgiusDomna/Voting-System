@@ -45,7 +45,8 @@
   margin-top: 10px;
 }
 
-.button:hover {
+.button:hover,
+.modal__close:hover {
   cursor: pointer;
   opacity: 0.8;
 }

@@ -1,23 +1,20 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
-import { useNavigate, useParams } from 'react-router';
-
+import { useParams } from 'react-router';
 import Loading from '@/components/ContentBlock/Loading/Loading';
 import Table from '@/components/Table/Table';
 import AddUserModal from '@/components/ContentBlock/AddUserModal/AddUserModal';
 import DeleteDepartmentModal from '@/components/ContentBlock/DeleteDepartmentModal/DeleteDepartmentModal';
 
 import { getUsersByDepartment } from '@/api/userService';
-
 import userStore from '@/stores/EmployeeStore';
 import alertStore from '@/stores/AlertStore';
 import authStore from '@/stores/AuthStore';
-
-import { Paths } from '@/enums/Paths';
-
 import plusIcon from '@/assets/plus.png';
 import trashIcon from '@/assets/trash.svg';
 import style from './userPanel.module.css';
+import { Paths } from '@/enums/Paths';
 
 const UserPanel: React.FC = () => {
   const { userList, setUserList } = userStore;

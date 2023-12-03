@@ -1,19 +1,15 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
-
 import Loading from '@/components/ContentBlock/Loading/Loading';
 import Table from '@/components/Table/Table';
 import FormDepartment from '@/components/ContentBlock/FormDepartment/FormDepartment';
-
 import { getAllDepartments } from '@/api/departmentService';
 import departmentsStore from '@/stores/DepartmentStore';
 import authStore from '@/stores/AuthStore';
 import alertStore from '@/stores/AlertStore';
-
-import { Paths } from '@/enums/Paths';
-
 import style from './departmentPanel.module.css';
+import { Paths } from '@/enums/Paths';
 
 const DepartmentPanel: React.FC = () => {
   const { departmentList, setDepartments } = departmentsStore;

@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import authStore from '@/stores/AuthStore';
 import { getUserMe } from '@/api/authService';
@@ -21,6 +21,7 @@ import FormRegistration from '../Auth/Forms/FormRegistration';
 import DocumentPanel from '@/Pages/DocumentPanel/DocumentPanel';
 
 const App: React.FC = () => {
+  const navigate = useNavigate();
   const { isOpen, message, toggleAlert } = alertStore;
 
   useEffect(() => {
@@ -34,6 +35,7 @@ const App: React.FC = () => {
           alertStore.toggleAlert(error);
           authStore.setIsLoggedIn(false);
           authStore.deleteToken();
+          navigate(Paths.LOGIN);
         });
     }
   }, [authStore.isLoggedIn]);
@@ -54,9 +56,17 @@ const App: React.FC = () => {
         >
           <Route index element={<DocumentPanel />} />
           <Route path={`${Paths.DOCUMENTS}/:id`} element={<DocumentPanel />} />
-          <Route path={Paths.DEPARTMENTS} element={<DepartmentPanel />} />
-          <Route path={`${Paths.DEPARTMENTS}/:name/:id`} element={<UserPanel />} />
-          <Route path={Paths.DOCUMENTS_VOTE} element={'Компонент голосования за документ (Юзер)'} />
+          {authStore.isUserAdmin ? (
+            <>
+              <Route path={Paths.DEPARTMENTS} element={<DepartmentPanel />} />
+              <Route path={`${Paths.DEPARTMENTS}/:name/:id`} element={<UserPanel />} />
+            </>
+          ) : (
+            <Route
+              path={Paths.DOCUMENTS_VOTE}
+              element={'Компонент голосования за документ (Юзер)'}
+            />
+          )}
         </Route>
         <Route
           path={Paths.ROOT}
