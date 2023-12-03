@@ -1,5 +1,5 @@
 import TableItem from './TableItem/TableItem';
-import userInfoModal from '../userInfoModal/userInfoModal';
+import UserInfoModal from '../userInfoModal/UserInfoModal';
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -13,7 +13,6 @@ import docIcon from '@/assets/docIcon.svg';
 import style from './table.module.css';
 import IUserInfo from '@/interfaces/userInfo';
 import { Paths } from '@/enums/Paths';
-import UserInfoModal from '../userInfoModal/userInfoModal';
 
 interface Itype_el {
   title?: string;
@@ -161,7 +160,7 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
         </thead>
         <tbody>{tabelItems}</tbody>
       </table>
-      {type === 'user' && (
+      {type === 'user' && isOpenUserInfo && (
         <UserInfoModal isOpen={isOpenUserInfo} toggle={toggleUserInfo} userInfo={userInfo} />
       )}
     </>

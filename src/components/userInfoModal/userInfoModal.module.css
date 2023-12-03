@@ -1,0 +1,79 @@
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.userInfo__modal {
+  display: inline-flex;
+  flex-direction: column;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 25px;
+  border: 1px solid rgb(199, 199, 199);
+  border-radius: 5px;
+}
+
+.userInfo__close {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  width: 20px;
+}
+
+.userInfo__avatar {
+  width: 100px;
+  margin-right: 25px;
+}
+
+.userInfo__info {
+  display: flex;
+  margin-bottom: 25px;
+}
+
+.info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 30px;
+}
+
+.info_info,
+.info_name {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  height: 100%;
+}
+
+.userInfo__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.userInfo__select {
+  width: 100px;
+  margin-right: 25px;
+}
+
+.userInfo__button {
+  width: 100px;
+  border-radius: 5px;
+  background: linear-gradient(0deg, #003274 0%, #035fa2 100%);
+  padding: 7px 15px;
+  border: none;
+  color: #fff;
+  font-family: Ubuntu, Arial, Helvetica, sans-serif;
+  font-weight: 500;
+  transition: opacity 0.3s;
+}
+
+.userInfo__select {
+  padding: 5px 0 5px 5px;
+  border: 2px solid #035fa2;
+  border-radius: 5px;
+}
