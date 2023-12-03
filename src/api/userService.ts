@@ -97,7 +97,7 @@ export async function addUserToDepartment(
     }
     return response.status;
   } catch (error) {
-    alertStore.toggleAlert((error as Error).message);
+    throw new Error((error as Error).message);
   }
 }
 
@@ -129,6 +129,6 @@ export async function getUsersByDepartment(
     const data = await response.json();
     return data.content;
   } catch (error) {
-    alertStore.toggleAlert((error as Error).message);
+    throw new Error((error as Error).message);
   }
 }

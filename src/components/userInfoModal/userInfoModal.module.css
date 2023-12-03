@@ -60,7 +60,6 @@
 }
 
 .userInfo__button {
-  width: 100px;
   border-radius: 5px;
   background: linear-gradient(0deg, #003274 0%, #035fa2 100%);
   padding: 7px 15px;

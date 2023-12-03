@@ -41,7 +41,7 @@ const UserInfoModal: React.FC<userInfoModalProps> = ({ isOpen, toggle, userInfo 
     fetchData();
   }, []);
 
-  useEffect(() => {
+  function moveHandler() {
     if (selectedValue !== userInfo.departmentId) {
       if (authStore.token) {
         addUserToDepartment(
@@ -57,7 +57,7 @@ const UserInfoModal: React.FC<userInfoModalProps> = ({ isOpen, toggle, userInfo 
           });
       }
     }
-  }, [selectedValue]);
+  }
 
   function deleteHandler() {
     if (authStore.token) {
@@ -108,30 +108,35 @@ const UserInfoModal: React.FC<userInfoModalProps> = ({ isOpen, toggle, userInfo 
             </div>
           </div>
           <div className={styles.userInfo__controls}>
-            <select
-              className={styles.userInfo__select}
-              value={selectedValue}
-              onChange={(e) => setSelectedValue(+e.target.value)}
-            >
-              <option key={userInfo.departmentId} value={userInfo.departmentId}>
-                {departments.find((el) => el.id === userInfo.departmentId)?.name ||
-                  'Без департамента'}
-              </option>
-              {departments.map((el) => {
-                if (el.id !== userInfo.departmentId) {
-                  return (
-                    <option key={el.id} value={el.id}>
-                      {el.name}
-                    </option>
-                  );
-                }
-              })}
-              {userInfo.departmentId !== -1 && (
-                <option key={-1} value={'-1'}>
-                  {'Без департамента'}
+            <div className={styles.select}>
+              <select
+                className={styles.userInfo__select}
+                value={selectedValue}
+                onChange={(e) => setSelectedValue(+e.target.value)}
+              >
+                <option key={userInfo.departmentId} value={userInfo.departmentId}>
+                  {departments.find((el) => el.id === userInfo.departmentId)?.name ||
+                    'Без департамента'}
                 </option>
-              )}
-            </select>
+                {departments.map((el) => {
+                  if (el.id !== userInfo.departmentId) {
+                    return (
+                      <option key={el.id} value={el.id}>
+                        {el.name}
+                      </option>
+                    );
+                  }
+                })}
+                {userInfo.departmentId !== -1 && (
+                  <option key={-1} value={'-1'}>
+                    {'Без департамента'}
+                  </option>
+                )}
+              </select>
+              <button className={styles.userInfo__button} onClick={moveHandler}>
+                Переместить
+              </button>
+            </div>
             <button className={styles.userInfo__button} onClick={deleteHandler}>
               Удалить
             </button>
