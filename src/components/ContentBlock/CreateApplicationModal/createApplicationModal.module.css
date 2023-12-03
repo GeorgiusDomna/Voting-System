@@ -28,6 +28,7 @@
 .file {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 5px;
 }
 
@@ -39,7 +40,27 @@
   text-overflow: ellipsis;
 }
 
+.button {
+  height: max-content;
+  width: max-content;
+  align-self: flex-end;
+}
+
 .button:hover {
   cursor: pointer;
   opacity: 0.8;
+}
+
+.image {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  object-position: center;
+}
+
+.containerFile {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
