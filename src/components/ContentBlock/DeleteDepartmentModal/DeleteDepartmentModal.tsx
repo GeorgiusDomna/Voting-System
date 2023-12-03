@@ -3,7 +3,13 @@ import { useState } from 'react';
 import Modal from 'react-modal';
 import styles from './deleteDepartmentModal.module.css';
 
+import { deleteDepartment } from '@/api/departmentService';
+
 import closeIcon from '@/assets/cancel.svg';
+import authStore from '@/stores/AuthStore';
+import alertStore from '@/stores/AlertStore';
+import { useNavigate } from 'react-router-dom';
+import { Paths } from '@/enums/Paths';
 
 interface deleteDepartmentProps {
   departmentId: number;
@@ -15,13 +21,24 @@ const AddUserModal: React.FC<deleteDepartmentProps> = observer(
   ({ isOpen, toggle, departmentId }) => {
     const [deleteUsers, setDeleteUsers] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(false);
+    const navigate = useNavigate();
 
     const handleDelete = () => {
-      if (confirmDelete) {
-        if (deleteUsers) {
-          console.log('Deleting department with users...'); // TODO
-        } else {
-          console.log('Deleting department...'); // TODO
+      if (authStore.token) {
+        if (confirmDelete) {
+          if (deleteUsers) {
+            console.log('Deleting department with users...'); // TODO
+          } else {
+            deleteDepartment(departmentId as number, authStore.token as string)
+              .then(() => {
+                alertStore.toggleAlert('Успешно удалено');
+                toggle();
+                navigate(Paths.DEPARTMENTS);
+              })
+              .catch((error) => {
+                alertStore.toggleAlert((error as Error).message);
+              });
+          }
         }
       }
     };
@@ -33,28 +50,27 @@ const AddUserModal: React.FC<deleteDepartmentProps> = observer(
           <label>Удалить пользователей вместе с департаментом</label>
           <input
             type='checkbox'
-            name=''
-            id=''
+            className={styles.checkboxInput}
             checked={deleteUsers}
             onChange={() => setDeleteUsers(!deleteUsers)}
           />
+          <br />
           <label>Вы уверены, что хотите удалить департамент?</label>
           <input
             type='checkbox'
-            name=''
-            id=''
+            className={styles.checkboxInput}
             checked={confirmDelete}
             onChange={() => setConfirmDelete(!confirmDelete)}
           />
-          <button
-            type='button'
-            className={styles.button}
-            onClick={handleDelete}
-            disabled={!confirmDelete}
-          >
-            Удалить
-          </button>
         </div>
+        <button
+          type='button'
+          className={styles.button}
+          onClick={handleDelete}
+          disabled={!confirmDelete}
+        >
+          Удалить
+        </button>
       </Modal>
     );
   }

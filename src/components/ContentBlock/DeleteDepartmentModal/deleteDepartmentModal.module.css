@@ -39,3 +39,12 @@
 .button:disabled{
   background: gray;
 }
+
+.form{
+  display: block;
+}
+
+.checkboxInput{
+  float: right;
+  position: relative;
+}
