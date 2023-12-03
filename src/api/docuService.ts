@@ -156,3 +156,31 @@ export async function downloadFile(token: string, docId: number, fileId: number)
     return Promise.reject('Что-то пошло не так');
   }
 }
+
+/**
+ * Запрашивает все документы пользователя.
+ *
+ * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
+ *
+ */
+export async function getDocsUser(token: string, userId: number) {
+  try {
+    const url = `${baseUrl}/user/${userId}/docs?recordState=ACTIVE&limit=1000`;
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      throw new Error(error.message);
+    }
+    return await response.json();
+  } catch (error) {
+    return Promise.reject('Что-то пошло не так');
+  }
+}

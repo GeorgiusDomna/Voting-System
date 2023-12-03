@@ -4,19 +4,18 @@ import styles from '../createDocumentModal.module.css';
 import stylesConfirm from './modalConfirmAddApplication.module.css';
 
 interface ICreateDocumentModalProps {
-  toggle: (id: null | number) => void;
+  toggle: () => void;
   isOpen: boolean;
   toggleCreateApp: () => void;
-  idDoc: null | number;
 }
 
 if (process.env.NODE_ENV !== 'test') Modal.setAppElement('#root');
 
 const ModalConfirmAddApplication: React.FC<ICreateDocumentModalProps> = observer(
-  ({ isOpen, toggle, toggleCreateApp, idDoc }) => {
+  ({ isOpen, toggle, toggleCreateApp }) => {
     return (
       <Modal isOpen={isOpen} contentLabel='Модальное окно' className={styles.modal}>
-        <button className={styles.modal__close} onClick={() => toggle(null)} />
+        <button className={styles.modal__close} onClick={toggle} />
         <p className={stylesConfirm.title}>Документ успешно создан!</p>
         <p className={stylesConfirm.subtitle}>Желаете создать голосование с этим документом?</p>
         <p>
@@ -28,13 +27,13 @@ const ModalConfirmAddApplication: React.FC<ICreateDocumentModalProps> = observer
             className={stylesConfirm.button}
             type='button'
             onClick={() => {
-              toggle(idDoc);
+              toggle();
               toggleCreateApp();
             }}
           >
             Да
           </button>
-          <button className={stylesConfirm.button} type='button' onClick={() => toggle(null)}>
+          <button className={stylesConfirm.button} type='button' onClick={toggle}>
             Отмена
           </button>
         </div>

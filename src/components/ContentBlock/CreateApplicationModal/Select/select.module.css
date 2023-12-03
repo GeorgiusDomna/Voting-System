@@ -1,0 +1,23 @@
+.select {
+  border-radius: 5px;
+  border: 1px solid #000;
+  padding: 8px;
+  font-family: Ubuntu, Arial, Helvetica, sans-serif;
+}
+
+.select:disabled {
+  background-color: transparent;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.error {
+  margin: 0;
+  font-size: 0.875rem;
+  min-height: 1rem;
+  color: #cd2204;
+}

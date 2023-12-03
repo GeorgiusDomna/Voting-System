@@ -30,3 +30,8 @@
   background-color: transparent;
   cursor: pointer;
 }
+
+.dataList__containerBtns {
+  display: flex;
+  gap: 10px;
+}

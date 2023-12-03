@@ -9,6 +9,7 @@ interface InputTextProps {
   error: string | undefined;
   handleChange: (e: string | ChangeEvent) => void;
   submitCount: number;
+  disabled?: boolean;
 }
 
 const InputText = ({
@@ -19,6 +20,7 @@ const InputText = ({
   error,
   handleChange,
   submitCount,
+  disabled,
 }: InputTextProps) => {
   const [isFocus, setIsFocus] = useState(false);
 
@@ -37,6 +39,7 @@ const InputText = ({
         onFocus={() => {
           setIsFocus(true);
         }}
+        disabled={disabled}
       />
       <p className={styles.error}>{(isFocus && error) || (submitCount >= 1 && error && error)}</p>
     </label>

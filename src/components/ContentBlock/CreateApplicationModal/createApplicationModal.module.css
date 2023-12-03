@@ -1,5 +1,6 @@
 .listDocs {
   margin: 0;
+  margin-top: 1rem;
   padding: 0;
   list-style-type: none;
   display: flex;
@@ -30,6 +31,24 @@
   justify-content: space-between;
   align-items: center;
   gap: 5px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #bdbdbd;
+}
+
+.containerFileImageName {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.fileImage {
+  width: 20px;
+  height: 20px;
+  background-image: url(@/assets/docIcon.svg);
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  background-position: center;
 }
 
 .fileName {

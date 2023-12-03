@@ -26,13 +26,8 @@ const DocumentPanel: React.FC = () => {
     setIsOpenModalCreateDocument(!isOpenModalCreateDocument);
   };
 
-  const toggleModalConfirmAddApplication = (id: number | null = null) => {
+  const toggleModalConfirmAddApplication = () => {
     setIsOpenModalConfirmAddApplication(!isOpenModalConfirmAddApplication);
-    if (id) {
-      setIdDoc(id);
-    } else {
-      setIdDoc(null);
-    }
   };
 
   const toggleModalCreateApplication = () => {
@@ -60,9 +55,15 @@ const DocumentPanel: React.FC = () => {
   return (
     <div className={style.documentPanel}>
       <h2 className={style.dataList__title}>Документы</h2>
-      <div className={style.dataList__controls} onClick={toggleModalCreateDocument}>
-        <img className={style.dataList__img} src={plusIcon} alt='+' />
-        <button className={style.dataList__button}>Добавить документ</button>
+      <div className={style.dataList__containerBtns}>
+        <div className={style.dataList__controls} onClick={toggleModalCreateDocument}>
+          <img className={style.dataList__img} src={plusIcon} alt='+' />
+          <button className={style.dataList__button}>Добавить документ</button>
+        </div>
+        <div className={style.dataList__controls} onClick={toggleModalCreateApplication}>
+          <img className={style.dataList__img} src={plusIcon} alt='+' />
+          <button className={style.dataList__button}>Добавить голосование</button>
+        </div>
       </div>
       {isLoading ? (
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />
@@ -74,12 +75,12 @@ const DocumentPanel: React.FC = () => {
             isOpen={isOpenModalCreateDocument}
             toggle={toggleModalCreateDocument}
             toggleConfirm={toggleModalConfirmAddApplication}
+            setIdDoc={setIdDoc}
           />
           <ModalConfirmAddApplication
             isOpen={isOpenModalConfirmAddApplication}
             toggle={toggleModalConfirmAddApplication}
             toggleCreateApp={toggleModalCreateApplication}
-            idDoc={idDoc}
           />
           <CreateApplicationModal
             isOpen={isOpenModalCreateApplication}

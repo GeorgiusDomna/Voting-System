@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { Form, Formik, FormikHelpers } from 'formik';
 import InputText from '@/components/Auth/Inputs/InputText';
 import styles from './createDocumentModal.module.css';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import InputUpload from '@/components/ContentBlock/CreateDocumentModal/InputUpload/InputUpload';
 import authStore from '@/stores/AuthStore';
 import { createDoc, createFile } from '@/api/docuService';
@@ -13,7 +13,8 @@ import alertStore from '@/stores/AlertStore';
 interface ICreateDocumentModalProps {
   toggle: () => void;
   isOpen: boolean;
-  toggleConfirm: (id: number | null) => void;
+  toggleConfirm: () => void;
+  setIdDoc: Dispatch<SetStateAction<number | null>>;
 }
 
 interface values {
@@ -35,7 +36,7 @@ interface valuesFiles {
 if (process.env.NODE_ENV !== 'test') Modal.setAppElement('#root');
 
 const CreateDocumentModal: React.FC<ICreateDocumentModalProps> = observer(
-  ({ isOpen, toggle, toggleConfirm }) => {
+  ({ isOpen, toggle, toggleConfirm, setIdDoc }) => {
     const [images, setImages] = useState<valuesImages[]>([]);
     const [files, setFiles] = useState<valuesFiles[]>([]);
     const [count, setCount] = useState<number>(0);
@@ -60,7 +61,8 @@ const CreateDocumentModal: React.FC<ICreateDocumentModalProps> = observer(
               .then(() => {
                 resetForm();
                 toggle();
-                toggleConfirm(res.id);
+                toggleConfirm();
+                setIdDoc(() => res.id);
                 setImages([]);
                 setFiles([]);
               })
