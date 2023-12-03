@@ -59,21 +59,25 @@ const AddUserModal: React.FC<deleteDepartmentProps> = observer(
       <Modal isOpen={isOpen} contentLabel='Модальное окно удаления' className={styles.modal}>
         <img src={closeIcon} className={styles.modal__close} onClick={toggle} />
         <div className={styles.form}>
-          <label>Удалить пользователей вместе с департаментом</label>
-          <input
-            type='checkbox'
-            className={styles.checkboxInput}
-            checked={deleteUsers}
-            onChange={() => setDeleteUsers(!deleteUsers)}
-          />
+          <div className={styles.question}>
+            <label>Удалить пользователей вместе с департаментом</label>
+            <input
+              type='checkbox'
+              className={styles.checkboxInput}
+              checked={deleteUsers}
+              onChange={() => setDeleteUsers(!deleteUsers)}
+            />
+          </div>
           <br />
-          <label>Вы уверены, что хотите удалить департамент?</label>
-          <input
-            type='checkbox'
-            className={styles.checkboxInput}
-            checked={confirmDelete}
-            onChange={() => setConfirmDelete(!confirmDelete)}
-          />
+          <div className={styles.question}>
+            <label>Вы уверены, что хотите удалить департамент?</label>
+            <input
+              type='checkbox'
+              className={styles.checkboxInput}
+              checked={confirmDelete}
+              onChange={() => setConfirmDelete(!confirmDelete)}
+            />
+          </div>
         </div>
         <button
           type='button'

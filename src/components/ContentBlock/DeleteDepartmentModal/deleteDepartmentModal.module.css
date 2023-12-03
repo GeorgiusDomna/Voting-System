@@ -47,4 +47,10 @@
 .checkboxInput{
   float: right;
   position: relative;
+  margin-left: 20px;
+  margin-right: auto;
+}
+
+.question{
+  margin: 10px;
 }
