@@ -4,12 +4,14 @@ import Modal from 'react-modal';
 import styles from './deleteDepartmentModal.module.css';
 
 import { deleteDepartment } from '@/api/departmentService';
+import { deleteUser, getUsersByDepartment } from '@/api/userService';
 
 import closeIcon from '@/assets/cancel.svg';
 import authStore from '@/stores/AuthStore';
 import alertStore from '@/stores/AlertStore';
 import { useNavigate } from 'react-router-dom';
 import { Paths } from '@/enums/Paths';
+import IUserInfo from '@/interfaces/userInfo';
 
 interface deleteDepartmentProps {
   departmentId: number;
@@ -27,18 +29,28 @@ const AddUserModal: React.FC<deleteDepartmentProps> = observer(
       if (authStore.token) {
         if (confirmDelete) {
           if (deleteUsers) {
-            console.log('Deleting department with users...'); // TODO
-          } else {
-            deleteDepartment(departmentId as number, authStore.token as string)
-              .then(() => {
-                alertStore.toggleAlert('Успешно удалено');
-                toggle();
-                navigate(Paths.DEPARTMENTS);
+            getUsersByDepartment(authStore.token, departmentId)
+              .then((data) => {
+                const userArr = data as IUserInfo[];
+                userArr.forEach((user) => {
+                  deleteUser(user.id as number, authStore.token as string).catch((error) => {
+                    alertStore.toggleAlert((error as Error).message);
+                  });
+                });
               })
               .catch((error) => {
                 alertStore.toggleAlert((error as Error).message);
               });
           }
+          deleteDepartment(departmentId as number, authStore.token as string)
+            .then(() => {
+              alertStore.toggleAlert('Успешно удалено');
+              toggle();
+              navigate(Paths.DEPARTMENTS);
+            })
+            .catch((error) => {
+              alertStore.toggleAlert((error as Error).message);
+            });
         }
       }
     };
