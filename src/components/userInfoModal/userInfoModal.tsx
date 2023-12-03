@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { observer, useStaticRendering } from 'mobx-react-lite';
+import { observer } from 'mobx-react-lite';
 
 import Modal from 'react-modal';
 
