@@ -46,7 +46,6 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  height: 100%;
 }
 
 .userInfo__controls {
@@ -76,4 +75,32 @@
   padding: 5px 0 5px 5px;
   border: 2px solid #035fa2;
   border-radius: 5px;
+}
+
+@media (max-width: 650px) {
+  .userInfo__modal {
+    width: 90%;
+  }
+
+  .userInfo__container {
+    width: 100%;
+  }
+
+  .info {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .info span,
+  .info b,
+  .userInfo__button,
+  .userInfo__select {
+    font-size: 14px;
+  }
+
+  .userInfo__avatar {
+    width: 100px;
+    height: 100px;
+    background-size: cover;
+  }
 }
