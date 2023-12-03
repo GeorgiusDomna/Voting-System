@@ -132,3 +132,22 @@ export async function getUsersByDepartment(
     throw new Error((error as Error).message);
   }
 }
+
+export async function deleteUser(id: number, token: string) {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
+  try {
+    if (!isOnline()) throw new NetworkError();
+    const url = `${baseUrl}/user/${id}`;
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: headersWithToken,
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      throw new Error(error.message);
+    }
+    return response.status;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+}
