@@ -17,6 +17,7 @@
   "DocumentsInReview": "Документы на рассмотрении",
   "FunctionsTitle": "Функции",
   "LogOut":"Выйти",
+  
   "DocumentTable": {
     "th1": "Название",
     "th2": "Автор",
@@ -61,7 +62,17 @@
       "loadingMessage": "Загрузка...",
       "plusIconAlt": "Добавить",
       "trashIconAlt": "Удалить"
+    },
+    "DocumentPanel":{
+      "AddDocument":"Добавить документ"
+    },
+    "DocumentModal":{
+      "UploadFile":"Загрузите файл",
+      "ModalWindow":"Модальное окно",
+      "DocumentName":"Название документа",
+      "AttachFiles":"Прикрепить файлы"
     }
+    
 
   }
   

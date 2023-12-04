@@ -70,7 +70,9 @@ const DocumentPanel: React.FC = () => {
       <h2 className={style.dataList__title}>{t(Localization.Documents)}</h2>
       <div className={style.dataList__controls} onClick={toggleModalCreateDocument}>
         <img className={style.dataList__img} src={plusIcon} alt='+' />
-        <button className={style.dataList__button}>Добавить документ</button>
+        <button className={style.dataList__button}>
+          {t(`${Localization.DocumentPanel}.AddDocument`)}
+        </button>
       </div>
       {isLoading ? (
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />
