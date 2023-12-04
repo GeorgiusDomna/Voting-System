@@ -1,21 +1,35 @@
 import React from 'react';
 import { Formik, Form, Field } from 'formik';
 import './VotingForm.css'; 
-
+import {handelsubmit} from 'api/applicationService'
 interface VotingFormProps {
-  documentId: string;
+  token: string
+  documentId: number;
+  applicationId: number;
 }
 
-const VotingForm:React.FC<VotingFormProps> = ({ documentId }) => {
-  const handleSubmit = (values: { vote: string }) => {
+const VotingForm:React.FC<VotingFormProps> = ({ token, applicationId, documentId }) => {
+  const PostServer= (values: { vote: string }) => {
     //  логика для отправки данных на сервер
+    const existingStatus = values.vote === 'yes' ? 'ACCEPTED' : 'DENIED';
+    const votingValue = {
+        status: existingStatus,
+        comment: 'Success',
+    };
+        handelsubmit(token, applicationId, documentId, votingValue)
+    .then(result => {
+        console.log('Успешный результат:', result);
+    })
+    .catch(error => {
+        console.error('Ошибка:', error);
+    });
     console.log(`Документ ID: ${documentId}, Выбор: ${values.vote}`);
   };
 
   return (
     <div className="form-container">
       <h2 className="form-header">Отправить докумен {documentId} на подписание?</h2>
-      <Formik initialValues={{ vote: '' }} onSubmit={handleSubmit}>
+      <Formik initialValues={{ vote: '' }} onSubmit={PostServer}>
         <Form>
           <div className="form-label">
             <label>
