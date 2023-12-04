@@ -3,7 +3,7 @@ export default interface documentData {
   creatorId: number;
   documentConstructorTypeId: number;
   fieldsValues: { [key: string]: string };
-  files: string[];
+  files: { id: number; name: string }[];
   id: number;
   name: string;
   updateDate: string;

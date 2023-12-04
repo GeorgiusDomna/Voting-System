@@ -2,9 +2,9 @@ import { ChangeEvent, useState } from 'react';
 import styles from '../auth.module.css';
 
 interface InputTextProps {
-  type: 'text' | 'email';
+  type: 'text' | 'email' | 'date' | 'datetime-local';
   name: string;
-  placeholder: string;
+  placeholder?: string;
   value: string;
   error: string | undefined;
   handleChange: (e: string | ChangeEvent) => void;
@@ -31,7 +31,7 @@ const InputText = ({
           styles.input,
           `${(isFocus && error) || (submitCount >= 1 && error) ? styles.input_error : ''}`,
         ].join(' ')}
-        placeholder={placeholder}
+        placeholder={placeholder ?? ''}
         value={value}
         onChange={handleChange}
         onFocus={() => {

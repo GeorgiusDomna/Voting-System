@@ -1,5 +1,8 @@
 import TableItem from './TableItem/TableItem';
+import UserInfoModal from '../userInfoModal/UserInfoModal';
 import { observer } from 'mobx-react-lite';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 import IdocumentData from '@/interfaces/IdocumentData';
 import IdepartamentData from '@/interfaces/IdepartmentData';
@@ -9,6 +12,7 @@ import departIcon from '@/assets/depart.svg';
 import docIcon from '@/assets/docIcon.svg';
 import style from './table.module.css';
 import IUserInfo from '@/interfaces/userInfo';
+import { Paths } from '@/enums/Paths';
 
 interface Itype_el {
   title?: string;
@@ -28,11 +32,33 @@ const dateFormater = (inputDate: string): string => {
   return inputDate.split('T')[0].split('-').join('.');
 };
 const roleCheck = (role: { name: string }[]): string => {
-  if (role.length > 1) return 'Admin';
-  else return 'User';
+  return role.find((el) => el.name === 'ROLE_ADMIN') ? 'Admin' : 'User';
 };
 
 const Table: React.FC<ITableProps> = ({ dataList, type }) => {
+  const [isOpenUserInfo, setIsOpenUserInfo] = useState(false);
+  const [userInfo, setUserInfo] = useState<IUserInfo>({
+    id: -1,
+    position: '',
+    username: '',
+    email: '',
+    roles: [
+      {
+        name: '',
+      },
+    ],
+    firstName: '',
+    lastName: '',
+    patronymic: '',
+    departmentId: -1,
+    birthDate: '',
+  });
+  const navigate = useNavigate();
+
+  function toggleUserInfo() {
+    setIsOpenUserInfo(!isOpenUserInfo);
+  }
+
   let type_el: Itype_el = {};
   let tabelItems;
   switch (type) {
@@ -81,7 +107,9 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
           td3={dateFormater(data.creationDate)}
           td4={dateFormater(data.updateDate)}
           img={type_el.img}
-          callback={() => {}}
+          callback={() => {
+            navigate(`${Paths.DOCUMENTS}/${encodeURIComponent(data.id)}`);
+          }}
         />
       ));
     }
@@ -92,12 +120,14 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
           td1={data.name}
           td2={data.amountOfEmployee}
           img={type_el.img}
-          callback={() => {}}
+          callback={() => {
+            navigate(`${Paths.DEPARTMENTS}/${encodeURIComponent(data.name)}/${data.id}`);
+          }}
         />
       ));
     }
     if (type === 'user') {
-      tabelItems = dataList.map((data: documentData) => (
+      tabelItems = dataList.map((data) => (
         <TableItem
           key={data.id}
           td1={data.username}
@@ -105,27 +135,35 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
           td3={data.departmentId}
           td4={data.email}
           img={type_el.img}
-          callback={() => {}}
+          callback={() => {
+            setUserInfo(data as IUserInfo);
+            toggleUserInfo();
+          }}
         />
       ));
     }
   }
 
   return (
-    <table className={style.tabel}>
-      <thead>
-        <tr className={style.tableHeader}>
-          <th className={style.th_name} style={{ paddingLeft: '3.4rem' }}>
-            {type_el.th1}
-          </th>
-          <th>{type_el.th2}</th>
-          {type_el.th3 && <th>{type_el.th3}</th>}
-          {type_el.th4 && <th>{type_el.th4}</th>}
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>{tabelItems}</tbody>
-    </table>
+    <>
+      <table className={style.tabel}>
+        <thead>
+          <tr className={style.tableHeader}>
+            <th className={style.th_name} style={{ paddingLeft: '3.4rem' }}>
+              {type_el.th1}
+            </th>
+            <th>{type_el.th2}</th>
+            {type_el.th3 && <th>{type_el.th3}</th>}
+            {type_el.th4 && <th>{type_el.th4}</th>}
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>{tabelItems}</tbody>
+      </table>
+      {type === 'user' && isOpenUserInfo && (
+        <UserInfoModal isOpen={isOpenUserInfo} toggle={toggleUserInfo} userInfo={userInfo} />
+      )}
+    </>
   );
 };
 

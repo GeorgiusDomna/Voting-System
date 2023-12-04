@@ -91,7 +91,7 @@ class AuthStore {
  * authStore.setToken('string');
  *
  *  * // Удаление токена пользователя
- * authStore.deleteToken('string');
+ * authStore.deleteToken();
  *
  */
 const authStore = new AuthStore();

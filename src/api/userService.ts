@@ -5,7 +5,6 @@ import IUserInfo from '@/interfaces/userInfo';
 import AddUserToDepartmentParams from '@/interfaces/addUserToDepartament';
 
 import alertStore from '@/stores/AlertStore';
-import userStore from '@/stores/AuthStore';
 
 import { isOnline } from '@/utils/networkStatus';
 
@@ -13,15 +12,15 @@ const baseUrl = 'http://5.35.83.142:8082/api';
 const headers = {
   Accept: 'application/json',
   'Content-Type': 'application/json',
-  Authorization: `Bearer ${userStore.token}`,
 };
 
-export async function createUser(params: IUser) {
+export async function createUser(params: IUser, token: string) {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
   try {
     if (!isOnline()) throw new NetworkError();
-    const response = await fetch(`${baseUrl}user/`, {
+    const response = await fetch(`${baseUrl}/user/`, {
       method: 'POST',
-      headers,
+      headers: headersWithToken,
       body: JSON.stringify(params),
     });
     if (!response.ok) {
@@ -35,12 +34,61 @@ export async function createUser(params: IUser) {
   }
 }
 
-export async function addUserToDepartment({ userId, departmentId }: AddUserToDepartmentParams) {
+export async function deleteUser(id: number, token: string) {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
   try {
     if (!isOnline()) throw new NetworkError();
-    const response = await fetch(baseUrl + `user/${userId}`, {
+    const url = `${baseUrl}/user/${id}`;
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: headersWithToken,
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      throw new Error(error.message);
+    }
+    return response.status;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+}
+
+/**
+ * Получает данные о сотруднике.
+ *
+ * @returns {Promise<IUserInfo[] | void>} Промис, который разрешается объектом типа `IUserInfo` данных о сотруднике.
+ * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
+ *
+ */
+export async function getUserInfo(id: number, token: string): Promise<IUserInfo | void> {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
+  try {
+    if (!isOnline()) throw new NetworkError();
+    const url = `${baseUrl}/user/${id}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: headersWithToken,
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      throw new Error(error.message);
+    }
+    return await response.json();
+  } catch (error) {
+    alertStore.toggleAlert((error as Error).message);
+  }
+}
+
+export async function addUserToDepartment(
+  { userId, departmentId }: AddUserToDepartmentParams,
+  token: string
+) {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
+  try {
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(`${baseUrl}/user/${userId}`, {
       method: 'PUT',
-      headers,
+      headers: headersWithToken,
       body: JSON.stringify({ departmentId }),
     });
     if (!response.ok) {
@@ -49,7 +97,7 @@ export async function addUserToDepartment({ userId, departmentId }: AddUserToDep
     }
     return response.status;
   } catch (error) {
-    alertStore.toggleAlert((error as Error).message);
+    throw new Error((error as Error).message);
   }
 }
 
@@ -61,24 +109,26 @@ export async function addUserToDepartment({ userId, departmentId }: AddUserToDep
  *
  */
 export async function getUsersByDepartment(
+  token: string,
   id: number,
   page: number = 0,
   limit: number = 30
 ): Promise<IUserInfo[] | void> {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
   try {
     if (!isOnline()) throw new NetworkError();
     const url = `${baseUrl}/department/${id}/users?page=${page}&limit=${limit}&recordState=ACTIVE`;
     const response = await fetch(url, {
       method: 'GET',
-      headers,
+      headers: headersWithToken,
     });
     if (!response.ok) {
       const error: IFailedServerResponse = await response.json();
       return Promise.reject(error.message);
-    }
+    } else if (response.status === 204) return [];
     const data = await response.json();
     return data.content;
   } catch (error) {
-    alertStore.toggleAlert((error as Error).message);
+    throw new Error((error as Error).message);
   }
 }
