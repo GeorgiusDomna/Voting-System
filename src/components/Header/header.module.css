@@ -35,6 +35,7 @@
 }
 
 .header_icon_menu {
+    display: none;
     background-image: url('@/assets/menu.svg');
     background-size: 1.9rem;
 }
@@ -47,4 +48,10 @@
     right: 0;
     left: 0;
     opacity: 0;
+}
+
+@media (max-width: 768px) {
+    .header_icon_menu{
+        display: block;
+    }
 }

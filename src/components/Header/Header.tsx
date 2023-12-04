@@ -4,6 +4,7 @@ import userStore from '@/stores/AuthStore';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Paths } from '@/enums/Paths';
+import sideBarStore from '@/stores/SideBarStore';
 
 const Header: React.FC = () => {
   const { i18n } = useTranslation();
@@ -13,6 +14,10 @@ const Header: React.FC = () => {
   const logout = () => {
     userStore.setIsLoggedIn(false);
     userStore.deleteToken();
+  };
+
+  const turnSideBar = () => {
+    sideBarStore.setIsShown(!sideBarStore.isShown);
   };
 
   const handleClickLng = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -31,7 +36,10 @@ const Header: React.FC = () => {
       </a>
       <div>
         <ul className={styles.headerlist}>
-          {/*<li className={`${styles.header_icon} ${styles.header_icon_menu}`}></li>*/}
+          <li
+            className={`${styles.header_icon} ${styles.header_icon_menu}`}
+            onClick={turnSideBar}
+          ></li>
           <li className={`${styles.header_icon} ${styles.header_icon_lang}`}>
             <button
               className={styles.lang_button}
