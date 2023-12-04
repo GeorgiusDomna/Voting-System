@@ -34,6 +34,51 @@ export async function createUser(params: IUser, token: string) {
   }
 }
 
+export async function deleteUser(id: number, token: string) {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
+  try {
+    if (!isOnline()) throw new NetworkError();
+    const url = `${baseUrl}/user/${id}`;
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: headersWithToken,
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      throw new Error(error.message);
+    }
+    return response.status;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+}
+
+/**
+ * Получает данные о сотруднике.
+ *
+ * @returns {Promise<IUserInfo[] | void>} Промис, который разрешается объектом типа `IUserInfo` данных о сотруднике.
+ * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
+ *
+ */
+export async function getUserInfo(id: number, token: string): Promise<IUserInfo | void> {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
+  try {
+    if (!isOnline()) throw new NetworkError();
+    const url = `${baseUrl}/user/${id}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: headersWithToken,
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      throw new Error(error.message);
+    }
+    return await response.json();
+  } catch (error) {
+    alertStore.toggleAlert((error as Error).message);
+  }
+}
+
 export async function addUserToDepartment(
   { userId, departmentId }: AddUserToDepartmentParams,
   token: string
@@ -52,7 +97,7 @@ export async function addUserToDepartment(
     }
     return response.status;
   } catch (error) {
-    alertStore.toggleAlert((error as Error).message);
+    throw new Error((error as Error).message);
   }
 }
 
@@ -80,10 +125,10 @@ export async function getUsersByDepartment(
     if (!response.ok) {
       const error: IFailedServerResponse = await response.json();
       return Promise.reject(error.message);
-    }
+    } else if (response.status === 204) return [];
     const data = await response.json();
     return data.content;
   } catch (error) {
-    alertStore.toggleAlert((error as Error).message);
+    throw new Error((error as Error).message);
   }
 }

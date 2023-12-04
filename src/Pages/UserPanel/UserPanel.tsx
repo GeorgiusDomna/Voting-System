@@ -1,43 +1,34 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
-import { useNavigate, useParams } from 'react-router';
-
+import { useParams } from 'react-router';
 import Loading from '@/components/ContentBlock/Loading/Loading';
 import Table from '@/components/Table/Table';
 import AddUserModal from '@/components/ContentBlock/AddUserModal/AddUserModal';
+import DeleteDepartmentModal from '@/components/ContentBlock/DeleteDepartmentModal/DeleteDepartmentModal';
 
 import { getUsersByDepartment } from '@/api/userService';
-import { getUserMe } from '@/api/authService';
-
 import userStore from '@/stores/EmployeeStore';
 import alertStore from '@/stores/AlertStore';
 import authStore from '@/stores/AuthStore';
-
-import { Paths } from '@/enums/Paths';
-
 import plusIcon from '@/assets/plus.png';
+import trashIcon from '@/assets/trash.svg';
 import style from './userPanel.module.css';
+import { Paths } from '@/enums/Paths';
 
 const UserPanel: React.FC = () => {
   const { userList, setUserList } = userStore;
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const { id, name } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (authStore.token) {
-      getUserMe(authStore.token)
-        .then((res) => {
-          authStore.setUserInfo(res);
-          if (!authStore.isUserAdmin) navigate(Paths.ROOT);
-        })
-        .catch((error) => {
-          alertStore.toggleAlert(error);
-          authStore.deleteToken();
-        });
+    if (authStore.userInfo) {
+      if (!authStore.isUserAdmin) navigate(Paths.ROOT);
     }
-  }, [authStore.isLoggedIn]);
+  }, [authStore.userInfo]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,12 +51,22 @@ const UserPanel: React.FC = () => {
     setIsOpen(!isOpen);
   }
 
+  function toggleDeleteModal() {
+    setIsDeleteModalOpen(!isDeleteModalOpen);
+  }
+
   return (
     <div className={style.UserPanel}>
       <h2 className={style.UserPanel__title}>{decodeURIComponent(name as string)}</h2>
-      <div className={style.UserPanel__controls} onClick={toggle}>
-        <img className={style.UserPanel__img} src={plusIcon} alt='+' />
-        <button className={style.UserPanel__button}>Добавить пользователя</button>
+      <div className={style.UserPanel__controls}>
+        <div className={style.UserPanel__control} onClick={toggle}>
+          <img className={style.UserPanel__img} src={plusIcon} alt='+' />
+          <button className={style.UserPanel__button}>Добавить пользователя</button>
+        </div>
+        <div className={style.UserPanel__control} onClick={toggleDeleteModal}>
+          <img className={style.UserPanel__img} src={trashIcon} />
+          <button className={style.UserPanel__button}>Удалить департамент</button>
+        </div>
       </div>
       {isLoading ? (
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />
@@ -73,6 +74,13 @@ const UserPanel: React.FC = () => {
         <Table dataList={userList} type='user' />
       )}
       {id && <AddUserModal departmentId={+id} toggle={toggle} isOpen={isOpen} />}
+      {id && (
+        <DeleteDepartmentModal
+          departmentId={+id}
+          toggle={toggleDeleteModal}
+          isOpen={isDeleteModalOpen}
+        />
+      )}
     </div>
   );
 };

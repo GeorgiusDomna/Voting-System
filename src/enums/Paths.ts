@@ -3,6 +3,7 @@ export enum Paths {
   LOGIN = '/login',
   REGISTRATION = '/registration',
   DEPARTMENTS = '/departments',
+  DOCUMENTS = '/documents',
   DOCUMENTS_VOTE = '/documents-vote',
   ANY = '*',
 }

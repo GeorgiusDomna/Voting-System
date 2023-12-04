@@ -2,7 +2,7 @@ import { ChangeEvent, useState } from 'react';
 import styles from '../auth.module.css';
 
 interface InputTextProps {
-  type: 'text' | 'email' | 'date';
+  type: 'text' | 'email' | 'date' | 'datetime-local';
   name: string;
   placeholder?: string;
   value: string;
