@@ -1,5 +1,6 @@
 .sideBar {
   width: 27%;
+  min-height: 1000px;
   padding: 50px 30px 50px 30px;
   background-color: #ececec;
   display: flex;
@@ -42,6 +43,9 @@
 
   .sideBar_shown {
     transform: translateX(0);
+    border-radius: 0 2.5rem 2.5rem 0;
+    background-color: #ecececf5;
+    padding: 50px 30px 50px 30px;
   }
 }
 

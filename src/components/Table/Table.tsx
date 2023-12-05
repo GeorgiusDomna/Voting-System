@@ -68,7 +68,6 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
     case 'document':
       type_el = {
         th1: t(`${Localization.DocumentTable}.th1`),
-        th2: t(`${Localization.DocumentTable}.th2`),
         th3: t(`${Localization.DocumentTable}.th3`),
         th4: t(`${Localization.DocumentTable}.th4`),
         img: docIcon,
@@ -85,7 +84,6 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
       type_el = {
         th1: t(`${Localization.UserTable}.th1`),
         th2: t(`${Localization.UserTable}.th2`),
-        th3: t(`${Localization.UserTable}.th3`),
         th4: t(`${Localization.UserTable}.th4`),
         img: userIcon,
       };
@@ -106,9 +104,8 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
         <TableItem
           key={data.id}
           td1={data.name}
-          td2={data.creatorId}
-          td3={dateFormater(data.creationDate)}
-          td4={dateFormater(data.updateDate)}
+          td2={dateFormater(data.creationDate)}
+          td3={dateFormater(data.updateDate)}
           img={type_el.img}
           callback={() => {
             navigate(`${Paths.DOCUMENTS}/${encodeURIComponent(data.id)}`);
@@ -135,8 +132,7 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
           key={data.id}
           td1={data.username}
           td2={roleCheck(data.roles)}
-          td3={data.departmentId}
-          td4={data.email}
+          td3={data.email}
           img={type_el.img}
           callback={() => {
             setUserInfo(data as IUserInfo);
@@ -155,7 +151,7 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
             <th className={style.th_name} style={{ paddingLeft: '3.4rem' }}>
               {type_el.th1}
             </th>
-            <th>{type_el.th2}</th>
+            {type_el.th2 && <th>{type_el.th2}</th>}
             {type_el.th3 && <th>{type_el.th3}</th>}
             {type_el.th4 && <th>{type_el.th4}</th>}
             <th></th>

@@ -31,19 +31,19 @@
 }
 .header_icon_lang {
     background-image: url('@/assets/lang.svg');
-    background-size: 1.9rem;
+    background-size: 2.1rem;
     position: relative;
 }
 
 .header_icon_logout {
     background-image: url('@/assets/logout.svg');
-    background-size: 1.9rem;
+    background-size: 2.1rem;
 }
 
 .header_icon_menu {
     display: none;
     background-image: url('@/assets/menu.svg');
-    background-size: 1.9rem;
+    background-size: 2.1rem;
 }
 
 .lang_button {
