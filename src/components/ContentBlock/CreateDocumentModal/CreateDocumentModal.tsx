@@ -9,6 +9,8 @@ import InputUpload from '@/components/ContentBlock/CreateDocumentModal/InputUplo
 import authStore from '@/stores/AuthStore';
 import { createDoc, createFile } from '@/api/docuService';
 import alertStore from '@/stores/AlertStore';
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
 
 interface ICreateDocumentModalProps {
   toggle: () => void;
@@ -39,10 +41,13 @@ const CreateDocumentModal: React.FC<ICreateDocumentModalProps> = observer(
     const [images, setImages] = useState<valuesImages[]>([]);
     const [files, setFiles] = useState<valuesFiles[]>([]);
     const [count, setCount] = useState<number>(0);
+    const { t } = useTranslation();
 
     const CreateDocumentSchema = Yup.object().shape({
-      docname: Yup.string().min(2, 'Минимум 2 символа').required('Поле обязательно для заполнения'),
-      file: Yup.string().required('Загрузите файлы'),
+      docname: Yup.string()
+        .min(2, t(Localization.Min2Chars))
+        .required(t(Localization.FieldRequired)),
+      file: Yup.string().required(t(`${Localization.DocumentModal}.UploadFile`)),
     });
 
     function handleSubmit(values: values, { resetForm }: FormikHelpers<values>) {
@@ -76,7 +81,11 @@ const CreateDocumentModal: React.FC<ICreateDocumentModalProps> = observer(
     }
 
     return (
-      <Modal isOpen={isOpen} contentLabel='Модальное окно' className={styles.modal}>
+      <Modal
+        isOpen={isOpen}
+        contentLabel={t(`${Localization.DocumentModal}.ModalWindow`)}
+        className={styles.modal}
+      >
         <button className={styles.modal__close} onClick={toggle} />
         <Formik
           initialValues={{
@@ -93,7 +102,7 @@ const CreateDocumentModal: React.FC<ICreateDocumentModalProps> = observer(
               <InputText
                 type='text'
                 name='docname'
-                placeholder='Название документа'
+                placeholder={t(`${Localization.DocumentModal}.DocumentName`)}
                 value={values.docname}
                 error={errors.docname}
                 handleChange={handleChange}
@@ -122,7 +131,7 @@ const CreateDocumentModal: React.FC<ICreateDocumentModalProps> = observer(
               </ul>
               <InputUpload
                 name='file'
-                placeholder='Название документа'
+                placeholder={t(`${Localization.DocumentModal}.DocumentName`)}
                 value={values.file}
                 error={errors.file}
                 handleChange={handleChange}
@@ -139,7 +148,7 @@ const CreateDocumentModal: React.FC<ICreateDocumentModalProps> = observer(
                 className={styles.button}
                 disabled={submitCount >= 1 && !isValid}
               >
-                Добавить документ
+                {t(`${Localization.DocumentPanel}.AddDocument`)}
               </button>
             </Form>
           )}

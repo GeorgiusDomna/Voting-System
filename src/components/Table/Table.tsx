@@ -13,6 +13,8 @@ import docIcon from '@/assets/docIcon.svg';
 import style from './table.module.css';
 import IUserInfo from '@/interfaces/userInfo';
 import { Paths } from '@/enums/Paths';
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
 
 interface Itype_el {
   title?: string;
@@ -54,6 +56,7 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
     birthDate: '',
   });
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   function toggleUserInfo() {
     setIsOpenUserInfo(!isOpenUserInfo);
@@ -64,26 +67,24 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
   switch (type) {
     case 'document':
       type_el = {
-        th1: 'Название',
-        th2: 'Автор',
-        th3: 'Дата создания',
-        th4: 'Обновление',
+        th1: t(`${Localization.DocumentTable}.th1`),
+        th3: t(`${Localization.DocumentTable}.th3`),
+        th4: t(`${Localization.DocumentTable}.th4`),
         img: docIcon,
       };
       break;
     case 'department':
       type_el = {
-        th1: 'Название',
-        th2: 'Количество сотрудников',
+        th1: t(`${Localization.DepartmentTable}.th1`),
+        th2: t(`${Localization.DepartmentTable}.th2`),
         img: departIcon,
       };
       break;
     case 'user':
       type_el = {
-        th1: 'Имя',
-        th2: 'Роль',
-        th3: 'Департамент',
-        th4: 'email',
+        th1: t(`${Localization.UserTable}.th1`),
+        th2: t(`${Localization.UserTable}.th2`),
+        th4: t(`${Localization.UserTable}.th4`),
         img: userIcon,
       };
       break;
@@ -103,9 +104,8 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
         <TableItem
           key={data.id}
           td1={data.name}
-          td2={data.creatorId}
-          td3={dateFormater(data.creationDate)}
-          td4={dateFormater(data.updateDate)}
+          td2={dateFormater(data.creationDate)}
+          td3={dateFormater(data.updateDate)}
           img={type_el.img}
           callback={() => {
             navigate(`${Paths.DOCUMENTS}/${encodeURIComponent(data.id)}`);
@@ -132,8 +132,7 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
           key={data.id}
           td1={data.username}
           td2={roleCheck(data.roles)}
-          td3={data.departmentId}
-          td4={data.email}
+          td3={data.email}
           img={type_el.img}
           callback={() => {
             setUserInfo(data as IUserInfo);
@@ -152,7 +151,7 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
             <th className={style.th_name} style={{ paddingLeft: '3.4rem' }}>
               {type_el.th1}
             </th>
-            <th>{type_el.th2}</th>
+            {type_el.th2 && <th>{type_el.th2}</th>}
             {type_el.th3 && <th>{type_el.th3}</th>}
             {type_el.th4 && <th>{type_el.th4}</th>}
             <th></th>

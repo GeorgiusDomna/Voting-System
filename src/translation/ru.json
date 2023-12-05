@@ -1,26 +1,78 @@
 {
-  "Categories": "Категории",
-  "All documents": "Все документы",
-  "Create category": "Создать новую категорию",
-  "Upload document": "Загрузить новый документ",
-  "Category name": "Название новой категории",
-  "Choose document": "Выберите документ",
-  "Enter a new document name": "Введите новое название документа. Разрешаются цифры и латинские буквы.",
-  "Cancel": "Отмена",
-  "Create": "Создать",
-  "Upload": "Загрузить",
-  "See": "Просмотреть документ",
-  "Rename doc": "Переименовать документ",
-  "Recovery": "Восстановить документ",
-  "Move doc": "Переместить документ",
-  "Delete": "Удалить документ",
-  "Settings": "Панель взаимодействия с документом",
-  "New name": "Новое название",
-  "Rename": "Переименовать",
-  "Choose a category": "Выберите категорию",
-  "Main folder": "Главная папка",
-  "Move": "Переместить",
-  "Basket": "Корзина",
-  "File exist": "Файл с таким именем уже существует. Перезаписать?",
-  "File moved": "Файл успешно перемещён."
-}
+  "Login":"Войти",
+  "Register":"Регистрация",
+  "Registration":"Зарегистрироваться",
+  "EnterLogin": "Введите логин",
+  "EnterPassword": "Введите пароль",
+  "Min2Chars": "Минимум 2 символа",
+  "Min8Chars": "Минимум 8 символов",
+  "FieldRequired": "Поле обязательно для заполнения",
+  "PasswordsNotMatch": "Пароли не совпадают",
+  "RepeatPassword":"Повторите пароль",
+  "CheckEmail": "Проверьте правильность email адреса",
+  "EnterEmail":"Введите email",
+  "Documents":"Документы",
+  "ManagementDocuments": "Управление документами",
+  "ManagementDepartments": "Управление департаментами",
+  "DocumentsInReview": "Документы на рассмотрении",
+  "FunctionsTitle": "Функции",
+  "LogOut":"Выйти",
+  
+  "DocumentTable": {
+    "th1": "Название",
+    "th2": "Автор",
+    "th3": "Дата создания",
+    "th4": "Обновление"
+  },
+    "DepartmentTable": {
+      "th1": "Название",
+      "th2": "Количество сотрудников"
+    },
+    "UserTable": {
+      "th1": "Имя",
+      "th2": "Роль",
+      "th3": "Департамент",
+      "th4": "Email"
+    },
+    "FormDepartment": {
+      "newDepartmentPlaceholder": "Название нового департамента",
+      "createButton": "Создать",
+      "noInternetConnection": "Нет подключения к интернету"
+    },
+    "DepartmentPanel": {
+      "title": "Работа с департаментами"
+    },
+    "AddUserModal": {
+      "modalLabel": "Модальное окно",
+      "closeIconAlt": "Закрыть модальное окно",
+      "usernamePlaceholder": "Введите логин",
+      "passwordPlaceholder": "Введите пароль",
+      "emailPlaceholder": "Введите email",
+      "birthDatePlaceholder": "Выберите дату рождения",
+      "firstNamePlaceholder": "Введите имя",
+      "lastNamePlaceholder": "Введите фамилию",
+      "addUserButton": "Добавить пользователя",
+      "successMessage": "Пользователь успешно добавлен"
+    },
+    "UserPanel": {
+      "title": "Панель управления пользователями",
+      "addUserButton": "Добавить пользователя",
+      "deleteDepartmentButton": "Удалить департамент",
+      "errorAlert": "Ошибка",
+      "loadingMessage": "Загрузка...",
+      "plusIconAlt": "Добавить",
+      "trashIconAlt": "Удалить"
+    },
+    "DocumentPanel":{
+      "AddDocument":"Добавить документ"
+    },
+    "DocumentModal":{
+      "UploadFile":"Загрузите файл",
+      "ModalWindow":"Модальное окно",
+      "DocumentName":"Название документа",
+      "AttachFiles":"Прикрепить файлы"
+    }
+    
+
+  }
+  

@@ -38,9 +38,20 @@
     height: 35px;
     margin-left: 10px;
     border-radius: 10px;
-    border: 1px solid #212529;
+    border-color: #bebebe;
+    cursor: pointer;
+    background-color: rgb(224, 224, 224);
+}
+.btn:disabled {
+    border-color: #d4d4d4;
+    opacity: 0.8;
+    transition: 0.3s;
 }
 
 .btn:hover{
-    background-color: #8895a2;
+    opacity: 0.8;
+    transition: 0.2s;
+}
+.btn:active{
+    background-color: rgb(207, 207, 207);
 }

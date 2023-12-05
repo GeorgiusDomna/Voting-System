@@ -1,6 +1,8 @@
 import { ChangeEvent, Dispatch, useState } from 'react';
 import styles from './inputUpload.module.css';
 import docImage from '@/assets/doc.png';
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
 
 interface InputUploadProps {
   name: string;
@@ -31,7 +33,7 @@ const InputUpload = ({
   setCount,
 }: InputUploadProps) => {
   const [isFocus, setIsFocus] = useState(false);
-
+  const { t } = useTranslation();
   const handleChangeFileValue = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
@@ -78,7 +80,9 @@ const InputUpload = ({
         />
         <div className={styles.containerFlex}>
           <div className={styles.inputFileBtn} />
-          <p className={styles.inputFileBtnName}>Прикрепить файлы</p>
+          <p className={styles.inputFileBtnName}>
+            {t(`${Localization.DocumentModal}.AttachFiles`)}
+          </p>
         </div>
       </label>
       <p className={styles.error}>{(isFocus && error) || (submitCount >= 1 && error && error)}</p>

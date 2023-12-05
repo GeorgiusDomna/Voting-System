@@ -16,6 +16,9 @@ import trashIcon from '@/assets/trash.svg';
 import style from './userPanel.module.css';
 import { Paths } from '@/enums/Paths';
 
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
+
 const UserPanel: React.FC = () => {
   const { userList, setUserList } = userStore;
   const [isLoading, setIsLoading] = useState(false);
@@ -23,6 +26,7 @@ const UserPanel: React.FC = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const { id, name } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (authStore.userInfo) {
@@ -38,7 +42,7 @@ const UserPanel: React.FC = () => {
           res && setUserList(res);
         }
       } else {
-        alertStore.toggleAlert('Ошибка');
+        alertStore.toggleAlert(t(`${Localization.UserPanel}.errorAlert`));
         setIsLoading(false);
       }
       setIsLoading(false);
@@ -61,11 +65,15 @@ const UserPanel: React.FC = () => {
       <div className={style.UserPanel__controls}>
         <div className={style.UserPanel__control} onClick={toggle}>
           <img className={style.UserPanel__img} src={plusIcon} alt='+' />
-          <button className={style.UserPanel__button}>Добавить пользователя</button>
+          <button className={style.UserPanel__button}>
+            {t(`${Localization.UserPanel}.addUserButton`)}
+          </button>
         </div>
         <div className={style.UserPanel__control} onClick={toggleDeleteModal}>
           <img className={style.UserPanel__img} src={trashIcon} />
-          <button className={style.UserPanel__button}>Удалить департамент</button>
+          <button className={style.UserPanel__button}>
+            {t(`${Localization.UserPanel}.deleteDepartmentButton`)}
+          </button>
         </div>
       </div>
       {isLoading ? (
