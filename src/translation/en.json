@@ -69,6 +69,41 @@
       "UploadFile":"Upload file",
       "ModalWindow":"Modal window",
       "DocumentName":"Document name",
-      "AttachFiles":"Attach files"
+      "AttachFiles":"Attach files",
+      "imageLoadError": "Error loading the image",
+      "documentInfoTitle": "Document Information:",
+      "authorInfoTitle": "Author Information:",
+      "fileName": "Name:",
+      "id": "id:",
+      "created": "Created:",
+      "updated": "Updated:",
+      "name": "Name:",
+      "login": "Login:",
+      "department": "Department:",
+      "email": "Email:"
+    },
+    "CreateApplicationModal": {
+      "modalLabel": "Modal Window",
+      "closeIconAlt": "Close modal window",
+      "dateNotEarlierThanToday": "Choose a date not earlier than today",
+      "chooseEndDate": "Choose the voting end date",
+      "archiveCreationError": "Error creating the archive",
+      "votingNamePlaceholder": "Voting Name",
+      "deadlinePlaceholder": "Deadline",
+      "attachedDocuments": "Attached Documents:",
+      "downloadArchiveButton": "Download Archive",
+      "downloadButton": "Download",
+      "createVotingButton": "Create Voting"
+    },
+    "UserInfoModal": {
+      "username": "Username:",
+      "name": "Name:",
+      "lastname": "Lastname:",
+      "birthday": "Birthday:",
+      "email": "Email:",
+      "department": "Department:",
+      "move": "Move",
+      "delete": "Delete",
+      "withoutDepartment": "Without Department"
     }
 }

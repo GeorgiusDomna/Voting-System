@@ -12,6 +12,8 @@ import documentData from '@/interfaces/IdocumentData';
 import authStore from '@/stores/AuthStore';
 import { connectDocToApplication, createApplication } from '@/api/applicationService';
 import JSZip from 'jszip';
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
 
 interface ICreateApplicationModalProps {
   toggle: () => void;
@@ -52,12 +54,14 @@ const CreateApplicationModal: React.FC<ICreateApplicationModalProps> = observer(
         url: '',
       },
     ]);
-
+    const { t } = useTranslation();
     const CreateApplicationSchema = Yup.object().shape({
-      docapp: Yup.string().min(2, 'Минимум 2 символа').required('Поле обязательно для заполнения'),
+      docapp: Yup.string()
+        .min(2, t(Localization.Min2Chars))
+        .required(t(Localization.FieldRequired)),
       deadline: Yup.date()
-        .min(new Date(), 'Выберите дату, не ранее сегодняшней')
-        .required('Выберите дату окончания голосования'),
+        .min(new Date(), t(`${Localization.CreateApplicationModal}.dateNotEarlierThanToday`))
+        .required(t(`${Localization.CreateApplicationModal}.chooseEndDate`)),
     });
 
     useEffect(() => {
@@ -145,12 +149,18 @@ const CreateApplicationModal: React.FC<ICreateApplicationModalProps> = observer(
           document.body.removeChild(link);
         })
         .catch((error) => {
-          alertStore.toggleAlert(`Ошибка при создании архива: ${error}`);
+          alertStore.toggleAlert(
+            t(`${Localization.CreateApplicationModal}.archiveCreationError`) + ' ' + `: ${error}`
+          );
         });
     }
 
     return (
-      <Modal isOpen={isOpen} contentLabel='Модальное окно' className={styles.modal}>
+      <Modal
+        isOpen={isOpen}
+        contentLabel={t(`${Localization.CreateApplicationModal}.modalLabel`)}
+        className={styles.modal}
+      >
         <button className={styles.modal__close} onClick={toggle} />
         <Formik
           initialValues={{
@@ -167,7 +177,7 @@ const CreateApplicationModal: React.FC<ICreateApplicationModalProps> = observer(
               <InputText
                 type='text'
                 name='docapp'
-                placeholder='Название голосования'
+                placeholder={t(`${Localization.CreateApplicationModal}.votingNamePlaceholder`)}
                 value={values.docapp}
                 error={errors.docapp}
                 handleChange={handleChange}
@@ -176,14 +186,14 @@ const CreateApplicationModal: React.FC<ICreateApplicationModalProps> = observer(
               <InputText
                 type='datetime-local'
                 name='deadline'
-                placeholder='Дата окончания'
+                placeholder={t(`${Localization.CreateApplicationModal}.deadlinePlaceholder`)}
                 value={values.deadline}
                 error={errors.deadline}
                 handleChange={handleChange}
                 submitCount={submitCount}
               />
               <ul className={stylesApp.listDocs}>
-                Прикрепленные документы:
+                {t(`${Localization.CreateApplicationModal}.attachedDocuments`)}
                 <li>
                   <ul className={stylesApp.listFiles}>
                     <p className={stylesApp.docName} title={docInfo.name}>
@@ -205,7 +215,7 @@ const CreateApplicationModal: React.FC<ICreateApplicationModalProps> = observer(
                             type='button'
                             onClick={() => handleDownloadDocument(item.id, item.name)}
                           >
-                            Скачать
+                            {t(`${Localization.CreateApplicationModal}.downloadButton`)}
                           </button>
                         </li>
                       ))}
@@ -217,14 +227,14 @@ const CreateApplicationModal: React.FC<ICreateApplicationModalProps> = observer(
                 className={stylesApp.button}
                 onClick={handleDownloadDocumentArchive}
               >
-                Скачать архив
+                {t(`${Localization.CreateApplicationModal}.downloadArchiveButton`)}
               </button>
               <button
                 type='submit'
                 className={styles.button}
                 disabled={submitCount >= 1 && !isValid}
               >
-                Создать голосование
+                {t(`${Localization.CreateApplicationModal}.createVotingButton`)}
               </button>
             </Form>
           )}

@@ -70,9 +70,41 @@
       "UploadFile":"Загрузите файл",
       "ModalWindow":"Модальное окно",
       "DocumentName":"Название документа",
-      "AttachFiles":"Прикрепить файлы"
+      "AttachFiles":"Прикрепить файлы",
+      "imageLoadError": "Ошибка при загрузке изображения",
+      "documentInfoTitle": "Информация о документе:",
+      "authorInfoTitle": "Информация об авторе:",
+      "fileName": "Название:",
+      "created": "Создан:",
+      "updated": "Обновлён:",
+      "name": "Имя:",
+      "login": "Логин:",
+      "department": "Департамент:",
+      "email": "Email:"
+    },
+    "CreateApplicationModal": {
+      "modalLabel": "Модальное окно",
+      "closeIconAlt": "Закрыть модальное окно",
+      "dateNotEarlierThanToday": "Выберите дату, не ранее сегодняшней",
+      "chooseEndDate": "Выберите дату окончания голосования",
+      "archiveCreationError": "Ошибка при создании архива",
+      "votingNamePlaceholder": "Название голосования",
+      "deadlinePlaceholder": "Дата окончания",
+      "attachedDocuments": "Прикрепленные документы:",
+      "downloadArchiveButton": "Скачать архив",
+      "downloadButton": "Скачать",
+      "createVotingButton": "Создать голосование"
+    },
+    "UserInfoModal": {
+      "username": "Имя пользователя:",
+      "name": "Имя:",
+      "lastname": "Фамилия:",
+      "birthday": "Дата рождения:",
+      "email": "Email:",
+      "department": "Департамент:",
+      "move": "Переместить",
+      "delete": "Удалить",
+      "withoutDepartment": "Без департамента"
     }
-    
-
   }
   

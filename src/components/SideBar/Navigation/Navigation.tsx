@@ -17,7 +17,10 @@ const Navigation: React.FC = observer(() => {
         setNavItems(
           <>
             <CategoryItem path={Paths.ROOT} category={t(Localization.ManagementDocuments)} />
-            <CategoryItem path={Paths.DEPARTMENTS} category={t(Localization.ManagementDocuments)} />
+            <CategoryItem
+              path={Paths.DEPARTMENTS}
+              category={t(Localization.ManagementDepartments)}
+            />
           </>
         );
       } else {
