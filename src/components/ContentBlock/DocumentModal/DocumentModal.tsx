@@ -16,23 +16,30 @@ import { Paths } from '@/enums/Paths';
 import { dateFormater } from '@/utils/dateFormater';
 
 import closeIcon from '@/assets/cancel.svg';
-import defaultImg from '@/assets/testDocument.png';
+import defaultImg from '@/assets/defaultImg.svg';
 import style from './documentModal.module.css';
 
 if (process.env.NODE_ENV !== 'test') Modal.setAppElement('#root');
 
 const DocumentModal: React.FC = () => {
-  const [dataDoc, setDataDoc] = useState<IdocumentData | null>();
-  const [dataUser, setDataUser] = useState<userInfo | null>();
-  const [dataDepart, setDataDepart] = useState<IdepartmentData | null>();
   const navigate = useNavigate();
   const { id } = useParams();
+  const [dataDoc, setDataDoc] = useState<IdocumentData | null>();
+  const [docUrl, setDocUrl] = useState<{ file: string; fileName?: string }[]>([
+    { file: defaultImg },
+  ]);
+  const [currentImg, setCurrentImg] = useState(0);
+  const [dataUser, setDataUser] = useState<userInfo | null>();
+  const [dataDepart, setDataDepart] = useState<IdepartmentData | null>();
+  const dots: JSX.Element[] = [];
 
   const closeModal = () => {
     navigate(Paths.ROOT);
     setDataDoc(null);
+    setDocUrl([{ file: defaultImg }]);
     setDataUser(null);
     setDataDepart(null);
+    setCurrentImg(0);
     window.removeEventListener('keyup', closeModalEsc);
   };
 
@@ -45,13 +52,29 @@ const DocumentModal: React.FC = () => {
     alertStore.toggleAlert('Ошибка при загрузке изображения');
   };
 
+  const switchCurrentDoc = (action: boolean) => {
+    action
+      ? setCurrentImg(currentImg + 1 === docUrl.length ? 0 : currentImg + 1)
+      : setCurrentImg(currentImg === 0 ? docUrl.length - 1 : currentImg - 1);
+  };
+
   useEffect(() => {
     (async () => {
       if (id && authStore.token) {
         const resDoc = await getDocumetData(+id);
         if (resDoc) {
           setDataDoc(resDoc);
-          const resUser = await getUserInfo(resDoc.creatorId);
+          if (resDoc.files[0]) {
+            setDocUrl(
+              resDoc.files.map((file) => {
+                return {
+                  file: `http://5.35.83.142:8082/api/doc/${resDoc.id}/file/${file.id}/download`,
+                  fileName: file.name,
+                };
+              })
+            );
+          }
+          const resUser = await getUserInfo(resDoc.creatorId, authStore.token);
           if (resUser) {
             setDataUser(resUser);
             if (resUser.departmentId) {
@@ -65,15 +88,34 @@ const DocumentModal: React.FC = () => {
     window.addEventListener('keyup', closeModalEsc);
   }, [id]);
 
-  const docUrl: string = dataDoc?.files[0]
-    ? `http://5.35.83.142:8082/api/doc/${dataDoc.id}/file/1/download`
-    : defaultImg;
+  for (let i = 0; i < docUrl.length; i++) {
+    dots.push(
+      <span
+        key={i}
+        className={[style.dot, i == currentImg && style.active].join(' ')}
+        onClick={() => setCurrentImg(i)}
+      />
+    );
+  }
 
   return (
     <Modal isOpen={Boolean(id)} contentLabel='Модальное окно' className={style.modal}>
       <img src={closeIcon} className={style.modal__close} onClick={closeModal} />
       <div className={style.modal__document}>
-        <img src={docUrl} onError={handleImageError} />
+        <div className={style.imageContainer}>
+          <div className={style.document_header}>
+            <div className={style.fileName}>
+              <i>{docUrl[currentImg].fileName}</i>
+            </div>
+            <div className={style.fileControler}>
+              <button onClick={() => switchCurrentDoc(false)}>&lt;</button>
+              <button onClick={() => switchCurrentDoc(true)}>&gt;</button>
+            </div>
+          </div>
+          <img src={docUrl[currentImg].file} onError={handleImageError} />
+          <div className={style.dotContainer}>{dots}</div>
+        </div>
+
         <div className={style.documentInfo}>
           {dataDoc && (
             <>

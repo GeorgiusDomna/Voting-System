@@ -26,7 +26,7 @@ const headers = {
 export async function getAllDocuments(token: string): Promise<documentData[] | void> {
   const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
   try {
-    const url = `${baseUrl}/doc/filter?page=0&limit=20&state=ACTIVE`;
+    const url = `${baseUrl}/doc/filter?page=0&limit=200&state=ACTIVE`;
     if (!isOnline()) throw new NetworkError();
     const response = await fetch(url, {
       method: 'GET',
