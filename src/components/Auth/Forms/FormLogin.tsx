@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import { Paths } from '@/enums/Paths';
 import alertStore from '@/stores/AlertStore';
 import { observer } from 'mobx-react-lite';
-import userStore from '@/stores/UserStore';
 import { useTranslation } from 'react-i18next';
 import { Localization } from '@/enums/Localization';
 import authStore from '@/stores/AuthStore';

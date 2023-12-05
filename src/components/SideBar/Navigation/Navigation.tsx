@@ -8,25 +8,31 @@ import { useTranslation } from 'react-i18next';
 import { Localization } from '@/enums/Localization';
 
 const Navigation: React.FC = observer(() => {
+  const [navItems, setNavItems] = useState<ReactElement>();
   const { t } = useTranslation();
-  let navItems: ReactElement;
 
-  if (authStore.isUserAdmin) {
-    navItems = (
-      <>
-        <CategoryItem path={Paths.ROOT} category={t(Localization.ManagementDocuments)} />
-        <CategoryItem path={Paths.DEPARTMENTS} category={t(Localization.ManagementDocuments)} />
-      </>
-    );
-  } else {
-    navItems = (
-      <>
-        <CategoryItem path={Paths.ROOT} category={t(Localization.ManagementDocuments)} />
-        <CategoryItem path={Paths.DOCUMENTS_VOTE} category={t(Localization.DocumentsInReview)} />
-      </>
-    );
-  }
-
+  useEffect(() => {
+    if (authStore.userInfo && authStore.token) {
+      if (authStore.isUserAdmin) {
+        setNavItems(
+          <>
+            <CategoryItem path={Paths.ROOT} category={t(Localization.ManagementDocuments)} />
+            <CategoryItem path={Paths.DEPARTMENTS} category={t(Localization.ManagementDocuments)} />
+          </>
+        );
+      } else {
+        setNavItems(
+          <>
+            <CategoryItem path={Paths.ROOT} category={t(Localization.ManagementDocuments)} />
+            <CategoryItem
+              path={Paths.DOCUMENTS_VOTE}
+              category={t(Localization.DocumentsInReview)}
+            />
+          </>
+        );
+      }
+    }
+  }, [authStore.userInfo]);
   return (
     <>
       <h3 className={styles.title}>{t(Localization.FunctionsTitle)}</h3>

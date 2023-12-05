@@ -26,9 +26,6 @@ const DocumentPanel: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState<boolean | undefined>();
   const [isLoading, setIsLoading] = useState(false);
   const { t } = useTranslation();
-  const toggleModalWindow = () => {
-    setIsOpenModalWindow(!isOpenModalWindow);
-  };
 
   const toggleModalCreateDocument = () => {
     setIsOpenModalCreateDocument(!isOpenModalCreateDocument);
