@@ -13,7 +13,10 @@
     display: flex;
     gap: 5px;
 }
-
+.logo:hover {
+    opacity: 0.8;
+    transition: 0.3s;
+}
 .header_icon {
     min-width: 3rem;
     min-height: 3rem;
@@ -22,7 +25,10 @@
     background-repeat: no-repeat;
     cursor: pointer;
 }
-
+.header_icon:hover {
+    opacity: 0.6;
+    transition: 0.2s;
+}
 .header_icon_lang {
     background-image: url('@/assets/lang.svg');
     background-size: 1.9rem;
