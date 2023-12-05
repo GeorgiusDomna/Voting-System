@@ -11,7 +11,6 @@ import { Localization } from '@/enums/Localization';
 
 const FormDepartment: React.FC = observer(() => {
   const [newName, setNewName] = useState('');
-  const [isFormEmpty, setFormEmpty] = useState(true);
   const { t } = useTranslation();
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -39,7 +38,6 @@ const FormDepartment: React.FC = observer(() => {
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     setNewName(e.target.value);
-    setFormEmpty(e.target.value === '');
   }
 
   return (
@@ -54,7 +52,7 @@ const FormDepartment: React.FC = observer(() => {
           className={styles.inputName}
           placeholder={t(`${Localization.FormDepartment}.newDepartmentPlaceholder`)}
         />
-        <button type='submit' className={styles.btn} disabled={isFormEmpty}>
+        <button type='submit' className={styles.btn} disabled={!newName}>
           {t(`${Localization.FormDepartment}.createButton`)}
         </button>
       </form>
