@@ -35,7 +35,7 @@ const Navigation: React.FC = observer(() => {
         );
       }
     }
-  }, [authStore.userInfo]);
+  }, [authStore.userInfo, t]);
   return (
     <>
       <h3 className={styles.title}>{t(Localization.FunctionsTitle)}</h3>

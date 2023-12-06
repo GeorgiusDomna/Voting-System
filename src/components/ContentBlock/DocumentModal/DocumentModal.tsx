@@ -132,7 +132,8 @@ const DocumentModal: React.FC = () => {
               </h1>
               <div className={style.info}>
                 <div className={style.info_item}>
-                  {t(`${Localization.DocumentModal}.fileName`)} <i>{dataDoc.name}</i>
+                  {t(`${Localization.DocumentModal}.fileName`)}
+                  <i>{dataDoc.name}</i>
                 </div>
                 <div className={style.info_item}>
                   id: <i>{dataDoc.id}</i>

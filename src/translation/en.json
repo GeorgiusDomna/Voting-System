@@ -73,14 +73,14 @@
       "imageLoadError": "Error loading the image",
       "documentInfoTitle": "Document Information:",
       "authorInfoTitle": "Author Information:",
-      "fileName": "Name:",
+      "fileName": "Name: ",
       "id": "id:",
-      "created": "Created:",
-      "updated": "Updated:",
-      "name": "Name:",
-      "login": "Login:",
-      "department": "Department:",
-      "email": "Email:"
+      "created": "Created: ",
+      "updated": "Updated: ",
+      "name": "Name: ",
+      "login": "Login: ",
+      "department": "Department: ",
+      "email": "Email: "
     },
     "CreateApplicationModal": {
       "modalLabel": "Modal Window",
@@ -96,12 +96,12 @@
       "createVotingButton": "Create Voting"
     },
     "UserInfoModal": {
-      "username": "Username:",
-      "name": "Name:",
-      "lastname": "Lastname:",
-      "birthday": "Birthday:",
-      "email": "Email:",
-      "department": "Department:",
+      "username": "Login: ",
+      "name": "Name: ",
+      "lastname": "Lastname: ",
+      "birthday": "Birthday: ",
+      "email": "Email: ",
+      "department": "Department: ",
       "move": "Move",
       "delete": "Delete",
       "withoutDepartment": "Without Department"

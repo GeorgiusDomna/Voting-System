@@ -74,13 +74,13 @@
       "imageLoadError": "Ошибка при загрузке изображения",
       "documentInfoTitle": "Информация о документе:",
       "authorInfoTitle": "Информация об авторе:",
-      "fileName": "Название:",
-      "created": "Создан:",
-      "updated": "Обновлён:",
-      "name": "Имя:",
-      "login": "Логин:",
-      "department": "Департамент:",
-      "email": "Email:"
+      "fileName": "Название: ",
+      "created": "Создан: ",
+      "updated": "Обновлён: ",
+      "name": "Имя: ",
+      "login": "Логин: ",
+      "department": "Департамент: ",
+      "email": "Email: "
     },
     "CreateApplicationModal": {
       "modalLabel": "Модальное окно",
@@ -96,12 +96,12 @@
       "createVotingButton": "Создать голосование"
     },
     "UserInfoModal": {
-      "username": "Имя пользователя:",
-      "name": "Имя:",
-      "lastname": "Фамилия:",
-      "birthday": "Дата рождения:",
-      "email": "Email:",
-      "department": "Департамент:",
+      "username": "Логин: ",
+      "name": "Имя: ",
+      "lastname": "Фамилия: ",
+      "birthday": "Дата рождения: ",
+      "email": "Email: ",
+      "department": "Департамент: ",
       "move": "Переместить",
       "delete": "Удалить",
       "withoutDepartment": "Без департамента"
