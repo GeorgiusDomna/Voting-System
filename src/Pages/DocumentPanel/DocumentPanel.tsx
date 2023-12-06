@@ -1,21 +1,21 @@
 import { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
 
 import Table from '@/components/Table/Table';
 import Loading from '@/components/ContentBlock/Loading/Loading';
 import DocumentModal from '@/components/ContentBlock/DocumentModal/DocumentModal';
 import CreateDocumentModal from '@/components/ContentBlock/CreateDocumentModal/CreateDocumentModal';
-import { getAllDocuments } from '@/api/docuService';
+import ModalConfirmAddApplication from '@/components/ContentBlock/CreateDocumentModal/ModalConfirmAddApplication/ModalConfirmAddApplication';
+import CreateApplicationModal from '@/components/ContentBlock/CreateApplicationModal/CreateApplicationModal';
+
 import documentStore from '@/stores/DocumentStore';
 import authStore from '@/stores/AuthStore';
-
-import { useTranslation } from 'react-i18next';
-import { Localization } from '@/enums/Localization';
+import { getAllDocuments } from '@/api/docuService';
 
 import style from './documentPanel.module.css';
 import plusIcon from '@/assets/plus.png';
-import ModalConfirmAddApplication from '@/components/ContentBlock/CreateDocumentModal/ModalConfirmAddApplication/ModalConfirmAddApplication';
-import CreateApplicationModal from '@/components/ContentBlock/CreateApplicationModal/CreateApplicationModal';
 
 const DocumentPanel: React.FC = () => {
   const { documentList, setDocumentList } = documentStore;
@@ -23,7 +23,6 @@ const DocumentPanel: React.FC = () => {
   const [isOpenModalConfirmAddApplication, setIsOpenModalConfirmAddApplication] = useState(false);
   const [isOpenModalCreateApplication, setIsOpenModalCreateApplication] = useState(false);
   const [idDoc, setIdDoc] = useState<number | null>(null);
-  const [isAdmin, setIsAdmin] = useState<boolean | undefined>();
   const [isLoading, setIsLoading] = useState(false);
   const { t } = useTranslation();
 
@@ -33,22 +32,12 @@ const DocumentPanel: React.FC = () => {
 
   const toggleModalConfirmAddApplication = (id: number | null = null) => {
     setIsOpenModalConfirmAddApplication(!isOpenModalConfirmAddApplication);
-    if (id) {
-      setIdDoc(id);
-    } else {
-      setIdDoc(null);
-    }
+    setIdDoc(id ? id : null);
   };
 
   const toggleModalCreateApplication = () => {
     setIsOpenModalCreateApplication(!isOpenModalCreateApplication);
   };
-
-  useEffect(() => {
-    if (authStore.userInfo) {
-      setIsAdmin(authStore.isUserAdmin);
-    }
-  }, [authStore.userInfo]);
 
   useEffect(() => {
     setIsLoading(true);
