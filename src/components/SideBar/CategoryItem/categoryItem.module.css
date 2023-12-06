@@ -35,14 +35,6 @@
   background-image: url('@/assets/dir-active.svg');
 }
 
-.categoryItem_icon_trash {
-  background-image: url('@/assets/trash.svg');
-  background-size: 1.9rem;
-}
-.active .categoryItem_icon_trash {
-  background-image: url('@/assets/trash-active.svg');
-}
-
 @media (max-width: 768px) {
   .categoryItem {
     padding: 0.6rem 5px;
