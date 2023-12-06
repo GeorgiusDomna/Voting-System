@@ -5,7 +5,7 @@ export default interface IdataTable {
   fieldsValues?: { [key: string]: string };
   files?: { id: number; name: string }[];
   id: number;
-  name: string;
+  name?: string;
   updateDate?: string;
   amountOfEmployee?: number;
   position?: string;

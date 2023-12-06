@@ -119,7 +119,8 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
           td2={data.amountOfEmployee}
           img={type_el.img}
           callback={() => {
-            navigate(`${Paths.DEPARTMENTS}/${encodeURIComponent(data.name)}/${data.id}`);
+            data.name &&
+              navigate(`${Paths.DEPARTMENTS}/${encodeURIComponent(data.name)}/${data.id}`);
           }}
         />
       ));
