@@ -17,7 +17,10 @@ const Navigation: React.FC = observer(() => {
         setNavItems(
           <>
             <CategoryItem path={Paths.ROOT} category={t(Localization.ManagementDocuments)} />
-            <CategoryItem path={Paths.DEPARTMENTS} category={t(Localization.ManagementDocuments)} />
+            <CategoryItem
+              path={Paths.DEPARTMENTS}
+              category={t(Localization.ManagementDepartments)}
+            />
           </>
         );
       } else {
@@ -32,7 +35,7 @@ const Navigation: React.FC = observer(() => {
         );
       }
     }
-  }, [authStore.userInfo]);
+  }, [authStore.userInfo, t]);
   return (
     <>
       <h3 className={styles.title}>{t(Localization.FunctionsTitle)}</h3>

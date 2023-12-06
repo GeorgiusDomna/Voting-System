@@ -1,5 +1,5 @@
 import TableItem from './TableItem/TableItem';
-import UserInfoModal from '../userInfoModal/UserInfoModal';
+import UserInfoModal from '../userInfoModal/userInfoModal';
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -130,7 +130,9 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
       tabelItems = dataList.map((data) => (
         <TableItem
           key={data.id}
-          td1={data.username}
+          td1={
+            data.firstName && data.lastName ? `${data.firstName} ${data.lastName}` : data.username
+          }
           td2={roleCheck(data.roles)}
           td3={data.email}
           img={type_el.img}

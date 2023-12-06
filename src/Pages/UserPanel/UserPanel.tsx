@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { useParams } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
+import { Paths } from '@/enums/Paths';
+
 import Loading from '@/components/ContentBlock/Loading/Loading';
 import Table from '@/components/Table/Table';
 import AddUserModal from '@/components/ContentBlock/AddUserModal/AddUserModal';
@@ -11,13 +15,10 @@ import { getUsersByDepartment } from '@/api/userService';
 import userStore from '@/stores/EmployeeStore';
 import alertStore from '@/stores/AlertStore';
 import authStore from '@/stores/AuthStore';
+
+import style from './userPanel.module.css';
 import plusIcon from '@/assets/plus.png';
 import trashIcon from '@/assets/trash.svg';
-import style from './userPanel.module.css';
-import { Paths } from '@/enums/Paths';
-
-import { useTranslation } from 'react-i18next';
-import { Localization } from '@/enums/Localization';
 
 const UserPanel: React.FC = () => {
   const { userList, setUserList } = userStore;

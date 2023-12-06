@@ -26,4 +26,6 @@ export enum Localization {
   UserPanel = 'UserPanel',
   DocumentPanel = 'DocumentPanel',
   DocumentModal = 'DocumentModal',
+  CreateApplicationModal = 'CreateApplicationModal',
+  UserInfoModal = 'UserInfoModal',
 }

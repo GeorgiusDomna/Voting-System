@@ -18,11 +18,11 @@
   gap: 0px;
   margin-bottom: 15px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .dataList__controls:hover {
-  background-color: rgb(247, 247, 247);
+  opacity: 0.75;
 }
 
 .dataList__button {

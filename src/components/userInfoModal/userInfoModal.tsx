@@ -17,6 +17,9 @@ import styles from './userInfoModal.module.css';
 import closeIcon from '@/assets/cancel.svg';
 import blankAvatar from '@/assets/blank-avatar.png';
 
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
+
 interface userInfoModalProps {
   isOpen: boolean;
   toggle: () => void;
@@ -26,6 +29,7 @@ interface userInfoModalProps {
 const UserInfoModal: React.FC<userInfoModalProps> = ({ isOpen, toggle, userInfo }) => {
   const [departments, setDepartments] = useState<departamentData[]>([]);
   const [selectedValue, setSelectedValue] = useState(userInfo.departmentId);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,7 +77,11 @@ const UserInfoModal: React.FC<userInfoModalProps> = ({ isOpen, toggle, userInfo 
   }
 
   return (
-    <Modal isOpen={isOpen} contentLabel='Модальное окно' className={styles.userInfo__modal}>
+    <Modal
+      isOpen={isOpen}
+      contentLabel={t(`${Localization.DocumentModal}.ModalWindow`)}
+      className={styles.userInfo__modal}
+    >
       <div className={styles.userInfo}>
         <img src={closeIcon} className={styles.userInfo__close} onClick={toggle} />
         <div className={styles.userInfo__container}>
@@ -82,25 +90,24 @@ const UserInfoModal: React.FC<userInfoModalProps> = ({ isOpen, toggle, userInfo 
             <div className={styles.info}>
               <div className={styles.info_name}>
                 <span>
-                  <b>{'Username: '}</b>
+                  <b>{t(`${Localization.UserInfoModal}.username`)}</b>
                   {userInfo.username}
                 </span>
                 <span>
-                  <b>{'Name: '}</b>
+                  <b>{t(`${Localization.UserInfoModal}.name`)}</b>
                   {userInfo.firstName}
                 </span>
                 <span>
-                  <b>{'Lastname: '}</b>
+                  <b>{t(`${Localization.UserInfoModal}.lastname`)}</b>
                   {userInfo.lastName}
                 </span>
               </div>
               <div className={styles.info_info}>
                 <span>
-                  <b>{'Birthday: '}</b>
+                  <b>{t(`${Localization.UserInfoModal}.birthday`)}</b>
                   {userInfo.birthDate}
                 </span>
                 <span>
-                  {' '}
                   <b>{'Email: '}</b>
                   {userInfo.email}
                 </span>
@@ -116,7 +123,7 @@ const UserInfoModal: React.FC<userInfoModalProps> = ({ isOpen, toggle, userInfo 
               >
                 <option key={userInfo.departmentId} value={userInfo.departmentId}>
                   {departments.find((el) => el.id === userInfo.departmentId)?.name ||
-                    'Без департамента'}
+                    t(`${Localization.UserInfoModal}.withoutDepartment`)}
                 </option>
                 {departments.map((el) => {
                   if (el.id !== userInfo.departmentId) {
@@ -129,16 +136,16 @@ const UserInfoModal: React.FC<userInfoModalProps> = ({ isOpen, toggle, userInfo 
                 })}
                 {userInfo.departmentId !== -1 && (
                   <option key={-1} value={'-1'}>
-                    {'Без департамента'}
+                    {t(`${Localization.UserInfoModal}.withoutDepartment`)}
                   </option>
                 )}
               </select>
               <button className={styles.userInfo__button} onClick={moveHandler}>
-                Переместить
+                {t(`${Localization.UserInfoModal}.move`)}
               </button>
             </div>
             <button className={styles.userInfo__button} onClick={deleteHandler}>
-              Удалить
+              {t(`${Localization.UserInfoModal}.delete`)}
             </button>
           </div>
         </div>
