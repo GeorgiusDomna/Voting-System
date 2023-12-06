@@ -1,11 +1,25 @@
 .sideBar {
   width: 27%;
+  min-height: 1000px;
   padding: 50px 30px 50px 30px;
   background-color: #ececec;
   display: flex;
   flex-direction: column;
 
   position: relative;
+}
+
+.button {
+  margin-top: 20px;
+  border: none;
+  background-color: transparent;
+  width: fit-content;
+  transition: opacity 0.3s;
+}
+
+.button:hover {
+  cursor: pointer;
+  opacity: 0.8;
 }
 
 @media (max-width: 1000px) {
@@ -29,6 +43,9 @@
 
   .sideBar_shown {
     transform: translateX(0);
+    border-radius: 0 2.5rem 2.5rem 0;
+    background-color: #ecececf5;
+    padding: 50px 30px 50px 30px;
   }
 }
 

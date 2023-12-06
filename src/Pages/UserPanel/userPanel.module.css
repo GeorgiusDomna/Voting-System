@@ -1,0 +1,41 @@
+.UserPanel__title {
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-left: 0.8rem;
+}
+
+.UserPanel__img {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 5px auto 5px 2px;
+}
+
+.UserPanel__control{
+  display: flex;
+  height: fit-content;
+  background-color: rgb(224, 224, 224);
+  transition: all 0.2s ease;
+}
+
+.UserPanel__controls {
+  padding: 4px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.UserPanel__control:hover {
+  opacity: 0.75;
+}
+
+.UserPanel__button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  text-align: center;
+  display: inline;
+}

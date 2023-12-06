@@ -1,0 +1,56 @@
+.modal {
+  display: inline-flex;
+  flex-direction: column;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(227, 225, 225);
+  padding: 20px;
+  border: 1px solid rgb(199, 199, 199);
+  border-radius: 5px;
+}
+
+.modal__close {
+  margin-left: auto;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.button {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 5px;
+  background: linear-gradient(0deg, #003274 0%, #035fa2 100%);
+  padding: 10px 25px;
+  border: none;
+  color: #fff;
+  font-family: Ubuntu, Arial, Helvetica, sans-serif;
+  font-weight: 500;
+  transition: opacity 0.3s;
+  margin-top: 10px;
+}
+
+.button:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.button:disabled{
+  background: gray;
+}
+
+.form{
+  display: block;
+}
+
+.checkboxInput{
+  float: right;
+  position: relative;
+  margin-left: 20px;
+  margin-right: auto;
+}
+
+.question{
+  margin: 10px;
+}

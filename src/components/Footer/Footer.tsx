@@ -4,7 +4,12 @@ import ghIcon from '../../assets/github_icon.png';
 const Footer: React.FC = () => {
   return (
     <footer className={styles.footer}>
-      <a className={styles.link} href='#' target='_blank' rel='noreferrer'>
+      <a
+        className={styles.link}
+        href='https://github.com/GeorgiusDomna/Voting-System'
+        target='_blank'
+        rel='noreferrer'
+      >
         <img src={ghIcon} alt='gh icon' />
         <span>2023</span>
       </a>

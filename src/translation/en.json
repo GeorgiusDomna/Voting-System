@@ -1,23 +1,109 @@
 {
-  "Categories": "Categories",
-  "All documents": "All documents",
-  "Create new category": "Create new category",
-  "Category name": "Name of the new category",
-  "Cancel": "Cancel",
-  "Create": "Create",
-  "See": "View the document",
-  "Rename doc": "Rename the document",
-  "Move doc": "Move the document",
-  "Delete": "Delete the document",
-  "Recovery": "Recovery the document",
-  "Settings": "The Document Interaction panel",
-  "New name": "New title",
-  "Rename": "Rename",
-  "Choose a category": "Choose a category",
-  "Main folder": "Main folder",
-  "Move": "Move",
-  "Basket": "Basket",
-  "Enter a new document name": "Enter a new document name. Numbers and Latin letters are allowed.",
-  "File exist": "A file with that name already exists. Overwrite it?",
-  "File moved": "The file has been moved successfully."
+  "login":"login",
+  "Register":"Register",
+  "Registration":"Register",
+  "EnterLogin": "Enter login",
+  "EnterPassword": "Enter password",
+  "Min2Chars": "Minimum 2 characters",
+  "Min8Chars": "Minimum 8 characters",
+  "FieldRequired": "Field is required",
+  "PasswordsNotMatch": "Passwords do not match",
+  "RepeatPassword":"Repeat your password",
+  "CheckEmail": "Check the correctness of the email address",
+  "EnterEmail":"Enter your email",
+  "Documents":"Documents",
+  "ManagementDocuments": "Document Management",
+  "ManagementDepartments": "Department Management",
+  "DocumentsInReview": "Documents In Review",
+  "FunctionsTitle": "Functions",
+  "LogOut":"Logout",
+  "DocumentTable": {
+    "th1": "Title",
+    "th2": "Author",
+    "th3": "Creation Date",
+    "th4": "Last Update"
+  },
+    "DepartmentTable": {
+      "th1": "Title",
+      "th2": "Number of Employees"
+    },
+    "UserTable": {
+      "th1": "Name",
+      "th2": "Role",
+      "th3": "Department",
+      "th4": "Email"
+    },
+    "FormDepartment": {
+      "newDepartmentPlaceholder": "New department name",
+      "createButton": "Create",
+      "noInternetConnection": "No internet connection"
+    },
+    "DepartmentPanel": {
+      "title": "Working with Departments"
+    },
+    "AddUserModal": {
+      "modalLabel": "Modal Window",
+      "closeIconAlt": "Close modal window",
+      "usernamePlaceholder": "Enter login",
+      "passwordPlaceholder": "Enter password",
+      "emailPlaceholder": "Enter email",
+      "birthDatePlaceholder": "Select birthdate",
+      "firstNamePlaceholder": "Enter first name",
+      "lastNamePlaceholder": "Enter last name",
+      "addUserButton": "Add User",
+      "successMessage": "User successfully added"
+    },
+    "UserPanel": {
+      "title": "User Management Panel",
+      "addUserButton": "Add User",
+      "deleteDepartmentButton": "Delete Department",
+      "errorAlert": "Error",
+      "loadingMessage": "Loading...",
+      "plusIconAlt": "Add",
+      "trashIconAlt": "Delete"
+    },
+    "DocumentPanel":{
+      "AddDocument":"Add Document"
+    },
+    "DocumentModal":{
+      "UploadFile":"Upload file",
+      "ModalWindow":"Modal window",
+      "DocumentName":"Document name",
+      "AttachFiles":"Attach files",
+      "imageLoadError": "Error loading the image",
+      "documentInfoTitle": "Document Information:",
+      "authorInfoTitle": "Author Information:",
+      "fileName": "Name: ",
+      "id": "id:",
+      "created": "Created: ",
+      "updated": "Updated: ",
+      "name": "Name: ",
+      "login": "Login: ",
+      "department": "Department: ",
+      "email": "Email: "
+    },
+    "CreateApplicationModal": {
+      "modalLabel": "Modal Window",
+      "closeIconAlt": "Close modal window",
+      "dateNotEarlierThanToday": "Choose a date not earlier than today",
+      "chooseEndDate": "Choose the voting end date",
+      "archiveCreationError": "Error creating the archive",
+      "votingNamePlaceholder": "Voting Name",
+      "deadlinePlaceholder": "Deadline",
+      "attachedDocuments": "Attached Documents:",
+      "downloadArchiveButton": "Download Archive",
+      "downloadButton": "Download",
+      "createVotingButton": "Create Voting"
+    },
+    "UserInfoModal": {
+      "username": "Login: ",
+      "name": "Name: ",
+      "lastname": "Lastname: ",
+      "birthday": "Birthday: ",
+      "email": "Email: ",
+      "department": "Department: ",
+      "move": "Move",
+      "delete": "Delete",
+      "withoutDepartment": "Without Department"
+    }
 }

@@ -1,0 +1,32 @@
+.dataList__title {
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-left: 0.8rem;
+}
+
+.dataList__img {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.dataList__controls {
+  padding: 4px;
+  font-size: 1.2rem;
+  background-color: rgb(224, 224, 224);
+  display: inline-flex;
+  align-items: center;
+  gap: 0px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dataList__controls:hover {
+  opacity: 0.75;
+}
+
+.dataList__button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
