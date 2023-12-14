@@ -4,6 +4,11 @@ import { isOnline } from '@/utils/networkStatus';
 
 const baseUrl = 'http://5.35.83.142:8082/api';
 
+const headers = {
+  Accept: 'application/json',
+  'Content-Type': 'application/json',
+};
+
 /**
  * Создает голосование.
  *
@@ -60,6 +65,64 @@ export async function connectDocToApplication(token: string, appId: number, docI
       throw new Error(error.message);
     }
     return await response.json();
+  } catch (error) {
+    return Promise.reject('Что-то пошло не так');
+  }
+}
+
+export async function getApplicationItemsByDepartment(token: string, depId: number) {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
+  try {
+    const url = `${baseUrl}/departament/${depId}/applicationItems`;
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: headersWithToken,
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      throw new Error(error.message);
+    }
+    return await response.json();
+  } catch (error) {
+    return Promise.reject('Что-то пошло не так');
+  }
+}
+
+export async function getApplication(token: string, appId: number) {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
+  try {
+    const url = `${baseUrl}/application/${appId}`;
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: headersWithToken,
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      throw new Error(error.message);
+    }
+    return await response.json();
+  } catch (error) {
+    return Promise.reject('Что-то пошло не так');
+  }
+}
+
+export async function takeApplicationItem(token: string, appItemId: number, appId: number) {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
+  try {
+    const url = `${baseUrl}/application/${appId}/applicationItem/${appItemId}/take`;
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: headersWithToken,
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      throw new Error(error.message);
+    }
+    const data = await response.json();
+    return data;
   } catch (error) {
     return Promise.reject('Что-то пошло не так');
   }
