@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import Modal from 'react-modal';
 
 import IdocumentData from '@/interfaces/IdocumentData';
 import IdepartmentData from '@/interfaces/IdepartmentData';
 import userInfo from '@/interfaces/userInfo';
+import { Paths } from '@/enums/Paths';
 
 import { getUserInfo } from '@/api/userService';
 import { getDepartmentData } from '@/api/departmentService';
@@ -12,7 +13,6 @@ import { getDocumetData } from '@/api/docuService';
 
 import alertStore from '@/stores/AlertStore';
 import authStore from '@/stores/AuthStore';
-import { Paths } from '@/enums/Paths';
 import { dateFormater } from '@/utils/dateFormater';
 
 import closeIcon from '@/assets/cancel.svg';
@@ -26,6 +26,7 @@ if (process.env.NODE_ENV !== 'test') Modal.setAppElement('#root');
 
 const DocumentModal: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams();
   const [dataDoc, setDataDoc] = useState<IdocumentData | null>();
   const [docUrl, setDocUrl] = useState<{ file: string; fileName?: string }[]>([
@@ -34,11 +35,12 @@ const DocumentModal: React.FC = () => {
   const [currentImg, setCurrentImg] = useState(0);
   const [dataUser, setDataUser] = useState<userInfo | null>();
   const [dataDepart, setDataDepart] = useState<IdepartmentData | null>();
+  const [prevLocation, setPrevLocation] = useState<null | string>(null);
   const dots: JSX.Element[] = [];
   const { t } = useTranslation();
 
   const closeModal = () => {
-    navigate(Paths.ROOT);
+    prevLocation ? navigate(prevLocation) : navigate(Paths.ROOT);
     setDataDoc(null);
     setDocUrl([{ file: defaultImg }]);
     setDataUser(null);
@@ -63,6 +65,7 @@ const DocumentModal: React.FC = () => {
   };
 
   useEffect(() => {
+    if (!id) setPrevLocation(location.pathname);
     (async () => {
       if (id && authStore.token) {
         const resDoc = await getDocumetData(+id);
