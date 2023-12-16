@@ -20,6 +20,7 @@ import {
 import FormLogin from '../Auth/Forms/FormLogin';
 import FormRegistration from '../Auth/Forms/FormRegistration';
 import DocumentPanel from '@/Pages/DocumentPanel/DocumentPanel';
+import NotFoundPage from '../errorPage/PageNotFound';
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -81,7 +82,7 @@ const App: React.FC = () => {
           <Route path={Paths.LOGIN} element={<FormLogin />} />
           <Route path={Paths.REGISTRATION} element={<FormRegistration />} />
         </Route>
-        <Route path={Paths.ANY} element={<h1>Страница не найдена</h1>} />
+        <Route path={Paths.ANY} Component={NotFoundPage} />
       </Routes>
       {isOpen && <Alert message={message} toggleAlert={toggleAlert} />}
     </>
