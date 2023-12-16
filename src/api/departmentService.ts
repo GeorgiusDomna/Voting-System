@@ -1,6 +1,10 @@
 import { NetworkError } from '@/errors/NetworkError';
 import { IFailedServerResponse } from '@/interfaces/IFailedServerResponse';
-import departamentData from '@/interfaces/IdepartmentData';
+import {
+  IDepartmentData,
+  IDepartmentInfo,
+  IDepartmentResponse,
+} from '@/interfaces/DepartmentResponseDto';
 import DepartmentRequestDto from '@/interfaces/DepartmentRequestDto';
 
 import alertStore from '@/stores/AlertStore';
@@ -42,7 +46,7 @@ export async function createNewDepartment(params: DepartmentRequestDto, token: s
  * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
  *
  */
-export async function getAllDepartments(token: string): Promise<departamentData[] | void> {
+export async function getAllDepartments(token: string): Promise<IDepartmentData[] | void> {
   const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
   try {
     if (!isOnline()) throw new NetworkError();
@@ -63,16 +67,45 @@ export async function getAllDepartments(token: string): Promise<departamentData[
 }
 
 /**
+ * Получает список отделов страницы.
+ *
+ * @returns {Promise<IDepartmentResponse | void>} Промис, который разрешается массивом данных об отделах.
+ * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
+ *
+ */
+export async function getDepartmentsByPage(page: number): Promise<IDepartmentResponse | void> {
+  try {
+    if (!isOnline()) throw new NetworkError();
+    const url = `${baseUrl}/department/?page=${page}&limit=2&recordState=ACTIVE`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers,
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      return Promise.reject(error.message);
+    }
+    const { content, ...pageInfo } = await response.json();
+    return {
+      pageData: content,
+      pageInfo,
+    };
+  } catch (error) {
+    alertStore.toggleAlert((error as Error).message);
+  }
+}
+
+/**
  * Получает объект данных о департаменте.
  *
- * @returns {Promise<departamentData | void>} Промис, который разрешается объект данных о департаменте.
+ * @returns {Promise<IDepartmentData | void>} Промис, который разрешается объект данных о департаменте.
  * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
  *
  */
 export async function getDepartmentData(
   id: number,
   token: string
-): Promise<departamentData | void> {
+): Promise<IDepartmentData | void> {
   const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
   try {
     if (!isOnline()) throw new NetworkError();

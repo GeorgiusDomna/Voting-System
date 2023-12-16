@@ -13,6 +13,8 @@ import { Paths } from '@/enums/Paths';
 import { useTranslation } from 'react-i18next';
 import { Localization } from '@/enums/Localization';
 import IdataTable from '@/interfaces/IdataTable';
+import Pagination from './Pagination/Pagination';
+import departmentsStore from '@/stores/DepartmentStore';
 
 interface Itype_el {
   title?: string;
@@ -160,6 +162,7 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
         </thead>
         <tbody>{tabelItems}</tbody>
       </table>
+      <Pagination store={departmentsStore} />
       {type === 'user' && isOpenUserInfo && (
         <UserInfoModal isOpen={isOpenUserInfo} toggle={toggleUserInfo} userInfo={userInfo} />
       )}

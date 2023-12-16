@@ -1,24 +1,24 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
+
 import Loading from '@/components/ContentBlock/Loading/Loading';
 import Table from '@/components/Table/Table';
 import FormDepartment from '@/components/ContentBlock/FormDepartment/FormDepartment';
-import { getAllDepartments } from '@/api/departmentService';
+
 import departmentsStore from '@/stores/DepartmentStore';
 import authStore from '@/stores/AuthStore';
-import alertStore from '@/stores/AlertStore';
-import { useTranslation } from 'react-i18next';
 import { Localization } from '@/enums/Localization';
-
-import style from './departmentPanel.module.css';
 import { Paths } from '@/enums/Paths';
 
+import style from './departmentPanel.module.css';
+
 const DepartmentPanel: React.FC = () => {
-  const { departmentList, setDepartments } = departmentsStore;
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoading, pageInfo, сurrentPage, loadDepartPage } = departmentsStore;
   const navigate = useNavigate();
   const { t } = useTranslation();
+
   useEffect(() => {
     if (authStore.userInfo) {
       if (!authStore.isUserAdmin) navigate(Paths.ROOT);
@@ -26,21 +26,16 @@ const DepartmentPanel: React.FC = () => {
   }, [authStore.userInfo]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        if (authStore.token) {
-          const res = await getAllDepartments(authStore.token);
-          res && setDepartments(res);
-        }
-      } catch (err) {
-        alertStore.toggleAlert((err as Error).message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, [authStore.isLoggedIn]);
+    (async () => {
+      !pageInfo && loadDepartPage();
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      loadDepartPage(сurrentPage);
+    })();
+  }, [сurrentPage]);
 
   return (
     <div className={style.DepartmentPanel}>
@@ -49,7 +44,7 @@ const DepartmentPanel: React.FC = () => {
       {isLoading ? (
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />
       ) : (
-        <Table dataList={departmentList} type='department' />
+        <Table dataList={departmentsStore.pageData} type='department' />
       )}
     </div>
   );
