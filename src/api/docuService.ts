@@ -48,13 +48,14 @@ export async function getAllDocuments(token: string): Promise<documentData[] | v
  * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
  *
  */
-export async function getDocumetData(id: number): Promise<documentData | void> {
+export async function getDocumetData(token: string, id: number): Promise<documentData | void> {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
   try {
     const url = `${baseUrl}/doc/${id}`;
     if (!isOnline()) throw new NetworkError();
     const response = await fetch(url, {
       method: 'GET',
-      headers,
+      headers: headersWithToken,
     });
     if (!response.ok) {
       const error: IFailedServerResponse = await response.json();

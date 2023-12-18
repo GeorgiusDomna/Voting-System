@@ -27,7 +27,7 @@ if (process.env.NODE_ENV !== 'test') Modal.setAppElement('#root');
 const DocumentModal: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { id } = useParams();
+  const { id, appId, appItemId } = useParams();
   const [dataDoc, setDataDoc] = useState<IdocumentData | null>();
   const [docUrl, setDocUrl] = useState<{ file: string; fileName?: string }[]>([
     { file: defaultImg },
@@ -64,11 +64,13 @@ const DocumentModal: React.FC = () => {
       : setCurrentImg(currentImg === 0 ? docUrl.length - 1 : currentImg - 1);
   };
 
+  const takeApplication = () => {};
+
   useEffect(() => {
     if (!id) setPrevLocation(location.pathname);
     (async () => {
       if (id && authStore.token) {
-        const resDoc = await getDocumetData(+id);
+        const resDoc = await getDocumetData(authStore.token, +id);
         if (resDoc) {
           setDataDoc(resDoc);
           if (resDoc.files[0]) {
@@ -178,6 +180,7 @@ const DocumentModal: React.FC = () => {
             </>
           )}
         </div>
+        {appId && appItemId && <button onClick={takeApplication}>{'Голосовать'}</button>}
       </div>
     </Modal>
   );

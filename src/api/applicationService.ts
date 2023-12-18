@@ -70,10 +70,39 @@ export async function connectDocToApplication(token: string, appId: number, docI
   }
 }
 
-export async function getApplicationItemsByDepartment(token: string, depId: number) {
+export async function getApplicationItemsByDepartment(
+  token: string,
+  depId: number,
+  page: number = 0,
+  limit: number = 30
+) {
   const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
   try {
-    const url = `${baseUrl}/departament/${depId}/applicationItems`;
+    const url = `${baseUrl}/department/${depId}/applicationItems?recordState=ACTIVE&limit=${limit}&page=${page}`;
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: headersWithToken,
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      throw new Error(error.message);
+    }
+    return await response.json();
+  } catch (error) {
+    return Promise.reject('Что-то пошло не так');
+  }
+}
+
+export async function getApplicationItemsByUser(
+  token: string,
+  userId: number,
+  page: number = 0,
+  limit: number = 30
+) {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
+  try {
+    const url = `${baseUrl}/user/${userId}/applicationItems?recordState=ACTIVE&limit=${limit}&page=${page}`;
     if (!isOnline()) throw new NetworkError();
     const response = await fetch(url, {
       method: 'GET',

@@ -106,7 +106,13 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
           td3={data.updateDate && dateFormater(data.updateDate)}
           img={type_el.img}
           callback={() => {
-            navigate(`${Paths.DOCUMENTS}/${encodeURIComponent(data.id)}`);
+            const path =
+              data.appId && data.appItemId
+                ? `${Paths.DOCUMENTS_TAKE}/${encodeURIComponent(data.id)}/${data.appId}/${
+                    data.appItemId
+                  }`
+                : `${Paths.DOCUMENTS}/${encodeURIComponent(data.id)}`;
+            navigate(path);
           }}
         />
       ));
