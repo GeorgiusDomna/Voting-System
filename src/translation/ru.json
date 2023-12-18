@@ -64,7 +64,8 @@
       "trashIconAlt": "Удалить"
     },
     "DocumentPanel":{
-      "AddDocument":"Добавить документ"
+      "AddDocument":"Добавить документ",
+      "AddApplication":"Добавить голосование"
     },
     "DocumentModal":{
       "UploadFile":"Загрузите файл",
