@@ -1,10 +1,6 @@
 import { NetworkError } from '@/errors/NetworkError';
 import { IFailedServerResponse } from '@/interfaces/IFailedServerResponse';
-import {
-  IDepartmentData,
-  IDepartmentInfo,
-  IDepartmentResponse,
-} from '@/interfaces/DepartmentResponseDto';
+import { IDepartmentData, IDepartmentResponse } from '@/interfaces/DepartmentResponseDto';
 import DepartmentRequestDto from '@/interfaces/DepartmentRequestDto';
 
 import alertStore from '@/stores/AlertStore';
@@ -46,8 +42,8 @@ export async function createNewDepartment(params: DepartmentRequestDto, token: s
  * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
  *
  */
-export async function getAllDepartments(token: string): Promise<IDepartmentData[] | void> {
-  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
+export async function getAllDepartments(): Promise<IDepartmentData[] | void> {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${authStore.token}` };
   try {
     if (!isOnline()) throw new NetworkError();
     const url = `${baseUrl}/department/`;
@@ -67,16 +63,19 @@ export async function getAllDepartments(token: string): Promise<IDepartmentData[
 }
 
 /**
- * Получает список отделов страницы.
+ * Получает список отделов на странице.
  *
  * @returns {Promise<IDepartmentResponse | void>} Промис, который разрешается массивом данных об отделах.
  * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
  *
  */
-export async function getDepartmentsByPage(page: number): Promise<IDepartmentResponse | void> {
+export async function getDepartmentsByPage(
+  page: number,
+  limit: number
+): Promise<IDepartmentResponse | void> {
   try {
     if (!isOnline()) throw new NetworkError();
-    const url = `${baseUrl}/department/?page=${page}&limit=2&recordState=ACTIVE`;
+    const url = `${baseUrl}/department/?page=${page}&limit=${limit}&recordState=ACTIVE`;
     const response = await fetch(url, {
       method: 'GET',
       headers,
@@ -85,10 +84,10 @@ export async function getDepartmentsByPage(page: number): Promise<IDepartmentRes
       const error: IFailedServerResponse = await response.json();
       return Promise.reject(error.message);
     }
-    const { content, ...pageInfo } = await response.json();
+    const { content, ...paginationInfo } = await response.json();
     return {
-      pageData: content,
-      pageInfo,
+      content,
+      paginationInfo,
     };
   } catch (error) {
     alertStore.toggleAlert((error as Error).message);

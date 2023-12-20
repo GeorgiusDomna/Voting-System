@@ -1,21 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
+import { Paths } from '@/enums/Paths';
 
-import Loading from '@/components/ContentBlock/Loading/Loading';
 import Table from '@/components/Table/Table';
 import FormDepartment from '@/components/ContentBlock/FormDepartment/FormDepartment';
+import Loading from '@/components/ContentBlock/Loading/Loading';
 
 import departmentsStore from '@/stores/DepartmentStore';
 import authStore from '@/stores/AuthStore';
-import { Localization } from '@/enums/Localization';
-import { Paths } from '@/enums/Paths';
 
 import style from './departmentPanel.module.css';
 
 const DepartmentPanel: React.FC = () => {
-  const { isLoading, pageInfo, сurrentPage, loadDepartPage } = departmentsStore;
+  const {
+    loadDepartData,
+    departamentPages,
+    paginationInfo,
+    currentPage,
+    setCurrentPage,
+    isLoading,
+  } = departmentsStore;
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -26,25 +33,29 @@ const DepartmentPanel: React.FC = () => {
   }, [authStore.userInfo]);
 
   useEffect(() => {
-    (async () => {
-      !pageInfo && loadDepartPage();
-    })();
+    loadDepartData();
   }, []);
 
   useEffect(() => {
-    (async () => {
-      loadDepartPage(сurrentPage);
-    })();
-  }, [сurrentPage]);
+    loadDepartData();
+  }, [currentPage]);
 
   return (
     <div className={style.DepartmentPanel}>
       <h2 className={style.DepartmentPanel__title}>{t(`${Localization.DepartmentPanel}.title`)}</h2>
-      <FormDepartment />
       {isLoading ? (
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />
       ) : (
-        <Table dataList={departmentsStore.pageData} type='department' />
+        <>
+          <FormDepartment />
+          <Table
+            dataList={departamentPages}
+            totalPages={paginationInfo.totalPages}
+            сurrentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            type='department'
+          />
+        </>
       )}
     </div>
   );

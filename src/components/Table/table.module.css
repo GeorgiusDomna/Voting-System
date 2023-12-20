@@ -16,3 +16,7 @@
 .th_name {
   text-align: left;
 }
+.notFoundItem {
+  background-color: rgb(247, 247, 247);
+  border-top: 5px solid white;
+}

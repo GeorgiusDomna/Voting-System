@@ -6,15 +6,19 @@
 .pagination_item {
   padding: 0.5rem;
   font-size: 18px;
-  background-color: rgb(224, 224, 224);
   color: rgb(87, 87, 87);
+  background-color: rgb(224, 224, 224);
   transition: 0.2s;
   cursor: pointer;
+}
+.pagination_item_disabled {
+  opacity: 0.45;
+  pointer-events: none;
 }
 .pagination_item:hover {
   opacity: 0.8;
 }
 .pagination_item_active {
-  background-color: rgb(185, 185, 185);
   color: white;
+  background-color: rgb(185, 185, 185);
 }

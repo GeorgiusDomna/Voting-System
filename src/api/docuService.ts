@@ -5,6 +5,7 @@ import ICreateDoc from '@/interfaces/createDoc';
 import ICreateFile from '@/interfaces/createFile';
 
 import alertStore from '@/stores/AlertStore';
+import authStore from '@/stores/AuthStore';
 import userStore from '@/stores/AuthStore';
 
 import { isOnline } from '@/utils/networkStatus';
@@ -23,10 +24,10 @@ const headers = {
  * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
  *
  */
-export async function getAllDocuments(token: string): Promise<documentData[] | void> {
-  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
+export async function getAllDocuments(): Promise<documentData[] | void> {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${authStore.token}` };
   try {
-    const url = `${baseUrl}/doc/filter?page=0&limit=20&state=ACTIVE`;
+    const url = `${baseUrl}/doc/filter?page=0&limit=1000&state=ACTIVE`;
     if (!isOnline()) throw new NetworkError();
     const response = await fetch(url, {
       method: 'GET',
@@ -41,6 +42,7 @@ export async function getAllDocuments(token: string): Promise<documentData[] | v
     alertStore.toggleAlert((error as Error).message);
   }
 }
+
 /**
  * Получает данные о документе принимая его id.
  *

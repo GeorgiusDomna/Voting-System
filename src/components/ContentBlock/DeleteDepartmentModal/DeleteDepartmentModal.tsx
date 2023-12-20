@@ -1,17 +1,19 @@
 import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Paths } from '@/enums/Paths';
 import Modal from 'react-modal';
-import styles from './deleteDepartmentModal.module.css';
 
+import authStore from '@/stores/AuthStore';
+import alertStore from '@/stores/AlertStore';
+import departmentsStore from '@/stores/DepartmentStore';
 import { deleteDepartment } from '@/api/departmentService';
 import { deleteUser, getUsersByDepartment } from '@/api/userService';
 
-import closeIcon from '@/assets/cancel.svg';
-import authStore from '@/stores/AuthStore';
-import alertStore from '@/stores/AlertStore';
-import { useNavigate } from 'react-router-dom';
-import { Paths } from '@/enums/Paths';
 import IUserInfo from '@/interfaces/userInfo';
+
+import styles from './deleteDepartmentModal.module.css';
+import closeIcon from '@/assets/cancel.svg';
 
 interface deleteDepartmentProps {
   departmentId: number;
@@ -49,6 +51,7 @@ const AddUserModal: React.FC<deleteDepartmentProps> = observer(
           }
           deleteDepartment(departmentId as number, authStore.token as string)
             .then(() => {
+              departmentsStore.deleteDepartment(departmentId);
               alertStore.toggleAlert('Успешно удалено');
               toggle();
               navigate(Paths.DEPARTMENTS);

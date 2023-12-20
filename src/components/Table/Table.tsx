@@ -1,20 +1,21 @@
-import TableItem from './TableItem/TableItem';
-import UserInfoModal from '../userInfoModal/userInfoModal';
-import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { observer } from 'mobx-react-lite';
+import { Localization } from '@/enums/Localization';
+import { Paths } from '@/enums/Paths';
+
+import TableItem from './TableItem/TableItem';
+import Pagination from './Pagination/Pagination';
+import UserInfoModal from '../userInfoModal/userInfoModal';
+
+import IUserInfo from '@/interfaces/userInfo';
+import IdataTable from '@/interfaces/IdataTable';
 
 import userIcon from '@/assets/user.svg';
 import departIcon from '@/assets/depart.svg';
 import docIcon from '@/assets/docIcon.svg';
 import style from './table.module.css';
-import IUserInfo from '@/interfaces/userInfo';
-import { Paths } from '@/enums/Paths';
-import { useTranslation } from 'react-i18next';
-import { Localization } from '@/enums/Localization';
-import IdataTable from '@/interfaces/IdataTable';
-import Pagination from './Pagination/Pagination';
-import departmentsStore from '@/stores/DepartmentStore';
 
 interface Itype_el {
   title?: string;
@@ -26,7 +27,10 @@ interface Itype_el {
 }
 
 interface ITableProps {
-  dataList: IdataTable[];
+  dataList: IdataTable[][];
+  totalPages: number;
+  сurrentPage: number;
+  setCurrentPage: (current: number) => void;
   type: 'document' | 'department' | 'user';
 }
 
@@ -37,7 +41,13 @@ const roleCheck = (role: [{ name: string }] | undefined): string => {
   return role && role.find((el) => el.name === 'ROLE_ADMIN') ? 'Admin' : 'User';
 };
 
-const Table: React.FC<ITableProps> = ({ dataList, type }) => {
+const Table: React.FC<ITableProps> = ({
+  dataList,
+  totalPages,
+  сurrentPage,
+  setCurrentPage,
+  type,
+}) => {
   const [isOpenUserInfo, setIsOpenUserInfo] = useState(false);
   const [userInfo, setUserInfo] = useState<IUserInfo>({
     id: -1,
@@ -90,17 +100,9 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
       break;
   }
 
-  if (!dataList.length) {
-    tabelItems = (
-      <tr>
-        <td colSpan={4} align='center'>
-          Документов не найдено.
-        </td>
-      </tr>
-    );
-  } else {
+  if (dataList.length && dataList[сurrentPage]) {
     if (type === 'document') {
-      tabelItems = dataList.map((data) => (
+      tabelItems = dataList[сurrentPage].map((data) => (
         <TableItem
           key={data.id}
           td1={data.name}
@@ -114,7 +116,7 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
       ));
     }
     if (type === 'department') {
-      tabelItems = dataList.map((data) => (
+      tabelItems = dataList[сurrentPage].map((data) => (
         <TableItem
           key={data.id}
           td1={data.name}
@@ -128,7 +130,7 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
       ));
     }
     if (type === 'user') {
-      tabelItems = dataList.map((data) => (
+      tabelItems = dataList[сurrentPage].map((data) => (
         <TableItem
           key={data.id}
           td1={
@@ -160,9 +162,19 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
             <th></th>
           </tr>
         </thead>
-        <tbody>{tabelItems}</tbody>
+        <tbody>
+          {!dataList.length || (dataList[сurrentPage] && !dataList[сurrentPage].length) ? (
+            <tr className={style.notFoundItem}>
+              <td colSpan={4} align='center'>
+                Документов не найдено.
+              </td>
+            </tr>
+          ) : (
+            tabelItems
+          )}
+        </tbody>
       </table>
-      <Pagination store={departmentsStore} />
+      <Pagination total={totalPages} сurrent={сurrentPage} setCurrentPage={setCurrentPage} />
       {type === 'user' && isOpenUserInfo && (
         <UserInfoModal isOpen={isOpenUserInfo} toggle={toggleUserInfo} userInfo={userInfo} />
       )}

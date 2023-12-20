@@ -1,4 +1,9 @@
-import { makeObservable, observable, action } from 'mobx';
+import { makeObservable, observable, computed, action } from 'mobx';
+
+import alertStore from './AlertStore';
+import { getAllDocuments } from '@/api/docuService';
+import { createTwoLevelArr } from '@/utils/createMultiLevelArr';
+
 import documentData from '@/interfaces/IdocumentData';
 
 class DocumentStore {
@@ -6,14 +11,61 @@ class DocumentStore {
    * Массив, содержащий данные всех документов в хранилище.
    */
   documentList: documentData[] = [];
+  /**
+   * Индекс текущей открытой страницы.
+   */
+  сurrentPage: number = 0;
+  /**
+   * Статус загрузки.
+   */
+  isLoading: boolean = false;
 
   constructor() {
     makeObservable(this, {
-      documentList: observable,
+      // Получение и установка данных с сервера
+      loadDocumentData: action.bound,
       setDocumentList: action.bound,
+
+      // Работа со списками
+      documentList: observable,
+      documentPages: computed,
       addDocument: action.bound,
       deleteDocument: action.bound,
+
+      // Пагинация
+      сurrentPage: observable,
+      setCurrentPage: action.bound,
+
+      // Статус загрузки
+      isLoading: observable,
+      toggleIsLoading: action.bound,
     });
+  }
+
+  /**
+   * Разбивает список всех документов на страницы размером не более 10 элементов.
+   */
+  get documentPages() {
+    return createTwoLevelArr(this.documentList, 10);
+  }
+
+  /**
+   * Получает список всех документов с сервера.
+   */
+  async loadDocumentData() {
+    this.toggleIsLoading();
+    try {
+      const res = await getAllDocuments();
+      if (res) {
+        this.setDocumentList(res);
+        return true;
+      }
+    } catch (err) {
+      alertStore.toggleAlert((err as Error).message);
+    } finally {
+      this.toggleIsLoading();
+    }
+    return false;
   }
 
   /**
@@ -38,6 +90,21 @@ class DocumentStore {
    */
   deleteDocument(id: number) {
     this.documentList = this.documentList.filter((item) => item.id !== id);
+  }
+
+  /**
+   * Изменяет номер текущей страницы.
+   * @param current - Новый номер текущей страницы.
+   */
+  setCurrentPage(current: number) {
+    this.сurrentPage = current;
+  }
+
+  /**
+   * Изменяет статус загрузки.
+   */
+  toggleIsLoading() {
+    this.isLoading = !this.isLoading;
   }
 }
 

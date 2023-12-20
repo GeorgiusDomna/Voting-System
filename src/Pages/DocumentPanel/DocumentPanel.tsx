@@ -11,19 +11,16 @@ import ModalConfirmAddApplication from '@/components/ContentBlock/CreateDocument
 import CreateApplicationModal from '@/components/ContentBlock/CreateApplicationModal/CreateApplicationModal';
 
 import documentStore from '@/stores/DocumentStore';
-import authStore from '@/stores/AuthStore';
-import { getAllDocuments } from '@/api/docuService';
 
 import style from './documentPanel.module.css';
 import plusIcon from '@/assets/plus.png';
 
 const DocumentPanel: React.FC = () => {
-  const { documentList, setDocumentList } = documentStore;
+  const { loadDocumentData, documentPages, сurrentPage, setCurrentPage, isLoading } = documentStore;
   const [isOpenModalCreateDocument, setIsOpenModalCreateDocument] = useState(false);
   const [isOpenModalConfirmAddApplication, setIsOpenModalConfirmAddApplication] = useState(false);
   const [isOpenModalCreateApplication, setIsOpenModalCreateApplication] = useState(false);
   const [idDoc, setIdDoc] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const { t } = useTranslation();
 
   const toggleModalCreateDocument = () => {
@@ -40,16 +37,8 @@ const DocumentPanel: React.FC = () => {
   };
 
   useEffect(() => {
-    setIsLoading(true);
-    const fetchData = async () => {
-      if (authStore.token) {
-        const res = await getAllDocuments(authStore.token);
-        res && setDocumentList(res);
-      }
-      setIsLoading(false);
-    };
-    fetchData();
-  }, [authStore.isLoggedIn]);
+    (async () => loadDocumentData())();
+  }, []);
 
   return (
     <div className={style.documentPanel}>
@@ -64,7 +53,12 @@ const DocumentPanel: React.FC = () => {
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />
       ) : (
         <>
-          <Table dataList={documentList} type='document' />
+          <Table
+            dataList={documentPages}
+            сurrentPage={сurrentPage}
+            setCurrentPage={setCurrentPage}
+            type='document'
+          />
           <DocumentModal />
           <CreateDocumentModal
             isOpen={isOpenModalCreateDocument}

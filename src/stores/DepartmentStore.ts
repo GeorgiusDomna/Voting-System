@@ -1,80 +1,133 @@
-import { getDepartmentsByPage } from '@/api/departmentService';
-import {
-  IDepartmentData,
-  IDepartmentInfo,
-  IDepartmentResponse,
-} from '@/interfaces/DepartmentResponseDto';
 import { makeObservable, observable, computed, action } from 'mobx';
+
 import alertStore from './AlertStore';
+import { getDepartmentsByPage } from '@/api/departmentService';
+
+import { IDepartmentData } from '@/interfaces/DepartmentResponseDto';
+import { IPaginationInfo } from '@/interfaces/IPaginationInfo';
 
 class DepartmentsStore {
   /**
-   * Массив, содержащий метаданные о департаментах. Каждый элемент реализует интерфейс `IDepartmentData`.
+   * Cписок всех департаментов разбитый на страницы. Каждый департамент реализует интерфейс `IDepartmentData`
    */
-  departmentList: IDepartmentData[] = [];
-  pageData: IDepartmentData[] = [];
-  pageInfo: IDepartmentInfo | undefined;
+  departamentPages: IDepartmentData[][] = [];
+  /**
+   * Информация о пагинации.
+   */
+  paginationInfo: IPaginationInfo = {
+    size: 2,
+    number: 0,
+    totalPages: 1,
+  };
+  /**
+   * Статус загрузки.
+   */
   isLoading: boolean = false;
 
   constructor() {
     makeObservable(this, {
-      departmentList: observable,
-      isLoading: observable,
-      pageData: observable,
-      pageInfo: observable,
-      сurrentPage: computed,
+      // Получение и установка данных с сервера
+      loadDepartData: action.bound,
+      setDepartmentList: action.bound,
+
+      // Рабора со списками
+      departamentPages: observable,
       addNewDepartment: action.bound,
+
+      // Пагинация
+      paginationInfo: observable,
+      currentPage: computed,
+      setPaginationInfo: action.bound,
       setCurrentPage: action.bound,
-      setDepartments: action.bound,
-      setDepartPage: action.bound,
-      loadDepartPage: action.bound,
+
+      // Статус загрузки
+      isLoading: observable,
+      toggleIsLoading: action.bound,
     });
   }
 
-  get сurrentPage() {
-    return this.pageInfo?.number ?? 0;
+  /**
+   * Индекс открытой страницы (начальное значение 0).
+   */
+  get currentPage() {
+    return this.paginationInfo.number ?? 0;
   }
 
   /**
-   * Устанавливает список всех департаментов в хранилище.
-   * @param departments - Массив метаданных департаментов для установки в качестве нового списка департаментов.
+   * Получает список департаментов открытой страницы с сервера.
    */
-  setDepartments(departments: IDepartmentData[]) {
-    this.departmentList = departments;
-  }
-
-  setCurrentPage(current: number) {
-    if (this.pageInfo) this.pageInfo.number = current;
-  }
-
-  async setDepartPage(res: IDepartmentResponse) {
-    this.pageData = res.pageData;
-    this.pageInfo = res.pageInfo;
-  }
-
-  async loadDepartPage(page: number = 0) {
-    this.isLoading = true;
+  async loadDepartData() {
+    this.toggleIsLoading();
     try {
-      const res = await getDepartmentsByPage(page);
-      if (res) {
-        this.setDepartPage(res);
-        this.isLoading = false;
-        return true;
+      if (!this.departamentPages[this.currentPage]) {
+        const res = await getDepartmentsByPage(this.currentPage, this.paginationInfo.size);
+        if (res) {
+          this.setDepartmentList(res.content);
+          this.setPaginationInfo(res.paginationInfo);
+          return true;
+        }
       }
     } catch (err) {
       alertStore.toggleAlert((err as Error).message);
     } finally {
-      this.isLoading = false;
+      this.toggleIsLoading();
     }
     return false;
   }
 
   /**
-   * Добавляет новую департамент в список категорий.
-   * @param newDepartment - Новые метаданные департамента для добавления в список департаментов.
+   * Добавляет данные о департаментах на загруженной страницы в список со всеми страницами.
+   * @param {IDepartmentData} departments - Массив данных о департаментах на загруженной странице.
+   */
+  setDepartmentList(departments: IDepartmentData[]) {
+    this.departamentPages[this.currentPage] = departments;
+  }
+
+  /**
+   * Добавляет новый департамент в список департаментов.
+   * @param {number} newDepartment - Данные новго департамента для добавления в список.
    */
   addNewDepartment(newDepartment: IDepartmentData) {
-    this.departmentList.push(newDepartment);
+    const totalPages = this.departamentPages.length;
+    if (this.departamentPages[totalPages - 1].length < this.paginationInfo.size) {
+      this.departamentPages[totalPages - 1].push(newDepartment);
+    } else {
+      this.departamentPages[totalPages] = [newDepartment];
+      this.paginationInfo.totalPages++;
+    }
+  }
+
+  /**
+   * Добавляет новый департамент в список департаментов.
+   * @param {number} newDepartment - Данные новго департамента для добавления в список.
+   */
+  deleteDepartment(id: number) {
+    for (let i = 0; i < this.departamentPages.length; i++) {
+      this.departamentPages[i] = this.departamentPages[i].filter((depart) => depart.id !== id);
+    }
+  }
+
+  /**
+   * Устанавливает объект данных с информацией о пагинации.
+   * @param info - Новый номер текущей страницы.
+   */
+  setPaginationInfo(info: IPaginationInfo) {
+    this.paginationInfo = info;
+  }
+
+  /**
+   * Изменяет номер текущей страницы.
+   * @param current - Новый номер текущей страницы.
+   */
+  setCurrentPage(current: number) {
+    this.paginationInfo.number = current;
+  }
+
+  /**
+   * Изменяет статус загрузки.
+   */
+  toggleIsLoading() {
+    this.isLoading = !this.isLoading;
   }
 }
 

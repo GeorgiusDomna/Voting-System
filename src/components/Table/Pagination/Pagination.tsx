@@ -1,28 +1,24 @@
 import { observer } from 'mobx-react-lite';
 
-import departmentsStore from '@/stores/DepartmentStore';
-import EmployeeStore from '@/stores/EmployeeStore';
-import DocumentStore from '@/stores/DocumentStore';
-
 import style from './Pagination.module.css';
 
 interface IPagination {
-  store: typeof departmentsStore | typeof EmployeeStore | typeof DocumentStore;
+  total: number;
+  сurrent: number;
+  setCurrentPage: (current: number) => void;
 }
 
-const Pagination: React.FC<IPagination> = ({ store }) => {
-  const { pageInfo, сurrentPage, setCurrentPage } = store;
+const Pagination: React.FC<IPagination> = ({ total, сurrent, setCurrentPage }) => {
   const pagination = [];
 
-  if (pageInfo) {
-    for (let i = 0; i < pageInfo.totalPages; i++) {
+  if (total) {
+    for (let i = 0; i < total; i++) {
       pagination.push(
         <div
           key={i}
-          className={[
-            style.pagination_item,
-            pageInfo.number === i && style.pagination_item_active,
-          ].join(' ')}
+          className={[style.pagination_item, сurrent === i && style.pagination_item_active].join(
+            ' '
+          )}
           onClick={() => setCurrentPage(i)}
         >
           {i + 1}
@@ -32,15 +28,20 @@ const Pagination: React.FC<IPagination> = ({ store }) => {
     return (
       <div className={style.pagination}>
         <div
-          className={style.pagination_item}
-          onClick={() => сurrentPage > 0 && setCurrentPage(сurrentPage - 1)}
+          className={[style.pagination_item, сurrent === 0 && style.pagination_item_disabled].join(
+            ' '
+          )}
+          onClick={() => setCurrentPage(сurrent - 1)}
         >
           &lt;
         </div>
         {pagination}
         <div
-          className={style.pagination_item}
-          onClick={() => сurrentPage < pageInfo.totalPages - 1 && setCurrentPage(сurrentPage + 1)}
+          className={[
+            style.pagination_item,
+            сurrent === total - 1 && style.pagination_item_disabled,
+          ].join(' ')}
+          onClick={() => setCurrentPage(сurrent + 1)}
         >
           &gt;
         </div>

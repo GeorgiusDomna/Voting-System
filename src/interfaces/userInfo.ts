@@ -1,3 +1,5 @@
+import { IPaginationInfo } from './IPaginationInfo';
+
 export default interface IUserInfo {
   id: number;
   position: string;
@@ -13,4 +15,9 @@ export default interface IUserInfo {
   patronymic: string;
   departmentId: number;
   birthDate: string;
+}
+
+export interface IUserResponse {
+  content: IUserInfo[];
+  paginationInfo: IPaginationInfo;
 }
