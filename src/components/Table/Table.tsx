@@ -114,17 +114,28 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
       ));
     }
     if (type === 'department') {
-      tabelItems = dataList.map((data) => (
+      tabelItems = [
         <TableItem
-          key={data.id}
-          td1={data.name}
-          td2={data.amountOfEmployee}
+          key={-1}
+          td1={'Удаленные пользователи'}
+          td2={null}
           img={type_el.img}
           callback={() => {
-            navigate(`${Paths.DEPARTMENTS}/${encodeURIComponent(data.name)}/${data.id}`);
+            navigate(`${Paths.DEPARTMENTS}/${encodeURIComponent('Deleted Users')}/${-1}`);
           }}
-        />
-      ));
+        />,
+        ...dataList.map((data) => (
+          <TableItem
+            key={data.id}
+            td1={data.name}
+            td2={data.amountOfEmployee}
+            img={type_el.img}
+            callback={() => {
+              navigate(`${Paths.DEPARTMENTS}/${encodeURIComponent(data.name)}/${data.id}`);
+            }}
+          />
+        )),
+      ];
     }
     if (type === 'user') {
       tabelItems = dataList.map((data) => (
