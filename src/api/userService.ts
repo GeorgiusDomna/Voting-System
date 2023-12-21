@@ -134,22 +134,15 @@ export async function getUsersByDepartment(
   }
 }
 
-/**
- * Получает список сотрудников департамента.
- *
- * @returns {Promise<IUserResponseDto | void>} Промис, который разрешается массивом данных всех сотрудниках департамента.
- * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
- *
- */
-export async function getDepartmentUsersByPage(
-  id: number,
-  current: number = 0,
-  size: number = 5
-): Promise<IUserResponseDto | void> {
-  const headersWithToken = { ...headers, Authorization: `Bearer ${authStore.token}` };
+export async function getDeletedUsers(
+  token: string,
+  page: number = 0,
+  limit: number = 30
+): Promise<IUserInfo[] | void> {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
   try {
     if (!isOnline()) throw new NetworkError();
-    const url = `${baseUrl}/department/${id}/users?page=${current}&limit=${size}&recordState=ACTIVE`;
+    const url = `${baseUrl}/user/?page=${page}&limit=${limit}&recordState=DELETED`;
     const response = await fetch(url, {
       method: 'GET',
       headers: headersWithToken,
@@ -157,14 +150,9 @@ export async function getDepartmentUsersByPage(
     if (!response.ok) {
       const error: IFailedServerResponse = await response.json();
       return Promise.reject(error.message);
-    } else if (response.status === 204)
-      return {
-        content: [],
-        size,
-        number: 0,
-        totalPages: 1,
-      };
-    return await response.json();
+    } else if (response.status === 204) return [];
+    const data = await response.json();
+    return data;
   } catch (error) {
     throw new Error((error as Error).message);
   }
