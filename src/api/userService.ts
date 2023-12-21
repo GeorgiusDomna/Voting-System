@@ -132,3 +132,27 @@ export async function getUsersByDepartment(
     throw new Error((error as Error).message);
   }
 }
+
+export async function getDeletedUsers(
+  token: string,
+  page: number = 0,
+  limit: number = 30
+): Promise<IUserInfo[] | void> {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
+  try {
+    if (!isOnline()) throw new NetworkError();
+    const url = `${baseUrl}/user/?page=${page}&limit=${limit}&recordState=DELETED`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: headersWithToken,
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      return Promise.reject(error.message);
+    } else if (response.status === 204) return [];
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+}
