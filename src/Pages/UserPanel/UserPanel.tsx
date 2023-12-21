@@ -11,7 +11,7 @@ import Table from '@/components/Table/Table';
 import AddUserModal from '@/components/ContentBlock/AddUserModal/AddUserModal';
 import DeleteDepartmentModal from '@/components/ContentBlock/DeleteDepartmentModal/DeleteDepartmentModal';
 
-import { getUsersByDepartment } from '@/api/userService';
+import { getDeletedUsers, getUsersByDepartment } from '@/api/userService';
 import userStore from '@/stores/EmployeeStore';
 import alertStore from '@/stores/AlertStore';
 import authStore from '@/stores/AuthStore';
@@ -37,9 +37,13 @@ const UserPanel: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (id) {
-        if (authStore.token) {
-          const res = await getUsersByDepartment(authStore.token, +id);
+      let res;
+      if (authStore.token) {
+        if (id && id !== '-1') {
+          res = await getUsersByDepartment(authStore.token, +id);
+          res && setUserList(res);
+        } else if (id == '-1') {
+          res = await getDeletedUsers(authStore.token as string);
           res && setUserList(res);
         }
       } else {
