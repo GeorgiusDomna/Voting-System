@@ -63,7 +63,8 @@
       "trashIconAlt": "Delete"
     },
     "DocumentPanel":{
-      "AddDocument":"Add Document"
+      "AddDocument":"Add Document",
+      "AddApplication":"Add Application"
     },
     "DocumentModal":{
       "UploadFile":"Upload file",
