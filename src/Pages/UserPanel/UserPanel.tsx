@@ -11,7 +11,11 @@ import Table from '@/components/Table/Table';
 import AddUserModal from '@/components/ContentBlock/AddUserModal/AddUserModal';
 import DeleteDepartmentModal from '@/components/ContentBlock/DeleteDepartmentModal/DeleteDepartmentModal';
 
+<<<<<<< HEAD
 import { getDepartmentUsersByPage } from '@/api/userService';
+=======
+import { getDeletedUsers, getUsersByDepartment } from '@/api/userService';
+>>>>>>> 948d6bf (check for id and getting deleted users)
 import userStore from '@/stores/EmployeeStore';
 import alertStore from '@/stores/AlertStore';
 import authStore from '@/stores/AuthStore';
@@ -35,6 +39,7 @@ const UserPanel: React.FC = () => {
   }, [authStore.userInfo]);
 
   useEffect(() => {
+<<<<<<< HEAD
     id && setOpenDepartID(id);
   }, [id]);
 
@@ -51,6 +56,17 @@ const UserPanel: React.FC = () => {
           alertStore.toggleAlert((err as Error).message);
         } finally {
           setIsLoading(false);
+=======
+    const fetchData = async () => {
+      let res;
+      if (authStore.token) {
+        if (id && id !== '-1') {
+          res = await getUsersByDepartment(authStore.token, +id);
+          res && setUserList(res);
+        } else if (id == '-1') {
+          res = await getDeletedUsers(authStore.token as string);
+          res && setUserList(res);
+>>>>>>> 948d6bf (check for id and getting deleted users)
         }
       } else {
         alertStore.toggleAlert(t(`${Localization.UserPanel}.errorAlert`));
