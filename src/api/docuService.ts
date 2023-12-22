@@ -36,7 +36,8 @@ export async function getAllDocuments(token: string): Promise<documentData[] | v
       const error: IFailedServerResponse = await response.json();
       return Promise.reject(error.message);
     }
-    return await response.json();
+    const data = await response.json();
+    return data.content;
   } catch (error) {
     alertStore.toggleAlert((error as Error).message);
   }
