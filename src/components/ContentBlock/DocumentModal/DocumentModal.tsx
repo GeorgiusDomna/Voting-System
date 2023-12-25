@@ -10,6 +10,7 @@ import { Paths } from '@/enums/Paths';
 import { getUserInfo } from '@/api/userService';
 import { getDepartmentData } from '@/api/departmentService';
 import { getDocumetData } from '@/api/docuService';
+import { takeApplicationItem } from '@/api/applicationService';
 
 import alertStore from '@/stores/AlertStore';
 import authStore from '@/stores/AuthStore';
@@ -25,12 +26,12 @@ import plusIcon from '@/assets/plus.png';
 
 if (process.env.NODE_ENV !== 'test') Modal.setAppElement('#root');
 
-interface ICreateApplicationModalProps {
-  toggle: () => void;
-  setIdDoc: (callback: () => number | null) => void;
+interface ModalProps {
+  toggle?: () => void;
+  setIdDoc?: (callback: () => number | null) => void;
 }
 
-const DocumentModal: React.FC<ICreateApplicationModalProps> = ({ toggle, setIdDoc }) => {
+const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id, appId, appItemId } = useParams();
@@ -46,7 +47,8 @@ const DocumentModal: React.FC<ICreateApplicationModalProps> = ({ toggle, setIdDo
   const { t } = useTranslation();
 
   const closeModal = () => {
-    prevLocation ? navigate(prevLocation) : navigate(Paths.ROOT);
+    console.log('close');
+    prevLocation ? navigate(prevLocation, { state: { fetch: true } }) : navigate(Paths.ROOT);
     setDataDoc(null);
     setDocUrl([{ file: defaultImg }]);
     setDataUser(null);
@@ -70,14 +72,29 @@ const DocumentModal: React.FC<ICreateApplicationModalProps> = ({ toggle, setIdDo
       : setCurrentImg(currentImg === 0 ? docUrl.length - 1 : currentImg - 1);
   };
 
-  const takeApplication = () => {};
+  const takeApplication = () => {
+    const take = async () => {
+      try {
+        if (appId && appItemId) {
+          if (authStore.token) {
+            const res = await takeApplicationItem(authStore.token, +appItemId, +appId);
+            res && closeModal();
+          }
+        } else alertStore.toggleAlert(t(`${Localization.UserPanel}.errorAlert`));
+      } catch (e) {
+        alertStore.toggleAlert((e as Error).message);
+      }
+    };
+
+    take();
+  };
 
   useEffect(() => {
-    if (!id) setPrevLocation(location.pathname);
+    if (appId) setPrevLocation(Paths.DOCUMENTS_TAKE);
     (async () => {
       if (id && authStore.token) {
         setIdDoc && setIdDoc(() => Number(id));
-        const resDoc = await getDocumetData(+id);
+        const resDoc = await getDocumetData(authStore.token, +id);
         if (resDoc) {
           setDataDoc(resDoc);
           if (resDoc.files[0]) {
@@ -102,7 +119,7 @@ const DocumentModal: React.FC<ICreateApplicationModalProps> = ({ toggle, setIdDo
       }
     })();
     window.addEventListener('keyup', closeModalEsc);
-  }, [id]);
+  }, [location]);
 
   for (let i = 0; i < docUrl.length; i++) {
     dots.push(
@@ -190,14 +207,22 @@ const DocumentModal: React.FC<ICreateApplicationModalProps> = ({ toggle, setIdDo
                 </div>
               </>
             )}
-            <div className={style.dataList__controls} onClick={toggle}>
-              <img className={style.dataList__img} src={plusIcon} alt='+' />
-              <button className={style.dataList__button}>
-                {t(`${Localization.DocumentPanel}.AddApplication`)}
-              </button>
-            </div>
+            {!appId && !appItemId && toggle && (
+              <div className={style.dataList__controls} onClick={toggle}>
+                <img className={style.dataList__img} src={plusIcon} alt='+' />
+                <button className={style.dataList__button}>
+                  {t(`${Localization.DocumentPanel}.AddApplication`)}
+                </button>
+              </div>
+            )}
+            {appId && appItemId && (
+              <div className={style.vote}>
+                <button className={style.vote__button} onClick={takeApplication}>
+                  {'Голосовать'}
+                </button>
+              </div>
+            )}
           </div>
-          {appId && appItemId && <button onClick={takeApplication}>{'Голосовать'}</button>}
         </div>
       </Modal>
     </>

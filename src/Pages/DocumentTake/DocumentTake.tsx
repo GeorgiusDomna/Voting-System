@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 //import { useTranslation } from 'react-i18next';
 //import { Localization } from '@/enums/Localization';
@@ -16,9 +16,7 @@ import {
   getApplication,
 } from '@/api/applicationService';
 import { getDocumetData } from '@/api/docuService';
-import { getUserMe } from '@/api/authService';
 
-//import documentStore from '@/stores/DocumentStore';
 import alertStore from '@/stores/AlertStore';
 import authStore from '@/stores/AuthStore';
 
@@ -39,6 +37,7 @@ const DocumentTake: React.FC = () => {
   const [department, setDepartment] = useState('');
   const fetch = useRef(false);
   const navigate = useNavigate();
+  const location = useLocation();
   //const { t } = useTranslation();
 
   useEffect(() => {
@@ -48,7 +47,8 @@ const DocumentTake: React.FC = () => {
   }, [authStore.userInfo]);
 
   useEffect(() => {
-    setIsLoading(true);
+    if (location.state?.fetch) fetch.current = false;
+
     const fetchData = async () => {
       if (authStore.token && authStore.userInfo) {
         if (fetch.current) return;
@@ -66,7 +66,6 @@ const DocumentTake: React.FC = () => {
           authStore.userInfo.departmentId
         );
         //Получение всех размещенных заявок на департаменте
-        console.log(appItems, 'заявки на департаменте');
 
         const userAppItems: IApplicationItem[] = await getApplicationItemsByUser(
           authStore.token,
@@ -74,7 +73,6 @@ const DocumentTake: React.FC = () => {
         );
         const userAppIds: number[] = userAppItems ? userAppItems.map((el) => el.id) : [];
         //Получение заявок закрепленных за текущим юзером
-        console.log(userAppItems, 'заявки юзера');
 
         let appItemsTemp: {
           appId: number;
@@ -89,8 +87,6 @@ const DocumentTake: React.FC = () => {
             .map((el) => {
               return { appId: el.applicationId, appItemId: el.id };
             }));
-        console.log(appItemsTemp, 'нужные');
-
         //Убираем ненужные заявки
 
         appItemsTemp.forEach((el) => {
@@ -111,14 +107,20 @@ const DocumentTake: React.FC = () => {
 
         setIsLoading(false);
       }
+      setIsLoading(false);
     };
     try {
+      setIsLoading(true);
+      if (location.pathname !== '/documents-take') {
+        fetch.current = false;
+        setAppItemsList([]);
+      }
       fetchData();
     } catch (err) {
       alertStore.toggleAlert((err as Error).message);
     }
     return () => setAppItemsList([]);
-  }, [authStore.isLoggedIn, authStore.userInfo]);
+  }, [authStore.isLoggedIn, authStore.userInfo, location]);
 
   return (
     <div className={style.documentTake}>

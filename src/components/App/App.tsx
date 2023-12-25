@@ -72,7 +72,7 @@ const App: React.FC = () => {
               />
               <Route path={Paths.DOCUMENTS_TAKE} element={<DocumentTake />} />
               <Route
-                path={`${Paths.DOCUMENTS_TAKE}/:id/:appId/:appItemId`}
+                path={`${Paths.DOCUMENTS_TAKE}/:id/:appId?/:appItemId?`}
                 element={<DocumentTake />}
               />
             </>

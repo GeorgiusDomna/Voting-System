@@ -121,6 +121,7 @@ export async function getApplicationItemsByDepartment(
       const error: IFailedServerResponse = await response.json();
       throw new Error(error.message);
     }
+    if (response.status === 204) return [];
     return await response.json();
   } catch (error) {
     return Promise.reject('Что-то пошло не так');
@@ -145,6 +146,7 @@ export async function getApplicationItemsByUser(
       const error: IFailedServerResponse = await response.json();
       throw new Error(error.message);
     }
+    if (response.status === 204) return [];
     return await response.json();
   } catch (error) {
     return Promise.reject('Что-то пошло не так');
@@ -164,6 +166,7 @@ export async function getApplication(token: string, appId: number) {
       const error: IFailedServerResponse = await response.json();
       throw new Error(error.message);
     }
+    if (response.status === 204) return [];
     return await response.json();
   } catch (error) {
     return Promise.reject('Что-то пошло не так');
@@ -183,6 +186,7 @@ export async function takeApplicationItem(token: string, appItemId: number, appI
       const error: IFailedServerResponse = await response.json();
       throw new Error(error.message);
     }
+    if (response.status === 204) return [];
     const data = await response.json();
     return data;
   } catch (error) {
