@@ -121,7 +121,10 @@ const UserInfoModal: React.FC<userInfoModalProps> = ({ isOpen, toggle, userInfo 
                 value={selectedValue}
                 onChange={(e) => setSelectedValue(+e.target.value)}
               >
-                <option key={userInfo.departmentId} value={userInfo.departmentId}>
+                <option
+                  key={userInfo.departmentId === null ? -1 : userInfo.departmentId}
+                  value={userInfo.departmentId}
+                >
                   {departments.find((el) => el.id === userInfo.departmentId)?.name ||
                     t(`${Localization.UserInfoModal}.withoutDepartment`)}
                 </option>
