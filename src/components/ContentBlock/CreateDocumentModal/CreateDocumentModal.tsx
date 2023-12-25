@@ -7,10 +7,11 @@ import styles from './createDocumentModal.module.css';
 import { useState } from 'react';
 import InputUpload from '@/components/ContentBlock/CreateDocumentModal/InputUpload/InputUpload';
 import authStore from '@/stores/AuthStore';
-import { createDoc, createFile } from '@/api/docuService';
+import { createDoc, createFile, getDocumetData } from '@/api/docuService';
 import alertStore from '@/stores/AlertStore';
 import { useTranslation } from 'react-i18next';
 import { Localization } from '@/enums/Localization';
+import documentStore from '@/stores/DocumentStore';
 
 interface ICreateDocumentModalProps {
   toggle: () => void;
@@ -68,6 +69,13 @@ const CreateDocumentModal: React.FC<ICreateDocumentModalProps> = observer(
                 toggleConfirm(res.id);
                 setImages([]);
                 setFiles([]);
+                getDocumetData(res.id)
+                  .then((result) => {
+                    if (result) {
+                      documentStore.addDocument(result);
+                    }
+                  })
+                  .catch((error) => alertStore.toggleAlert(error));
               })
               .catch((error) => alertStore.toggleAlert(error));
           })
@@ -142,6 +150,7 @@ const CreateDocumentModal: React.FC<ICreateDocumentModalProps> = observer(
                 setFiles={setFiles}
                 count={count}
                 setCount={setCount}
+                multiple={true}
               />
               <button
                 type='submit'

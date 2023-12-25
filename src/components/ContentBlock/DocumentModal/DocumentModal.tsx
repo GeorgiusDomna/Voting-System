@@ -21,10 +21,16 @@ import style from './documentModal.module.css';
 
 import { useTranslation } from 'react-i18next';
 import { Localization } from '@/enums/Localization';
+import plusIcon from '@/assets/plus.png';
 
 if (process.env.NODE_ENV !== 'test') Modal.setAppElement('#root');
 
-const DocumentModal: React.FC = () => {
+interface ICreateApplicationModalProps {
+  toggle: () => void;
+  setIdDoc: (callback: () => number | null) => void;
+}
+
+const DocumentModal: React.FC<ICreateApplicationModalProps> = ({ toggle, setIdDoc }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id, appId, appItemId } = useParams();
@@ -70,7 +76,8 @@ const DocumentModal: React.FC = () => {
     if (!id) setPrevLocation(location.pathname);
     (async () => {
       if (id && authStore.token) {
-        const resDoc = await getDocumetData(authStore.token, +id);
+        setIdDoc && setIdDoc(() => Number(id));
+        const resDoc = await getDocumetData(+id);
         if (resDoc) {
           setDataDoc(resDoc);
           if (resDoc.files[0]) {
@@ -108,81 +115,92 @@ const DocumentModal: React.FC = () => {
   }
 
   return (
-    <Modal
-      isOpen={Boolean(id)}
-      contentLabel={t(`${Localization.DocumentModal}.ModalWindow`)}
-      className={style.modal}
-    >
-      <img src={closeIcon} className={style.modal__close} onClick={closeModal} />
-      <div className={style.modal__document}>
-        <div className={style.imageContainer}>
-          <div className={style.document_header}>
-            <div className={style.fileName}>
-              <i>{docUrl[currentImg].fileName}</i>
+    <>
+      <Modal
+        isOpen={Boolean(id)}
+        contentLabel={t(`${Localization.DocumentModal}.ModalWindow`)}
+        className={style.modal}
+      >
+        <img src={closeIcon} className={style.modal__close} onClick={closeModal} />
+        <div className={style.modal__document}>
+          <div className={style.imageContainer}>
+            <div className={style.document_header}>
+              <div className={style.fileName}>
+                <i>{docUrl[currentImg].fileName}</i>
+              </div>
+              <div className={style.fileControler}>
+                <button onClick={() => switchCurrentDoc(false)}>&lt;</button>
+                <button onClick={() => switchCurrentDoc(true)}>&gt;</button>
+              </div>
             </div>
-            <div className={style.fileControler}>
-              <button onClick={() => switchCurrentDoc(false)}>&lt;</button>
-              <button onClick={() => switchCurrentDoc(true)}>&gt;</button>
+            <img src={docUrl[currentImg].file} onError={handleImageError} />
+            <div className={style.dotContainer}>{dots}</div>
+          </div>
+
+          <div className={style.documentInfo}>
+            {dataDoc && (
+              <>
+                <h1 className={style.title}>
+                  {t(`${Localization.DocumentModal}.documentInfoTitle`)}
+                </h1>
+                <div className={style.info}>
+                  <div className={style.info_item}>
+                    {t(`${Localization.DocumentModal}.fileName`)}
+                    <i>{dataDoc.name}</i>
+                  </div>
+                  <div className={style.info_item}>
+                    id: <i>{dataDoc.id}</i>
+                  </div>
+                  <div className={style.info_item}>
+                    {t(`${Localization.DocumentModal}.created`)}
+                    <i>{dateFormater(dataDoc.creationDate)}</i>
+                  </div>
+                  <div className={style.info_item}>
+                    {t(`${Localization.DocumentModal}.updated`)}
+                    <i>{dateFormater(dataDoc.updateDate)}</i>
+                  </div>
+                </div>
+              </>
+            )}
+            {dataUser && (
+              <>
+                <h1 className={style.title}>
+                  {' '}
+                  {t(`${Localization.DocumentModal}.authorInfoTitle`)}
+                </h1>
+                <div className={style.info}>
+                  <div className={style.info_item}>
+                    {t(`${Localization.DocumentModal}.name`)}
+                    <i>{dataUser.lastName}</i> <i>{dataUser.firstName}</i>
+                  </div>
+                  <div className={style.info_item}>
+                    {t(`${Localization.DocumentModal}.login`)}
+                    <i>{dataUser.username}</i>
+                  </div>
+                  {dataDepart && (
+                    <div className={style.info_item}>
+                      {t(`${Localization.DocumentModal}.department`)}
+                      <i>{dataDepart?.name}</i>
+                    </div>
+                  )}
+                  <div className={style.info_item}>
+                    {t(`${Localization.DocumentModal}.email`)}
+                    <i>{dataUser.email}</i>
+                  </div>
+                </div>
+              </>
+            )}
+            <div className={style.dataList__controls} onClick={toggle}>
+              <img className={style.dataList__img} src={plusIcon} alt='+' />
+              <button className={style.dataList__button}>
+                {t(`${Localization.DocumentPanel}.AddApplication`)}
+              </button>
             </div>
           </div>
-          <img src={docUrl[currentImg].file} onError={handleImageError} />
-          <div className={style.dotContainer}>{dots}</div>
+          {appId && appItemId && <button onClick={takeApplication}>{'Голосовать'}</button>}
         </div>
-
-        <div className={style.documentInfo}>
-          {dataDoc && (
-            <>
-              <h1 className={style.title}>
-                {t(`${Localization.DocumentModal}.documentInfoTitle`)}
-              </h1>
-              <div className={style.info}>
-                <div className={style.info_item}>
-                  {t(`${Localization.DocumentModal}.fileName`)}
-                  <i>{dataDoc.name}</i>
-                </div>
-                <div className={style.info_item}>
-                  id: <i>{dataDoc.id}</i>
-                </div>
-                <div className={style.info_item}>
-                  {t(`${Localization.DocumentModal}.created`)}
-                  <i>{dateFormater(dataDoc.creationDate)}</i>
-                </div>
-                <div className={style.info_item}>
-                  {t(`${Localization.DocumentModal}.updated`)}
-                  <i>{dateFormater(dataDoc.updateDate)}</i>
-                </div>
-              </div>
-            </>
-          )}
-          {dataUser && (
-            <>
-              <h1 className={style.title}> {t(`${Localization.DocumentModal}.authorInfoTitle`)}</h1>
-              <div className={style.info}>
-                <div className={style.info_item}>
-                  {t(`${Localization.DocumentModal}.name`)}
-                  <i>{dataUser.lastName}</i> <i>{dataUser.firstName}</i>
-                </div>
-                <div className={style.info_item}>
-                  {t(`${Localization.DocumentModal}.login`)}
-                  <i>{dataUser.username}</i>
-                </div>
-                {dataDepart && (
-                  <div className={style.info_item}>
-                    {t(`${Localization.DocumentModal}.department`)}
-                    <i>{dataDepart?.name}</i>
-                  </div>
-                )}
-                <div className={style.info_item}>
-                  {t(`${Localization.DocumentModal}.email`)}
-                  <i>{dataUser.email}</i>
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-        {appId && appItemId && <button onClick={takeApplication}>{'Голосовать'}</button>}
-      </div>
-    </Modal>
+      </Modal>
+    </>
   );
 };
 

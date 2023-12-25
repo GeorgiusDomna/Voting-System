@@ -70,6 +70,39 @@ export async function connectDocToApplication(token: string, appId: number, docI
   }
 }
 
+/**
+ * Отправить голосование в департамент или пользователю.
+ *
+ * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
+ *
+ */
+export async function sendAppToDepOrUser(
+  token: string,
+  appId: number,
+  value: { toUserId?: number; toDepartmentId: number }[]
+) {
+  try {
+    const url = `${baseUrl}/application/${appId}/applicationItem`;
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(value),
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      throw new Error(error.message);
+    }
+    return await response.json();
+  } catch (error) {
+    return Promise.reject('Что-то пошло не так');
+  }
+}
+
 export async function getApplicationItemsByDepartment(
   token: string,
   depId: number,

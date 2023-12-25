@@ -32,7 +32,7 @@ const DocumentPanel: React.FC = () => {
 
   const toggleModalConfirmAddApplication = (id: number | null = null) => {
     setIsOpenModalConfirmAddApplication(!isOpenModalConfirmAddApplication);
-    setIdDoc(id ? id : null);
+    setIdDoc(() => (id ? id : null));
   };
 
   const toggleModalCreateApplication = () => {
@@ -65,7 +65,7 @@ const DocumentPanel: React.FC = () => {
       ) : (
         <>
           <Table dataList={documentList} type='document' />
-          <DocumentModal />
+          <DocumentModal toggle={toggleModalCreateApplication} setIdDoc={setIdDoc} />
           <CreateDocumentModal
             isOpen={isOpenModalCreateDocument}
             toggle={toggleModalCreateDocument}
