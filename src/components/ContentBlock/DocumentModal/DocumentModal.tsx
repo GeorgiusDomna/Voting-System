@@ -47,7 +47,6 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
   const { t } = useTranslation();
 
   const closeModal = () => {
-    console.log('close');
     prevLocation ? navigate(prevLocation, { state: { fetch: true } }) : navigate(Paths.ROOT);
     setDataDoc(null);
     setDocUrl([{ file: defaultImg }]);
