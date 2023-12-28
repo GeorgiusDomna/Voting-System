@@ -49,7 +49,13 @@ const DepartmentPanel: React.FC = () => {
       {isLoading ? (
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />
       ) : (
-        <Table dataList={departmentList} type='department' />
+        <Table
+          totalPages={5}
+          сurrentPage={0}
+          setCurrentPage={() => {}}
+          dataList={departmentList}
+          type='department'
+        />
       )}
     </div>
   );
