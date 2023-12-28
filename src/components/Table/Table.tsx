@@ -25,7 +25,7 @@ interface Itype_el {
 }
 
 interface ITableProps {
-  dataList: IdataTable[];
+  dataList: IdataTable[][];
   totalPages: number;
   сurrentPage: number;
   setCurrentPage: (current: number) => void;
@@ -128,18 +128,20 @@ const Table: React.FC<ITableProps> = ({
       ));
     }
     if (type === 'department') {
-      tabelItems = dataList.map((data) => (
-        <TableItem
-          key={data.id}
-          td1={data.name}
-          td2={data.amountOfEmployee}
-          img={type_el.img}
-          callback={() => {
-            data.name &&
-              navigate(`${Paths.DEPARTMENTS}/${encodeURIComponent(data.name)}/${data.id}`);
-          }}
-        />
-      ));
+      if (dataList.length && dataList[сurrentPage]) {
+        tabelItems = dataList[сurrentPage].map((data) => (
+          <TableItem
+            key={data.id}
+            td1={data.name}
+            td2={data.amountOfEmployee}
+            img={type_el.img}
+            callback={() => {
+              data.name &&
+                navigate(`${Paths.DEPARTMENTS}/${encodeURIComponent(data.name)}/${data.id}`);
+            }}
+          />
+        ));
+      }
     }
     if (type === 'user') {
       tabelItems = dataList.map((data) => (

@@ -3,7 +3,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import Modal from 'react-modal';
 
 import IdocumentData from '@/interfaces/IdocumentData';
-import IdepartmentData from '@/interfaces/IdepartmentData';
+import IdepartmentData from '@/interfaces/IDepartmentData';
 import userInfo from '@/interfaces/userInfo';
 import { Paths } from '@/enums/Paths';
 
