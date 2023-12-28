@@ -3,10 +3,10 @@ import style from './tableItem.module.css';
 import option from '@/assets/option.svg';
 
 interface ITabelItemProps {
-  td1: string;
-  td2: number | string;
-  td3?: string;
-  td4?: string;
+  td1: string | undefined;
+  td2: number | string | undefined;
+  td3?: string | undefined;
+  td4?: string | undefined;
   img: string | undefined;
   callback: () => void;
 }

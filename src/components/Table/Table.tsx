@@ -4,9 +4,6 @@ import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
-import IdocumentData from '@/interfaces/IdocumentData';
-import IdepartamentData from '@/interfaces/IdepartmentData';
-
 import userIcon from '@/assets/user.svg';
 import departIcon from '@/assets/depart.svg';
 import docIcon from '@/assets/docIcon.svg';
@@ -15,6 +12,7 @@ import IUserInfo from '@/interfaces/userInfo';
 import { Paths } from '@/enums/Paths';
 import { useTranslation } from 'react-i18next';
 import { Localization } from '@/enums/Localization';
+import IdataTable from '@/interfaces/IdataTable';
 
 interface Itype_el {
   title?: string;
@@ -26,15 +24,15 @@ interface Itype_el {
 }
 
 interface ITableProps {
-  dataList: IdocumentData[] | IdepartamentData[] | IUserInfo[];
+  dataList: IdataTable[];
   type: 'document' | 'department' | 'user';
 }
 
 const dateFormater = (inputDate: string): string => {
   return inputDate.split('T')[0].split('-').join('.');
 };
-const roleCheck = (role: { name: string }[]): string => {
-  return role.find((el) => el.name === 'ROLE_ADMIN') ? 'Admin' : 'User';
+const roleCheck = (role: [{ name: string }] | undefined): string => {
+  return role && role.find((el) => el.name === 'ROLE_ADMIN') ? 'Admin' : 'User';
 };
 
 const Table: React.FC<ITableProps> = ({ dataList, type }) => {
@@ -104,11 +102,17 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
         <TableItem
           key={data.id}
           td1={data.name}
-          td2={dateFormater(data.creationDate)}
-          td3={dateFormater(data.updateDate)}
+          td2={data.creationDate && dateFormater(data.creationDate)}
+          td3={data.updateDate && dateFormater(data.updateDate)}
           img={type_el.img}
           callback={() => {
-            navigate(`${Paths.DOCUMENTS}/${encodeURIComponent(data.id)}`);
+            const path =
+              data.appId && data.appItemId
+                ? `${Paths.DOCUMENTS_TAKE}/${encodeURIComponent(data.id)}/${data.appId}/${
+                    data.appItemId
+                  }`
+                : `${Paths.DOCUMENTS}/${encodeURIComponent(data.id)}`;
+            navigate(path);
           }}
         />
       ));
@@ -121,7 +125,8 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
           td2={data.amountOfEmployee}
           img={type_el.img}
           callback={() => {
-            navigate(`${Paths.DEPARTMENTS}/${encodeURIComponent(data.name)}/${data.id}`);
+            data.name &&
+              navigate(`${Paths.DEPARTMENTS}/${encodeURIComponent(data.name)}/${data.id}`);
           }}
         />
       ));

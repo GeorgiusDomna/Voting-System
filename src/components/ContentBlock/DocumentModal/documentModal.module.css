@@ -29,7 +29,6 @@
 .document_header {
   display: flex;
   justify-content: space-between;
-
 }
 .fileName {
   margin: 0.5rem 0 0 1rem;
@@ -118,4 +117,23 @@
   border: none;
   background-color: transparent;
   cursor: pointer;
+}
+
+.vote {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.vote__button {
+  font-size: 1rem;
+  background-color: rgb(224, 224, 224);
+  border: none;
+  margin-top: 2rem;
+  padding: 7px 10px 7px 10px;
+  transition: all 0.2s ease;
+}
+
+.vote__button:hover {
+  opacity: 0.75;
 }

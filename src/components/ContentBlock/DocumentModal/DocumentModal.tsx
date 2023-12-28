@@ -1,18 +1,19 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import Modal from 'react-modal';
 
 import IdocumentData from '@/interfaces/IdocumentData';
 import IdepartmentData from '@/interfaces/IdepartmentData';
 import userInfo from '@/interfaces/userInfo';
+import { Paths } from '@/enums/Paths';
 
 import { getUserInfo } from '@/api/userService';
 import { getDepartmentData } from '@/api/departmentService';
 import { getDocumetData } from '@/api/docuService';
+import { takeApplicationItem } from '@/api/applicationService';
 
 import alertStore from '@/stores/AlertStore';
 import authStore from '@/stores/AuthStore';
-import { Paths } from '@/enums/Paths';
 import { dateFormater } from '@/utils/dateFormater';
 
 import closeIcon from '@/assets/cancel.svg';
@@ -25,14 +26,15 @@ import plusIcon from '@/assets/plus.png';
 
 if (process.env.NODE_ENV !== 'test') Modal.setAppElement('#root');
 
-interface ICreateApplicationModalProps {
-  toggle: () => void;
-  setIdDoc: (callback: () => number | null) => void;
+interface ModalProps {
+  toggle?: () => void;
+  setIdDoc?: (callback: () => number | null) => void;
 }
 
-const DocumentModal: React.FC<ICreateApplicationModalProps> = ({ toggle, setIdDoc }) => {
+const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null }) => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const location = useLocation();
+  const { id, appId, appItemId } = useParams();
   const [dataDoc, setDataDoc] = useState<IdocumentData | null>();
   const [docUrl, setDocUrl] = useState<{ file: string; fileName?: string }[]>([
     { file: defaultImg },
@@ -40,11 +42,12 @@ const DocumentModal: React.FC<ICreateApplicationModalProps> = ({ toggle, setIdDo
   const [currentImg, setCurrentImg] = useState(0);
   const [dataUser, setDataUser] = useState<userInfo | null>();
   const [dataDepart, setDataDepart] = useState<IdepartmentData | null>();
+  const [prevLocation, setPrevLocation] = useState<null | string>(null);
   const dots: JSX.Element[] = [];
   const { t } = useTranslation();
 
   const closeModal = () => {
-    navigate(Paths.ROOT);
+    prevLocation ? navigate(prevLocation, { state: { fetch: true } }) : navigate(Paths.ROOT);
     setDataDoc(null);
     setDocUrl([{ file: defaultImg }]);
     setDataUser(null);
@@ -68,11 +71,29 @@ const DocumentModal: React.FC<ICreateApplicationModalProps> = ({ toggle, setIdDo
       : setCurrentImg(currentImg === 0 ? docUrl.length - 1 : currentImg - 1);
   };
 
+  const takeApplication = () => {
+    const take = async () => {
+      try {
+        if (appId && appItemId) {
+          if (authStore.token) {
+            const res = await takeApplicationItem(authStore.token, +appItemId, +appId);
+            res && closeModal();
+          }
+        } else alertStore.toggleAlert(t(`${Localization.UserPanel}.errorAlert`));
+      } catch (e) {
+        alertStore.toggleAlert((e as Error).message);
+      }
+    };
+
+    take();
+  };
+
   useEffect(() => {
+    if (appId) setPrevLocation(Paths.DOCUMENTS_TAKE);
     (async () => {
       if (id && authStore.token) {
         setIdDoc && setIdDoc(() => Number(id));
-        const resDoc = await getDocumetData(+id);
+        const resDoc = await getDocumetData(authStore.token, +id);
         if (resDoc) {
           setDataDoc(resDoc);
           if (resDoc.files[0]) {
@@ -97,7 +118,7 @@ const DocumentModal: React.FC<ICreateApplicationModalProps> = ({ toggle, setIdDo
       }
     })();
     window.addEventListener('keyup', closeModalEsc);
-  }, [id]);
+  }, [location]);
 
   for (let i = 0; i < docUrl.length; i++) {
     dots.push(
@@ -185,12 +206,21 @@ const DocumentModal: React.FC<ICreateApplicationModalProps> = ({ toggle, setIdDo
                 </div>
               </>
             )}
-            <div className={style.dataList__controls} onClick={toggle}>
-              <img className={style.dataList__img} src={plusIcon} alt='+' />
-              <button className={style.dataList__button}>
-                {t(`${Localization.DocumentPanel}.AddApplication`)}
-              </button>
-            </div>
+            {!appId && !appItemId && toggle && (
+              <div className={style.dataList__controls} onClick={toggle}>
+                <img className={style.dataList__img} src={plusIcon} alt='+' />
+                <button className={style.dataList__button}>
+                  {t(`${Localization.DocumentPanel}.AddApplication`)}
+                </button>
+              </div>
+            )}
+            {appId && appItemId && (
+              <div className={style.vote}>
+                <button className={style.vote__button} onClick={takeApplication}>
+                  {'Голосовать'}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </Modal>

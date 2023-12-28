@@ -5,5 +5,6 @@ export enum Paths {
   DEPARTMENTS = '/departments',
   DOCUMENTS = '/documents',
   DOCUMENTS_VOTE = '/documents-vote',
+  DOCUMENTS_TAKE = '/documents-take',
   ANY = '*',
 }
