@@ -1,6 +1,6 @@
 import { NetworkError } from '@/errors/NetworkError';
 import { IFailedServerResponse } from '@/interfaces/IFailedServerResponse';
-import documentData from '@/interfaces/IdocumentData';
+import documentData, { IDocumentResponseDto } from '@/interfaces/IdocumentData';
 import ICreateDoc from '@/interfaces/createDoc';
 import ICreateFile from '@/interfaces/createFile';
 
@@ -17,16 +17,20 @@ const headers = {
 };
 
 /**
- * Получает список всех документов.
+ * Получает список документов на странице.
  *
- * @returns {Promise<documentData[] | void>} Промис, который разрешается массивом данных всех документов.
+ * @returns {Promise<IDocumentResponseDto[] | void>} Промис, который разрешается массивом данных документов со страницы.
  * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
  *
  */
-export async function getAllDocuments(token: string): Promise<documentData[] | void> {
+export async function getDocumentsByPages(
+  page: number,
+  limit: number,
+  token: string
+): Promise<IDocumentResponseDto[] | void> {
   const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
   try {
-    const url = `${baseUrl}/doc/filter?page=0&limit=20&state=ACTIVE`;
+    const url = `${baseUrl}/doc/filter?page=${page}&limit=${limit}&state=ACTIVE`;
     if (!isOnline()) throw new NetworkError();
     const response = await fetch(url, {
       method: 'GET',
@@ -36,12 +40,12 @@ export async function getAllDocuments(token: string): Promise<documentData[] | v
       const error: IFailedServerResponse = await response.json();
       return Promise.reject(error.message);
     }
-    const data = await response.json();
-    return data.content;
+    return await response.json();
   } catch (error) {
     alertStore.toggleAlert((error as Error).message);
   }
 }
+
 /**
  * Получает данные о документе принимая его id.
  *

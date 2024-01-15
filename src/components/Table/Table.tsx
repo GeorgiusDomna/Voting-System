@@ -108,24 +108,26 @@ const Table: React.FC<ITableProps> = ({
     );
   } else {
     if (type === 'document') {
-      tabelItems = dataList.map((data) => (
-        <TableItem
-          key={data.id}
-          td1={data.name}
-          td2={data.creationDate && dateFormater(data.creationDate)}
-          td3={data.updateDate && dateFormater(data.updateDate)}
-          img={type_el.img}
-          callback={() => {
-            const path =
-              data.appId && data.appItemId
-                ? `${Paths.DOCUMENTS_TAKE}/${encodeURIComponent(data.id)}/${data.appId}/${
-                    data.appItemId
-                  }`
-                : `${Paths.DOCUMENTS}/${encodeURIComponent(data.id)}`;
-            navigate(path);
-          }}
-        />
-      ));
+      if (dataList.length && dataList[сurrentPage]) {
+        tabelItems = dataList[сurrentPage].map((data) => (
+          <TableItem
+            key={data.id}
+            td1={data.name}
+            td2={data.creationDate && dateFormater(data.creationDate)}
+            td3={data.updateDate && dateFormater(data.updateDate)}
+            img={type_el.img}
+            callback={() => {
+              const path =
+                data.appId && data.appItemId
+                  ? `${Paths.DOCUMENTS_TAKE}/${encodeURIComponent(data.id)}/${data.appId}/${
+                      data.appItemId
+                    }`
+                  : `${Paths.DOCUMENTS}/${encodeURIComponent(data.id)}`;
+              navigate(path);
+            }}
+          />
+        ));
+      }
     }
     if (type === 'department') {
       if (dataList.length && dataList[сurrentPage]) {
