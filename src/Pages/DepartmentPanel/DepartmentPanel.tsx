@@ -37,10 +37,10 @@ const DepartmentPanel: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      setIsLoading(true);
       try {
         if (authStore.token && !departamentPages[currentPage]) {
-          const res = await getDepartmentsByPage(currentPage, paginationInfo.size);
+          setIsLoading(true);
+          const res = await getDepartmentsByPage(currentPage, paginationInfo.size, authStore.token);
           if (res) {
             const { content, ...paginationInfo } = res;
             setDepartmentPage(content);
@@ -63,10 +63,10 @@ const DepartmentPanel: React.FC = () => {
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />
       ) : (
         <Table
+          dataList={departamentPages}
           totalPages={paginationInfo.totalPages}
           сurrentPage={currentPage}
           setCurrentPage={setCurrentPage}
-          dataList={departamentPages}
           type='department'
         />
       )}

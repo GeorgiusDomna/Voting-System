@@ -56,14 +56,6 @@ class DepartmentsStore {
   }
 
   /**
-   * Добавляет новую департамент в список категорий.
-   * @param newDepartment - Новые метаданные департамента для добавления в список департаментов.
-   */
-  //addNewDepartment(newDepartment: IDepartmentData) {
-  //  this.departmentList.push(newDepartment);
-  //}
-
-  /**
    * Добавляет новый департамент в список департаментов.
    * @param {number} newDepartment - Данные новго департамента для добавления в список.
    */

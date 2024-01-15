@@ -144,21 +144,23 @@ const Table: React.FC<ITableProps> = ({
       }
     }
     if (type === 'user') {
-      tabelItems = dataList.map((data) => (
-        <TableItem
-          key={data.id}
-          td1={
-            data.firstName && data.lastName ? `${data.firstName} ${data.lastName}` : data.username
-          }
-          td2={roleCheck(data.roles)}
-          td3={data.email}
-          img={type_el.img}
-          callback={() => {
-            setUserInfo(data as IUserInfo);
-            toggleUserInfo();
-          }}
-        />
-      ));
+      if (dataList.length && dataList[сurrentPage]) {
+        tabelItems = dataList[сurrentPage].map((data) => (
+          <TableItem
+            key={data.id}
+            td1={
+              data.firstName && data.lastName ? `${data.firstName} ${data.lastName}` : data.username
+            }
+            td2={roleCheck(data.roles)}
+            td3={data.email}
+            img={type_el.img}
+            callback={() => {
+              setUserInfo(data as IUserInfo);
+              toggleUserInfo();
+            }}
+          />
+        ));
+      }
     }
   }
 

@@ -71,14 +71,16 @@ export async function getAllDepartments(token: string): Promise<IDepartmentData[
  */
 export async function getDepartmentsByPage(
   page: number,
-  limit: number
+  limit: number,
+  token: string
 ): Promise<IDepartmentResponseDto | void> {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
   try {
     if (!isOnline()) throw new NetworkError();
     const url = `${baseUrl}/department/?page=${page}&limit=${limit}&recordState=ACTIVE`;
     const response = await fetch(url, {
       method: 'GET',
-      headers,
+      headers: headersWithToken,
     });
     if (!response.ok) {
       const error: IFailedServerResponse = await response.json();
