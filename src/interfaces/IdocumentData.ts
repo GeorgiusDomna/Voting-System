@@ -1,3 +1,5 @@
+import { IPaginationInfo } from './IPaginationInfo';
+
 export default interface documentData {
   creationDate: string;
   creatorId: number;
@@ -7,4 +9,8 @@ export default interface documentData {
   id: number;
   name: string;
   updateDate: string;
+}
+
+export interface IDocumentResponseDto extends IPaginationInfo {
+  content: documentData[];
 }

@@ -11,7 +11,7 @@ import authStore from '@/stores/AuthStore';
 import alertStore from '@/stores/AlertStore';
 
 import IUserInfo from '@/interfaces/userInfo';
-import departamentData from '@/interfaces/IdepartmentData';
+import { IDepartmentData } from '@/interfaces/IDepartmentData';
 
 import styles from './userInfoModal.module.css';
 import closeIcon from '@/assets/cancel.svg';
@@ -27,7 +27,7 @@ interface userInfoModalProps {
 }
 
 const UserInfoModal: React.FC<userInfoModalProps> = ({ isOpen, toggle, userInfo }) => {
-  const [departments, setDepartments] = useState<departamentData[]>([]);
+  const [departments, setDepartments] = useState<IDepartmentData[]>([]);
   const [selectedValue, setSelectedValue] = useState(userInfo.departmentId);
   const { t } = useTranslation();
 

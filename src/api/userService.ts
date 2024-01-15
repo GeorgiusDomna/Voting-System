@@ -1,12 +1,13 @@
 import { NetworkError } from '@/errors/NetworkError';
 import { IFailedServerResponse } from '@/interfaces/IFailedServerResponse';
 import IUser from '@/interfaces/IUser';
-import IUserInfo from '@/interfaces/userInfo';
+import IUserInfo, { IUserResponseDto } from '@/interfaces/userInfo';
 import AddUserToDepartmentParams from '@/interfaces/addUserToDepartament';
 
 import alertStore from '@/stores/AlertStore';
 
 import { isOnline } from '@/utils/networkStatus';
+import authStore from '@/stores/AuthStore';
 
 const baseUrl = 'http://5.35.83.142:8082/api';
 const headers = {
@@ -128,6 +129,42 @@ export async function getUsersByDepartment(
     } else if (response.status === 204) return [];
     const data = await response.json();
     return data.content;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+}
+
+/**
+ * Получает список сотрудников департамента.
+ *
+ * @returns {Promise<IUserResponseDto | void>} Промис, который разрешается массивом данных всех сотрудниках департамента.
+ * @throws {NetworkError} Если ответ сервера не успешен, вызывается `alertStore.toggleAlert()` с сообщением об ошибке.
+ *
+ */
+export async function getDepartmentUsersByPage(
+  id: number,
+  current: number,
+  size: number
+): Promise<IUserResponseDto | void> {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${authStore.token}` };
+  try {
+    if (!isOnline()) throw new NetworkError();
+    const url = `${baseUrl}/department/${id}/users?page=${current}&limit=${size}&recordState=ACTIVE`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: headersWithToken,
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      return Promise.reject(error.message);
+    } else if (response.status === 204)
+      return {
+        content: [],
+        size,
+        number: 0,
+        totalPages: 1,
+      };
+    return await response.json();
   } catch (error) {
     throw new Error((error as Error).message);
   }

@@ -12,13 +12,21 @@ import CreateApplicationModal from '@/components/ContentBlock/CreateApplicationM
 
 import documentStore from '@/stores/DocumentStore';
 import authStore from '@/stores/AuthStore';
-import { getAllDocuments } from '@/api/docuService';
+import { getDocumentsByPages } from '@/api/docuService';
 
 import style from './documentPanel.module.css';
 import plusIcon from '@/assets/plus.png';
+import alertStore from '@/stores/AlertStore';
 
 const DocumentPanel: React.FC = () => {
-  const { documentList, setDocumentList } = documentStore;
+  const {
+    documentPages,
+    setDocumentList,
+    setPaginationInfo,
+    paginationInfo,
+    currentPage,
+    setCurrentPage,
+  } = documentStore;
   const [isOpenModalCreateDocument, setIsOpenModalCreateDocument] = useState(false);
   const [isOpenModalConfirmAddApplication, setIsOpenModalConfirmAddApplication] = useState(false);
   const [isOpenModalCreateApplication, setIsOpenModalCreateApplication] = useState(false);
@@ -40,16 +48,24 @@ const DocumentPanel: React.FC = () => {
   };
 
   useEffect(() => {
-    setIsLoading(true);
-    const fetchData = async () => {
-      if (authStore.token) {
-        const res = await getAllDocuments(authStore.token);
-        res && setDocumentList(res);
+    (async () => {
+      try {
+        if (authStore.token && !documentPages[currentPage]) {
+          setIsLoading(true);
+          const res = await getDocumentsByPages(currentPage, paginationInfo.size, authStore.token);
+          if (res) {
+            const { content, ...paginationInfo } = res;
+            setDocumentList(content);
+            setPaginationInfo(paginationInfo);
+          }
+        }
+      } catch (err) {
+        alertStore.toggleAlert((err as Error).message);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
-    };
-    fetchData();
-  }, [authStore.isLoggedIn]);
+    })();
+  }, [currentPage]);
 
   return (
     <div className={style.documentPanel}>
@@ -64,7 +80,13 @@ const DocumentPanel: React.FC = () => {
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />
       ) : (
         <>
-          <Table dataList={documentList} type='document' />
+          <Table
+            dataList={documentPages}
+            totalPages={paginationInfo.totalPages}
+            сurrentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            type='document'
+          />
           <DocumentModal toggle={toggleModalCreateApplication} setIdDoc={setIdDoc} />
           <CreateDocumentModal
             isOpen={isOpenModalCreateDocument}
