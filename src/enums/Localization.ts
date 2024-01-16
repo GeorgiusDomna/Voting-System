@@ -28,4 +28,5 @@ export enum Localization {
   DocumentModal = 'DocumentModal',
   CreateApplicationModal = 'CreateApplicationModal',
   UserInfoModal = 'UserInfoModal',
+  NotFoundPage = 'NotFoundPage',
 }

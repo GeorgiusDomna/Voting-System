@@ -21,7 +21,7 @@ import {
 import FormLogin from '../Auth/Forms/FormLogin';
 import FormRegistration from '../Auth/Forms/FormRegistration';
 import DocumentPanel from '@/Pages/DocumentPanel/DocumentPanel';
-import NotFoundPage from '../errorPage/PageNotFound';
+import NotFoundPage from '../../Pages/NotFoundPage/NotFoundPage';
 
 const App: React.FC = () => {
   const navigate = useNavigate();
