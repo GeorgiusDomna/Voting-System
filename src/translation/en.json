@@ -106,5 +106,10 @@
       "move": "Move",
       "delete": "Delete",
       "withoutDepartment": "Without Department"
+    },
+    "NotFoundPage": {
+      "title": "Page not found",
+      "discription": "Please check the accuracy of the entered address or go back to the main page and try again later.",
+      "button": "Back to main page"
     }
 }
