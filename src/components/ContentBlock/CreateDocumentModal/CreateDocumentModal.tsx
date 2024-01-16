@@ -69,7 +69,7 @@ const CreateDocumentModal: React.FC<ICreateDocumentModalProps> = observer(
                 toggleConfirm(res.id);
                 setImages([]);
                 setFiles([]);
-                getDocumetData(res.id)
+                getDocumetData(authStore.token as string, res.id)
                   .then((result) => {
                     if (result) {
                       documentStore.addDocument(result);

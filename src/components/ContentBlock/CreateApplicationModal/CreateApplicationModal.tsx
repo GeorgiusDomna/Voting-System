@@ -79,7 +79,7 @@ const CreateApplicationModal: React.FC<ICreateApplicationModalProps> = observer(
         getAllDepartments(authStore.token)
           .then((res) => res && setDepartments(res))
           .catch((error) => alertStore.toggleAlert(error));
-        getDocumetData(idDoc)
+        getDocumetData(authStore.token, idDoc)
           .then((res) => {
             if (res) {
               setDocInfo(res);

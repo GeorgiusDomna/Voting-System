@@ -4,6 +4,7 @@ import authStore from '@/stores/AuthStore';
 import { getUserMe } from '@/api/authService';
 import ContentBlock from '../ContentBlock/ContentBlock';
 import DepartmentPanel from '../../Pages/DepartmentPanel/DepartmentPanel';
+import DocumentTake from '@/Pages/DocumentTake/DocumentTake';
 import UserPanel from '@/Pages/UserPanel/UserPanel';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
@@ -65,10 +66,17 @@ const App: React.FC = () => {
               <Route path={`${Paths.DEPARTMENTS}/:name/:id`} element={<UserPanel />} />
             </>
           ) : (
-            <Route
-              path={Paths.DOCUMENTS_VOTE}
-              element={'Компонент голосования за документ (Юзер)'}
-            />
+            <>
+              <Route
+                path={Paths.DOCUMENTS_VOTE}
+                element={'Компонент голосования за документ (Юзер)'}
+              />
+              <Route path={Paths.DOCUMENTS_TAKE} element={<DocumentTake />} />
+              <Route
+                path={`${Paths.DOCUMENTS_TAKE}/:id/:appId?/:appItemId?`}
+                element={<DocumentTake />}
+              />
+            </>
           )}
         </Route>
         <Route

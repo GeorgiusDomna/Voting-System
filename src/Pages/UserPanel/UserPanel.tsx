@@ -11,7 +11,7 @@ import Table from '@/components/Table/Table';
 import AddUserModal from '@/components/ContentBlock/AddUserModal/AddUserModal';
 import DeleteDepartmentModal from '@/components/ContentBlock/DeleteDepartmentModal/DeleteDepartmentModal';
 
-import { getUsersByDepartment } from '@/api/userService';
+import { getDepartmentUsersByPage } from '@/api/userService';
 import userStore from '@/stores/EmployeeStore';
 import alertStore from '@/stores/AlertStore';
 import authStore from '@/stores/AuthStore';
@@ -21,7 +21,8 @@ import plusIcon from '@/assets/plus.png';
 import trashIcon from '@/assets/trash.svg';
 
 const UserPanel: React.FC = () => {
-  const { userList, setUserList } = userStore;
+  const { userPages, currentPage, setCurrentPage, paginationInfo, setPaginationInfo, setUserList } =
+    userStore;
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -36,21 +37,28 @@ const UserPanel: React.FC = () => {
   }, [authStore.userInfo]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    (async () => {
       if (id) {
-        if (authStore.token) {
-          const res = await getUsersByDepartment(authStore.token, +id);
-          res && setUserList(res);
+        try {
+          if (authStore.token && !userPages[currentPage]) {
+            setIsLoading(true);
+            const res = await getDepartmentUsersByPage(+id, currentPage, paginationInfo.size);
+            if (res) {
+              const { content, ...paginationInfo } = res;
+              setUserList(content);
+              setPaginationInfo(paginationInfo);
+            }
+          }
+        } catch (err) {
+          alertStore.toggleAlert((err as Error).message);
+        } finally {
+          setIsLoading(false);
         }
       } else {
         alertStore.toggleAlert(t(`${Localization.UserPanel}.errorAlert`));
-        setIsLoading(false);
       }
-      setIsLoading(false);
-    };
-    setIsLoading(true);
-    fetchData();
-  }, [id]);
+    })();
+  }, [currentPage]);
 
   function toggle() {
     setIsOpen(!isOpen);
@@ -80,7 +88,13 @@ const UserPanel: React.FC = () => {
       {isLoading ? (
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />
       ) : (
-        <Table dataList={userList} type='user' />
+        <Table
+          dataList={userPages}
+          totalPages={paginationInfo.totalPages}
+          сurrentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          type='user'
+        />
       )}
       {id && <AddUserModal departmentId={+id} toggle={toggle} isOpen={isOpen} />}
       {id && (
