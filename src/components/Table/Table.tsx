@@ -1,19 +1,21 @@
-import TableItem from './TableItem/TableItem';
-import UserInfoModal from '../userInfoModal/userInfoModal';
 import { observer } from 'mobx-react-lite';
-import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
+import { Paths } from '@/enums/Paths';
 
+import TableItem from './TableItem/TableItem';
+import Pagination from './Pagination/Pagination';
+import UserInfoModal from '../userInfoModal/userInfoModal';
+
+import IdataTable from '@/interfaces/IdataTable';
+import IUserInfo from '@/interfaces/userInfo';
+
+import style from './table.module.css';
 import userIcon from '@/assets/user.svg';
 import departIcon from '@/assets/depart.svg';
 import docIcon from '@/assets/docIcon.svg';
-import style from './table.module.css';
-import IUserInfo from '@/interfaces/userInfo';
-import { Paths } from '@/enums/Paths';
-import { useTranslation } from 'react-i18next';
-import { Localization } from '@/enums/Localization';
-import IdataTable from '@/interfaces/IdataTable';
-import Pagination from './Pagination/Pagination';
 
 interface Itype_el {
   title?: string;
@@ -98,7 +100,7 @@ const Table: React.FC<ITableProps> = ({
       break;
   }
 
-  if (!dataList.length) {
+  if (!dataList) {
     tabelItems = (
       <tr>
         <td colSpan={4} align='center'>

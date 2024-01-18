@@ -7,12 +7,12 @@ class UserStore {
   /**
    * Массив, содержащий данные всех сотрудниках в хранилище.
    */
-  userPages: IUserInfo[][] = [];
+  userPages: { [key: string]: IUserInfo[][] } = {};
   /**
    * Информация о пагинации.
    */
   paginationInfo: IPaginationInfo = {
-    size: 3,
+    size: 2,
     number: 0,
     totalPages: 1,
   };
@@ -44,8 +44,11 @@ class UserStore {
    * Устанавливает список весех сотрудников в хранилище.
    * @param {IUserInfo[]} userList - Новый список сотрудников для установки.
    */
-  setUserList(userList: IUserInfo[]) {
-    this.userPages[this.currentPage] = userList;
+  setUserList(userList: IUserInfo[], id: string) {
+    if (!(id in this.userPages)) {
+      this.userPages[id] = [];
+    }
+    this.userPages[id][this.currentPage] = userList;
   }
 
   /**

@@ -31,22 +31,20 @@ const UserPanel: React.FC = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (authStore.userInfo) {
-      if (!authStore.isUserAdmin) navigate(Paths.ROOT);
-    }
+    if (authStore.userInfo && !authStore.isUserAdmin) navigate(Paths.ROOT);
   }, [authStore.userInfo]);
 
   useEffect(() => {
     (async () => {
       if (id) {
         try {
-          if (authStore.token && !userPages[currentPage]) {
+          if (authStore.token && (!userPages[id] || !userPages[id][currentPage])) {
             setIsLoading(true);
             const res = await getDepartmentUsersByPage(+id, currentPage, paginationInfo.size);
             if (res) {
               const { content, ...paginationInfo } = res;
-              setUserList(content);
               setPaginationInfo(paginationInfo);
+              setUserList(content, id);
             }
           }
         } catch (err) {
@@ -89,7 +87,7 @@ const UserPanel: React.FC = () => {
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />
       ) : (
         <Table
-          dataList={userPages}
+          dataList={id ? userPages[id] : []}
           totalPages={paginationInfo.totalPages}
           сurrentPage={currentPage}
           setCurrentPage={setCurrentPage}
