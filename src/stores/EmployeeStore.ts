@@ -1,34 +1,38 @@
 import { makeObservable, observable, computed, action } from 'mobx';
 
 import { IPaginationInfo } from '@/interfaces/IPaginationInfo';
-import IUserInfo from '@/interfaces/userInfo';
+import IUserInfo, { IUserResponseDto } from '@/interfaces/userInfo';
+
+interface IUserPages {
+  [id: string]: {
+    pages: IUserInfo[][];
+    pagination: IPaginationInfo;
+  };
+}
 
 class UserStore {
   /**
+   * Номер открытого департамента.
+   */
+  openDepartID: string | null = null;
+  /**
    * Массив, содержащий данные всех сотрудниках в хранилище.
    */
-  userPages: IUserInfo[][] = [];
-  /**
-   * Информация о пагинации.
-   */
-  paginationInfo: IPaginationInfo = {
-    size: 3,
-    number: 0,
-    totalPages: 1,
-  };
+  userPages: IUserPages = {};
 
   constructor() {
     makeObservable(this, {
       // Работа со списками
+      openDepartID: observable,
       userPages: observable,
+      setOpenDepartID: action.bound,
       setUserList: action.bound,
       addUser: action.bound,
       deleteUser: action.bound,
 
       // Пагинация
-      paginationInfo: observable,
       currentPage: computed,
-      setPaginationInfo: action.bound,
+      totalPages: computed,
       setCurrentPage: action.bound,
     });
   }
@@ -36,29 +40,54 @@ class UserStore {
   /**
    * Индекс открытой страницы (начальное значение 0).
    */
-  get currentPage() {
-    return this.paginationInfo.number ?? 0;
+  get currentPage(): number {
+    return (this.openDepartID && this.userPages[this.openDepartID]?.pagination?.number) || 0;
+  }
+  /**
+   * Количество страниц с пользователями в департаменте.
+   */
+  get totalPages(): number {
+    return (this.openDepartID && this.userPages[this.openDepartID]?.pagination?.totalPages) || 1;
   }
 
   /**
-   * Устанавливает список весех сотрудников в хранилище.
-   * @param {IUserInfo[]} userList - Новый список сотрудников для установки.
+   * Устанавливает ID текущего открытого департамента.
+   * @param ID - индеикатор текущего открытого департамента.
    */
-  setUserList(userList: IUserInfo[]) {
-    this.userPages[this.currentPage] = userList;
+  setOpenDepartID(ID: string) {
+    this.openDepartID = ID;
+  }
+
+  /**
+   * Устанавливает список сотрудников на странице и информацию о пагинации.
+   * @param {IUserResponseDto} data - объект типа `IUserResponseDto` содержащий в себе массив пользователей на странице и информацию для пагинации.
+   */
+  setUserList(data: IUserResponseDto) {
+    const id = this.openDepartID;
+    if (id) {
+      if (!(id in this.userPages)) {
+        this.userPages[id] = { pages: [], pagination: {} };
+      }
+      const { content, ...paginationInfo } = data;
+      this.userPages[id].pages[this.currentPage] = content;
+      this.userPages[id].pagination = paginationInfo;
+    }
   }
 
   /**
    * Добавляет нового сотрудника в список сотрудников.
    * @param {IUserInfo} newUser - Данные о новом сотруднике для добавления.
+   * @param {number} id - Индефикатор департамента в который добавляется сотрудник.
    */
-  addUser(newUser: IUserInfo) {
-    const totalPages = this.userPages.length;
-    if (this.userPages[totalPages - 1].length < this.paginationInfo.size) {
-      this.userPages[totalPages - 1].push(newUser);
-    } else {
-      this.userPages[totalPages] = [newUser];
-      this.paginationInfo.totalPages++;
+  addUser(newUser: IUserInfo, id: number) {
+    if (this.userPages[id] && this.userPages[id].pagination) {
+      const totalPages = this.userPages[id].pages.length;
+      if (this.userPages[id].pages[totalPages - 1].length < this.userPages[id].pagination.size) {
+        this.userPages[id].pages[totalPages - 1].push(newUser);
+      } else {
+        this.userPages[id].pages[totalPages] = [newUser];
+        this.userPages[id].pagination.totalPages++;
+      }
     }
   }
 
@@ -67,17 +96,13 @@ class UserStore {
    * @param {number} id - Id сотрудника, которого нужно удалить.
    */
   deleteUser(id: number) {
-    for (let i = 0; i < this.userPages.length; i++) {
-      this.userPages[i] = this.userPages[i].filter((user) => user.id !== id);
+    if (this.openDepartID) {
+      this.userPages[this.openDepartID].pages[this.currentPage] = this.userPages[
+        this.openDepartID
+      ].pages[this.currentPage].filter((user) => user.id !== id);
+      !this.userPages[this.openDepartID].pages[this.currentPage].length &&
+        this.userPages[this.openDepartID].pagination.totalPages--;
     }
-  }
-
-  /**
-   * Устанавливает объект данных с информацией о пагинации.
-   * @param info - Новый номер текущей страницы.
-   */
-  setPaginationInfo(info: IPaginationInfo) {
-    this.paginationInfo = info;
   }
 
   /**
@@ -85,7 +110,9 @@ class UserStore {
    * @param current - Новый номер текущей страницы.
    */
   setCurrentPage(current: number) {
-    this.paginationInfo.number = current;
+    if (this.openDepartID) {
+      this.userPages[this.openDepartID].pagination.number = current;
+    }
   }
 }
 

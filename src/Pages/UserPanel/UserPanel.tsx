@@ -21,7 +21,7 @@ import plusIcon from '@/assets/plus.png';
 import trashIcon from '@/assets/trash.svg';
 
 const UserPanel: React.FC = () => {
-  const { userPages, currentPage, setCurrentPage, paginationInfo, setPaginationInfo, setUserList } =
+  const { userPages, setUserList, currentPage, setCurrentPage, totalPages, setOpenDepartID } =
     userStore;
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -31,23 +31,21 @@ const UserPanel: React.FC = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (authStore.userInfo) {
-      if (!authStore.isUserAdmin) navigate(Paths.ROOT);
-    }
+    if (authStore.userInfo && !authStore.isUserAdmin) navigate(Paths.ROOT);
   }, [authStore.userInfo]);
+
+  useEffect(() => {
+    id && setOpenDepartID(id);
+  }, [id]);
 
   useEffect(() => {
     (async () => {
       if (id) {
         try {
-          if (authStore.token && !userPages[currentPage]) {
+          if (authStore.token && (!userPages[id] || !userPages[id].pages[currentPage])) {
             setIsLoading(true);
-            const res = await getDepartmentUsersByPage(+id, currentPage, paginationInfo.size);
-            if (res) {
-              const { content, ...paginationInfo } = res;
-              setUserList(content);
-              setPaginationInfo(paginationInfo);
-            }
+            const res = await getDepartmentUsersByPage(+id, currentPage);
+            res && setUserList(res);
           }
         } catch (err) {
           alertStore.toggleAlert((err as Error).message);
@@ -89,8 +87,8 @@ const UserPanel: React.FC = () => {
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />
       ) : (
         <Table
-          dataList={userPages}
-          totalPages={paginationInfo.totalPages}
+          dataList={id ? userPages[id]?.pages : []}
+          totalPages={totalPages}
           сurrentPage={currentPage}
           setCurrentPage={setCurrentPage}
           type='user'
