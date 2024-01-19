@@ -77,7 +77,7 @@ const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, de
             authStore.token as string
           )
             .then(() => {
-              userStore.addUser({ ...data, departmentId });
+              userStore.addUser(data, departmentId);
               resetForm();
               alertStore.toggleAlert(t(`${Localization.AddUserModal}.successMessage`));
             })

@@ -143,8 +143,8 @@ export async function getUsersByDepartment(
  */
 export async function getDepartmentUsersByPage(
   id: number,
-  current: number,
-  size: number
+  current: number = 0,
+  size: number = 5
 ): Promise<IUserResponseDto | void> {
   const headersWithToken = { ...headers, Authorization: `Bearer ${authStore.token}` };
   try {

@@ -2,7 +2,7 @@ export interface IPaginationInfo {
   empty?: boolean;
   first?: boolean;
   last?: boolean;
-  number: number;
+  number?: number;
   numberOfElements?: number;
   pageable?: {
     offset: number;
@@ -16,12 +16,12 @@ export interface IPaginationInfo {
     };
     unpaged?: boolean;
   };
-  size: number;
+  size?: number;
   sort?: {
     empty: boolean;
     sorted: boolean;
     unsorted: boolean;
   };
   totalElements?: number;
-  totalPages: number;
+  totalPages?: number;
 }
