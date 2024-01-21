@@ -10,7 +10,7 @@ import { Paths } from '@/enums/Paths';
 import { getUserInfo } from '@/api/userService';
 import { getDepartmentData } from '@/api/departmentService';
 import { getDocumetData } from '@/api/docuService';
-import { takeApplicationItem } from '@/api/applicationService';
+import { takeApplicationItem, voteApplicationItem } from '@/api/applicationService';
 
 import alertStore from '@/stores/AlertStore';
 import authStore from '@/stores/AuthStore';
@@ -40,11 +40,14 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
     { file: defaultImg },
   ]);
   const [currentImg, setCurrentImg] = useState(0);
+  const [resStatus, setResStatus] = useState(0);
   const [dataUser, setDataUser] = useState<userInfo | null>();
   const [dataDepart, setDataDepart] = useState<IdepartmentData | null>();
   const [prevLocation, setPrevLocation] = useState<null | string>(null);
   const dots: JSX.Element[] = [];
   const { t } = useTranslation();
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const closeModal = () => {
     prevLocation ? navigate(prevLocation, { state: { fetch: true } }) : navigate(Paths.ROOT);
@@ -77,6 +80,7 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
         if (appId && appItemId) {
           if (authStore.token) {
             const res = await takeApplicationItem(authStore.token, +appItemId, +appId);
+            setResStatus(res ? 1 : 0);
             res && closeModal();
           }
         } else alertStore.toggleAlert(t(`${Localization.UserPanel}.errorAlert`));
@@ -86,6 +90,32 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
     };
 
     take();
+  };
+
+  const handleVoteOption = (option: 'ACCEPTED' | 'DENIED') => {
+    setSelectedOption(option);
+  };
+
+  const handleVoteSubmit = () => {
+    setFormSubmitted(true);
+    const obj = {
+      status: selectedOption!,
+      comment: "string",
+    };
+    const vote = async () => {
+      try {
+        if (appId && appItemId) {
+          if (authStore.token) {
+            const res = await voteApplicationItem(authStore.token, +appItemId, +appId, obj);
+            res && closeModal();
+          }
+        } else alertStore.toggleAlert(t(`${Localization.UserPanel}.errorAlert`));
+      } catch (e) {
+        alertStore.toggleAlert((e as Error).message);
+      }
+    };
+
+    vote();
   };
 
   useEffect(() => {
@@ -220,6 +250,34 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
                   {'Голосовать'}
                 </button>
               </div>
+            )}
+            {appId && appItemId && resStatus && (
+              <div className={style.info}>
+              <h1 className={style.title}>Голосование за документ</h1>
+              <div className={style.voteButtons}>
+                <button
+                  className={`${style.voteButton} ${style.choice} ${selectedOption === 'ACCEPTED' && style.active}`}
+                  onClick={() => handleVoteOption('ACCEPTED')}
+                  disabled={formSubmitted}
+                >
+                  За
+                </button>
+                <button
+                  className={`${style.voteButton} ${style.choice} ${selectedOption === 'DENIED' && style.active}`}
+                  onClick={() => handleVoteOption('DENIED')}
+                  disabled={formSubmitted}
+                >
+                  Против
+                </button>
+              </div>
+              <button
+                className={`${style.voteButton} ${style.choice}`}
+                onClick={handleVoteSubmit}
+                disabled={!selectedOption || formSubmitted}
+              >
+                Проголосовать
+              </button>
+            </div>
             )}
           </div>
         </div>
