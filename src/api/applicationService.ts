@@ -193,3 +193,25 @@ export async function takeApplicationItem(token: string, appItemId: number, appI
     return Promise.reject('Что-то пошло не так');
   }
 }
+
+export async function voteApplicationItem(token: string, appItemId: number, appId: number, value: { status: string; comment?: string }) {
+  const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
+  try {
+    const url = `${baseUrl}/application/${appId}/applicationItem/${appItemId}/vote`;
+    if (!isOnline()) throw new NetworkError();
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: headersWithToken,
+      body: JSON.stringify(value),
+    });
+    if (!response.ok) {
+      const error: IFailedServerResponse = await response.json();
+      throw new Error(error.message);
+    }
+    if (response.status === 204) return [];
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return Promise.reject('Что-то пошло не так');
+  }
+}
