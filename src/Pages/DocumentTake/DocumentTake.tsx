@@ -104,7 +104,6 @@ const DocumentTake: React.FC = () => {
             });
           });
         });
-
         setIsLoading(false);
       }
       setIsLoading(false);
@@ -130,7 +129,7 @@ const DocumentTake: React.FC = () => {
       ) : (
         <>
           <h2 className={style.documentTake__subtitle}>{department}</h2>
-          <Table dataList={appItemsList} type='document' />
+          <Table dataList={[appItemsList]} type='document' />
           <DocumentModal />
         </>
       )}

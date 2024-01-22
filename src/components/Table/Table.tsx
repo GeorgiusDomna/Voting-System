@@ -28,9 +28,9 @@ interface Itype_el {
 
 interface ITableProps {
   dataList: IdataTable[][];
-  totalPages: number;
-  сurrentPage: number;
-  setCurrentPage: (current: number) => void;
+  totalPages?: number;
+  сurrentPage?: number;
+  setCurrentPage?: (current: number) => void;
   type: 'document' | 'department' | 'user';
 }
 
@@ -44,7 +44,7 @@ const roleCheck = (role: [{ name: string }] | undefined): string => {
 const Table: React.FC<ITableProps> = ({
   dataList,
   totalPages,
-  сurrentPage,
+  сurrentPage = 0,
   setCurrentPage,
   type,
 }) => {
@@ -113,7 +113,7 @@ const Table: React.FC<ITableProps> = ({
       if (dataList.length && dataList[сurrentPage]) {
         tabelItems = dataList[сurrentPage].map((data) => (
           <TableItem
-            key={data.id}
+            key={data.appId ? data.appId : data.id}
             td1={data.name}
             td2={data.creationDate && dateFormater(data.creationDate)}
             td3={data.updateDate && dateFormater(data.updateDate)}
@@ -184,7 +184,9 @@ const Table: React.FC<ITableProps> = ({
         </thead>
         <tbody>{tabelItems}</tbody>
       </table>
-      <Pagination total={totalPages} сurrent={сurrentPage} setCurrentPage={setCurrentPage} />
+      {totalPages && (
+        <Pagination total={totalPages} сurrent={сurrentPage} setCurrentPage={setCurrentPage} />
+      )}
       {type === 'user' && isOpenUserInfo && (
         <UserInfoModal isOpen={isOpenUserInfo} toggle={toggleUserInfo} userInfo={userInfo} />
       )}
