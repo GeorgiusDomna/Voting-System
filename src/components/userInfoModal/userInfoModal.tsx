@@ -54,6 +54,7 @@ const UserInfoModal: React.FC<userInfoModalProps> = ({ isOpen, toggle, userInfo 
         )
           .then(() => {
             userStore.deleteUser(userInfo.id);
+            userStore.addUser(userInfo, selectedValue);
             toggle();
           })
           .catch((error) => {
