@@ -120,9 +120,7 @@
 }
 
 .vote {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  text-align: center;
 }
 
 .vote__button {
@@ -136,4 +134,36 @@
 
 .vote__button:hover {
   opacity: 0.75;
+}
+
+.title {
+  margin-bottom: 10px;
+}
+
+.voteButtons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.voteButton {
+  padding: 10px;
+  cursor: pointer;
+  border: none;
+  color: white;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.voteButton.choice {
+  background-color: rgb(224, 224, 224); 
+}
+
+
+.voteButton.active {
+  background-color: #800080; /* Фиолетовый цвет для активной кнопки */
+}
+
+.voteButton:disabled {
+  background-color: white; 
 }
