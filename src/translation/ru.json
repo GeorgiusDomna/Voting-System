@@ -58,7 +58,6 @@
       "title": "Панель управления пользователями",
       "addUserButton": "Добавить пользователя",
       "deleteDepartmentButton": "Удалить департамент",
-      "errorAlert": "Ошибка",
       "loadingMessage": "Загрузка...",
       "plusIconAlt": "Добавить",
       "trashIconAlt": "Удалить"

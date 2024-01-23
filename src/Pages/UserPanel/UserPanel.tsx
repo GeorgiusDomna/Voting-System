@@ -11,9 +11,7 @@ import Table from '@/components/Table/Table';
 import AddUserModal from '@/components/ContentBlock/AddUserModal/AddUserModal';
 import DeleteDepartmentModal from '@/components/ContentBlock/DeleteDepartmentModal/DeleteDepartmentModal';
 
-import { getDepartmentUsersByPage } from '@/api/userService';
 import userStore from '@/stores/EmployeeStore';
-import alertStore from '@/stores/AlertStore';
 import authStore from '@/stores/AuthStore';
 
 import style from './userPanel.module.css';
@@ -21,9 +19,15 @@ import plusIcon from '@/assets/plus.png';
 import trashIcon from '@/assets/trash.svg';
 
 const UserPanel: React.FC = () => {
-  const { userPages, setUserList, currentPage, setCurrentPage, totalPages, setOpenDepartID } =
-    userStore;
-  const [isLoading, setIsLoading] = useState(false);
+  const {
+    loadData,
+    userPages,
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    setOpenDepartID,
+    isLoading,
+  } = userStore;
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const { id, name } = useParams();
@@ -39,23 +43,7 @@ const UserPanel: React.FC = () => {
   }, [id]);
 
   useEffect(() => {
-    (async () => {
-      if (id) {
-        try {
-          if (authStore.token && (!userPages[id] || !userPages[id].pages[currentPage])) {
-            setIsLoading(true);
-            const res = await getDepartmentUsersByPage(+id, currentPage);
-            res && setUserList(res);
-          }
-        } catch (err) {
-          alertStore.toggleAlert((err as Error).message);
-        } finally {
-          setIsLoading(false);
-        }
-      } else {
-        alertStore.toggleAlert(t(`${Localization.UserPanel}.errorAlert`));
-      }
-    })();
+    loadData();
   }, [currentPage]);
 
   function toggle() {

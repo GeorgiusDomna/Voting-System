@@ -57,7 +57,6 @@
       "title": "User Management Panel",
       "addUserButton": "Add User",
       "deleteDepartmentButton": "Delete Department",
-      "errorAlert": "Error",
       "loadingMessage": "Loading...",
       "plusIconAlt": "Add",
       "trashIconAlt": "Delete"

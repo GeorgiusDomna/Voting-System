@@ -7,11 +7,7 @@ import InputPassword from '@/components/Auth/Inputs/InputPassword';
 import InputText from '@/components/Auth/Inputs/InputText';
 
 import alertStore from '@/stores/AlertStore';
-import authStore from '@/stores/AuthStore';
 import userStore from '@/stores/EmployeeStore';
-import { createUser, addUserToDepartment } from '@/api/userService';
-
-import IUser from '@/interfaces/IUser';
 
 import styles from './addUserModal.module.css';
 import closeIcon from '@/assets/cancel.svg';
@@ -36,7 +32,7 @@ interface userValues {
 
 if (process.env.NODE_ENV !== 'test') Modal.setAppElement('#root');
 
-const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, departmentId }) => {
+const AddUserModal: React.FC<addUserModalProps> = ({ isOpen, toggle, departmentId }) => {
   const { t } = useTranslation();
   const AddUserSchema = Yup.object().shape({
     username: Yup.string()
@@ -57,37 +53,11 @@ const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, de
       .required(t(Localization.FieldRequired)),
   });
 
-  function handleSubmit(values: userValues, { resetForm }: FormikHelpers<userValues>) {
-    const userParams: IUser = {
-      ...values,
-      position: '',
-      patronymic: '',
-      roles: [
-        {
-          name: 'ROLE_USER',
-        },
-      ],
-    };
-
-    if (authStore.token) {
-      createUser(userParams, authStore.token)
-        .then((data) => {
-          addUserToDepartment(
-            { userId: data.id as number, departmentId },
-            authStore.token as string
-          )
-            .then(() => {
-              userStore.addUser(data, departmentId);
-              resetForm();
-              alertStore.toggleAlert(t(`${Localization.AddUserModal}.successMessage`));
-            })
-            .catch((error) => {
-              alertStore.toggleAlert((error as Error).message);
-            });
-        })
-        .catch((error) => {
-          alertStore.toggleAlert((error as Error).message);
-        });
+  async function handleSubmit(values: userValues, { resetForm }: FormikHelpers<userValues>) {
+    const res = await userStore.createUser(values, departmentId);
+    if (res) {
+      resetForm();
+      alertStore.toggleAlert(t(`${Localization.AddUserModal}.successMessage`));
     }
   }
 
@@ -180,6 +150,6 @@ const AddUserModal: React.FC<addUserModalProps> = observer(({ isOpen, toggle, de
       </Formik>
     </Modal>
   );
-});
+};
 
-export default AddUserModal;
+export default observer(AddUserModal);
