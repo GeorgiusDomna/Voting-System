@@ -104,7 +104,7 @@ const Table: React.FC<ITableProps> = ({
     tabelItems = (
       <tr>
         <td colSpan={4} align='center'>
-          Документов не найдено.
+          Не найдено.
         </td>
       </tr>
     );
@@ -133,18 +133,29 @@ const Table: React.FC<ITableProps> = ({
     }
     if (type === 'department') {
       if (dataList.length && dataList[сurrentPage]) {
-        tabelItems = dataList[сurrentPage].map((data) => (
+        tabelItems = [
           <TableItem
-            key={data.id}
-            td1={data.name}
-            td2={data.amountOfEmployee}
+            key={-1}
+            td1={'Удаленные пользователи'}
+            td2={null}
             img={type_el.img}
             callback={() => {
-              data.name &&
-                navigate(`${Paths.DEPARTMENTS}/${encodeURIComponent(data.name)}/${data.id}`);
+              navigate(`${Paths.DEPARTMENTS}/${encodeURIComponent('Deleted Users')}/${-1}`);
             }}
-          />
-        ));
+          />,
+          ...dataList[сurrentPage].map((data) => (
+            <TableItem
+              key={data.id}
+              td1={data.name}
+              td2={data.amountOfEmployee}
+              img={type_el.img}
+              callback={() => {
+                data.name &&
+                  navigate(`${Paths.DEPARTMENTS}/${encodeURIComponent(data.name)}/${data.id}`);
+              }}
+            />
+          )),
+        ];
       }
     }
     if (type === 'user') {
