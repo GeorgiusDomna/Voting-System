@@ -3,6 +3,15 @@ import { makeObservable, observable, computed, action } from 'mobx';
 import documentData from '@/interfaces/IdocumentData';
 import { IPaginationInfo } from '@/interfaces/IPaginationInfo';
 
+import authStore from './AuthStore';
+import { createDoc, createFile, getDocumentsByPages, getDocumetData } from '@/api/docuService';
+import alertStore from './AlertStore';
+
+interface valuesFiles {
+  file: File;
+  id: number;
+}
+
 class DocumentStore {
   /**
    * Cписок всех документов разбитый на страницы. Каждый документ реализует интерфейс `documentData`
@@ -16,12 +25,20 @@ class DocumentStore {
     number: 0,
     totalPages: 1,
   };
+  /**
+   * Состояние загрузки данных.
+   */
+  isLoading: boolean = false;
 
   constructor() {
     makeObservable(this, {
+      // Загрузка данных
+      loadData: action.bound,
+
       // Рабора со страницами документов
       documentPages: observable,
       setDocumentList: action.bound,
+      createDocument: action.bound,
       addNewDocument: action.bound,
       deleteDocument: action.bound,
 
@@ -30,6 +47,10 @@ class DocumentStore {
       currentPage: computed,
       setPaginationInfo: action.bound,
       setCurrentPage: action.bound,
+
+      // Статус загрузки
+      isLoading: observable,
+      toggleLoading: action.bound,
     });
   }
 
@@ -41,11 +62,64 @@ class DocumentStore {
   }
 
   /**
+   * Получает с сервера данные о документах на открытой странице.
+   */
+  async loadData() {
+    try {
+      if (authStore.token && !this.documentPages[this.currentPage]) {
+        this.toggleLoading();
+        const res = await getDocumentsByPages(
+          this.currentPage,
+          this.paginationInfo.size,
+          authStore.token
+        );
+        if (res) {
+          const { content, ...paginationInfo } = res;
+          this.setDocumentList(content);
+          this.setPaginationInfo(paginationInfo);
+        }
+      }
+    } catch (err) {
+      alertStore.toggleAlert((err as Error).message);
+    } finally {
+      this.isLoading && this.toggleLoading();
+    }
+  }
+
+  /**
    * Добавляет данные о документах на загруженной страницы в список со всеми страницами.
    * @param {documentData} documents - Массив данных о документах на загруженной странице.
    */
   setDocumentList(departments: documentData[]) {
     this.documentPages[this.currentPage] = departments;
+  }
+
+  /**
+   * Создаёт на сервере документ и прикрепляет к нему переданные файлы.
+   * @param {string} name - Название создаваемого документа.
+   * @param {valuesFiles[]} files - Массив файлов, для при прикрепления к документу.
+   * @return {Promise<number | undefined>} В случае успешного создании документа, возвращает его id.
+   */
+  async createDocument(name: string, files: valuesFiles[]) {
+    let result;
+    try {
+      if (authStore.token) {
+        const res = await createDoc(authStore.token, name);
+        await Promise.all(
+          files.map(async (item) => {
+            if (authStore.token) {
+              return await createFile(authStore.token, res.id, item.file);
+            }
+          })
+        );
+        result = res.id;
+        const newDoc = await getDocumetData(authStore.token as string, res.id);
+        newDoc && this.addNewDocument(newDoc);
+        return result;
+      }
+    } catch (error) {
+      alertStore.toggleAlert((error as Error).message);
+    }
   }
 
   /**
@@ -86,6 +160,14 @@ class DocumentStore {
    */
   setCurrentPage(current: number) {
     this.paginationInfo.number = current;
+  }
+
+  /**
+   * Изменяет статус состояние загрузки данных.
+   * @return `true` - идёт загрузка, в противном случае `fasle`.
+   */
+  toggleLoading() {
+    this.isLoading = !this.isLoading;
   }
 }
 
