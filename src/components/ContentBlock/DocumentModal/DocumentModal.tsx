@@ -1,14 +1,15 @@
-import * as pdfjsLib from 'pdfjs-dist';
 import { pdfjs } from 'react-pdf';
 import { Document, Page } from 'react-pdf';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
+import { Paths } from '@/enums/Paths';
 import Modal from 'react-modal';
 
 import IdocumentData from '@/interfaces/IdocumentData';
 import { IDepartmentData } from '@/interfaces/IDepartmentData';
 import userInfo from '@/interfaces/userInfo';
-import { Paths } from '@/enums/Paths';
 
 import { getUserInfo } from '@/api/userService';
 import { getDepartmentData } from '@/api/departmentService';
@@ -19,13 +20,12 @@ import alertStore from '@/stores/AlertStore';
 import authStore from '@/stores/AuthStore';
 import { dateFormater } from '@/utils/dateFormater';
 
+import style from './documentModal.module.css';
 import closeIcon from '@/assets/cancel.svg';
 import defaultImg from '@/assets/defaultImg.svg';
-import style from './documentModal.module.css';
-
-import { useTranslation } from 'react-i18next';
-import { Localization } from '@/enums/Localization';
 import plusIcon from '@/assets/plus.png';
+import 'react-pdf/dist/Page/TextLayer.css';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
 
 if (process.env.NODE_ENV !== 'test') Modal.setAppElement('#root');
 
@@ -39,8 +39,9 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
   const location = useLocation();
   const { id, appId, appItemId } = useParams();
   const [numPages, setNumPages] = useState<number>();
-  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [currentView, setCurrentView] = useState(0);
   const [dataDoc, setDataDoc] = useState<IdocumentData | null>();
+  const [isModeImg, setIsModeImg] = useState<boolean>(true);
   const [docUrl, setDocUrl] = useState<{ file: string; fileName?: string }[]>([
     { file: defaultImg },
   ]);
@@ -59,8 +60,8 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
     setDocUrl([{ file: defaultImg }]);
     setDataUser(null);
     setDataDepart(null);
-    setPageNumber(1);
-    window.removeEventListener('keyup', closeModalEsc);
+    setCurrentView(0);
+    setIsModeImg(true);
   };
 
   function closeModalEsc(event: KeyboardEvent) {
@@ -77,10 +78,16 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
   }
 
   const switchCurrentDoc = (action: boolean) => {
-    const pages: number = numPages ? (numPages as number) : docUrl.length;
-    action
-      ? setPageNumber(pageNumber + 1 > pages ? 1 : pageNumber + 1)
-      : setPageNumber(pageNumber === 1 ? pages : pageNumber - 1);
+    if (!isModeImg) {
+      const pages: number = numPages ? (numPages as number) : docUrl.length;
+      action
+        ? setCurrentView(currentView + 1 > pages ? 1 : currentView + 1)
+        : setCurrentView(currentView === 1 ? pages : currentView - 1);
+    } else {
+      action
+        ? setCurrentView(currentView + 1 === docUrl.length ? 0 : currentView + 1)
+        : setCurrentView(currentView === 0 ? docUrl.length - 1 : currentView - 1);
+    }
   };
 
   const takeApplication = () => {
@@ -136,6 +143,8 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
         if (resDoc) {
           setDataDoc(resDoc);
           if (resDoc.files[0]) {
+            resDoc.files[0].name.toLowerCase().endsWith('.pdf') &&
+              (setIsModeImg(false), setCurrentView(currentView + 1));
             setDocUrl(
               resDoc.files.map((file) => {
                 return {
@@ -157,6 +166,7 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
       }
     })();
     window.addEventListener('keyup', closeModalEsc);
+    return () => window.removeEventListener('keyup', closeModalEsc);
   }, [location]);
 
   if (docUrl.length !== 1) {
@@ -164,8 +174,8 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
       dots.push(
         <span
           key={i}
-          className={[style.dot, i == pageNumber - 1 && style.active].join(' ')}
-          onClick={() => setPageNumber(i)}
+          className={[style.dot, i == currentView && style.active].join(' ')}
+          onClick={() => setCurrentView(i)}
         />
       );
     }
@@ -185,29 +195,25 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
           <div className={style.imageContainer}>
             <div className={style.document_header}>
               <div className={style.fileName}>
-                <i>{docUrl.length > 1 ? docUrl[pageNumber - 1].fileName : docUrl[0].fileName}</i>
+                <i>{docUrl.length > 1 ? docUrl[currentView].fileName : docUrl[0].fileName}</i>
               </div>
               <div className={style.fileControler}>
                 <button onClick={() => switchCurrentDoc(false)}>&lt;</button>
                 <button onClick={() => switchCurrentDoc(true)}>&gt;</button>
               </div>
             </div>
-            {docUrl[0].fileName?.toLowerCase().endsWith('.pdf') ? (
+            {!isModeImg ? (
               <>
                 <Document file={docUrl[0].file} onLoadSuccess={onDocumentLoadSuccess}>
-                  <Page pageNumber={pageNumber} width={200} height={300} />
+                  <Page pageNumber={currentView} />
                 </Document>
                 <p>
-                  Page {pageNumber} of {numPages}
+                  Page {currentView} of {numPages}
                 </p>
               </>
             ) : (
               <>
-                <img
-                  src={docUrl[pageNumber - 1].file}
-                  alt='Image'
-                  style={{ width: 200, height: 300 }}
-                />
+                <img src={docUrl[currentView].file} onError={handleImageError} alt='Image' />
                 <div className={style.dotContainer}>{dots}</div>
               </>
             )}
