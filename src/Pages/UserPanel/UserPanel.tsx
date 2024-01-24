@@ -53,7 +53,6 @@ const UserPanel: React.FC = () => {
               res = await getDepartmentUsersByPage(+id, currentPage, 10, 1);
               res && setUserList(res);
             }
-            console.log(res);
           }
         } catch (err) {
           alertStore.toggleAlert((err as Error).message);
