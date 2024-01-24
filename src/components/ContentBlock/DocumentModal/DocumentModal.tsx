@@ -1,11 +1,15 @@
+import { pdfjs } from 'react-pdf';
+import { Document, Page } from 'react-pdf';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
+import { Paths } from '@/enums/Paths';
 import Modal from 'react-modal';
 
 import IdocumentData from '@/interfaces/IdocumentData';
-import IdepartmentData from '@/interfaces/IDepartmentData';
+import { IDepartmentData } from '@/interfaces/IDepartmentData';
 import userInfo from '@/interfaces/userInfo';
-import { Paths } from '@/enums/Paths';
 
 import { getUserInfo } from '@/api/userService';
 import { getDepartmentData } from '@/api/departmentService';
@@ -16,13 +20,12 @@ import alertStore from '@/stores/AlertStore';
 import authStore from '@/stores/AuthStore';
 import { dateFormater } from '@/utils/dateFormater';
 
+import style from './documentModal.module.css';
 import closeIcon from '@/assets/cancel.svg';
 import defaultImg from '@/assets/defaultImg.svg';
-import style from './documentModal.module.css';
-
-import { useTranslation } from 'react-i18next';
-import { Localization } from '@/enums/Localization';
 import plusIcon from '@/assets/plus.png';
+import 'react-pdf/dist/Page/TextLayer.css';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
 
 if (process.env.NODE_ENV !== 'test') Modal.setAppElement('#root');
 
@@ -35,14 +38,16 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
   const navigate = useNavigate();
   const location = useLocation();
   const { id, appId, appItemId } = useParams();
+  const [numPages, setNumPages] = useState<number>();
+  const [currentView, setCurrentView] = useState(0);
   const [dataDoc, setDataDoc] = useState<IdocumentData | null>();
+  const [isModeImg, setIsModeImg] = useState<boolean>(true);
   const [docUrl, setDocUrl] = useState<{ file: string; fileName?: string }[]>([
     { file: defaultImg },
   ]);
-  const [currentImg, setCurrentImg] = useState(0);
   const [resStatus, setResStatus] = useState(0);
   const [dataUser, setDataUser] = useState<userInfo | null>();
-  const [dataDepart, setDataDepart] = useState<IdepartmentData | null>();
+  const [dataDepart, setDataDepart] = useState<IDepartmentData | null>();
   const [prevLocation, setPrevLocation] = useState<null | string>(null);
   const dots: JSX.Element[] = [];
   const { t } = useTranslation();
@@ -55,8 +60,8 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
     setDocUrl([{ file: defaultImg }]);
     setDataUser(null);
     setDataDepart(null);
-    setCurrentImg(0);
-    window.removeEventListener('keyup', closeModalEsc);
+    setCurrentView(0);
+    setIsModeImg(true);
   };
 
   function closeModalEsc(event: KeyboardEvent) {
@@ -68,10 +73,21 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
     alertStore.toggleAlert(t(`${Localization.DocumentModal}.imageLoadError`));
   };
 
+  function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
+    setNumPages(numPages);
+  }
+
   const switchCurrentDoc = (action: boolean) => {
-    action
-      ? setCurrentImg(currentImg + 1 === docUrl.length ? 0 : currentImg + 1)
-      : setCurrentImg(currentImg === 0 ? docUrl.length - 1 : currentImg - 1);
+    if (!isModeImg) {
+      const pages: number = numPages ? (numPages as number) : docUrl.length;
+      action
+        ? setCurrentView(currentView + 1 > pages ? 1 : currentView + 1)
+        : setCurrentView(currentView === 1 ? pages : currentView - 1);
+    } else {
+      action
+        ? setCurrentView(currentView + 1 === docUrl.length ? 0 : currentView + 1)
+        : setCurrentView(currentView === 0 ? docUrl.length - 1 : currentView - 1);
+    }
   };
 
   const takeApplication = () => {
@@ -100,7 +116,7 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
     setFormSubmitted(true);
     const obj = {
       status: selectedOption!,
-      comment: "string",
+      comment: 'string',
     };
     const vote = async () => {
       try {
@@ -127,6 +143,8 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
         if (resDoc) {
           setDataDoc(resDoc);
           if (resDoc.files[0]) {
+            resDoc.files[0].name.toLowerCase().endsWith('.pdf') &&
+              (setIsModeImg(false), setCurrentView(currentView + 1));
             setDocUrl(
               resDoc.files.map((file) => {
                 return {
@@ -148,17 +166,22 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
       }
     })();
     window.addEventListener('keyup', closeModalEsc);
+    return () => window.removeEventListener('keyup', closeModalEsc);
   }, [location]);
 
-  for (let i = 0; i < docUrl.length; i++) {
-    dots.push(
-      <span
-        key={i}
-        className={[style.dot, i == currentImg && style.active].join(' ')}
-        onClick={() => setCurrentImg(i)}
-      />
-    );
+  if (docUrl.length !== 1) {
+    for (let i = 0; i < docUrl.length; i++) {
+      dots.push(
+        <span
+          key={i}
+          className={[style.dot, i == currentView && style.active].join(' ')}
+          onClick={() => setCurrentView(i)}
+        />
+      );
+    }
   }
+
+  pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
   return (
     <>
@@ -172,15 +195,28 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
           <div className={style.imageContainer}>
             <div className={style.document_header}>
               <div className={style.fileName}>
-                <i>{docUrl[currentImg].fileName}</i>
+                <i>{docUrl.length > 1 ? docUrl[currentView].fileName : docUrl[0].fileName}</i>
               </div>
               <div className={style.fileControler}>
                 <button onClick={() => switchCurrentDoc(false)}>&lt;</button>
                 <button onClick={() => switchCurrentDoc(true)}>&gt;</button>
               </div>
             </div>
-            <img src={docUrl[currentImg].file} onError={handleImageError} />
-            <div className={style.dotContainer}>{dots}</div>
+            {!isModeImg ? (
+              <>
+                <Document file={docUrl[0].file} onLoadSuccess={onDocumentLoadSuccess}>
+                  <Page pageNumber={currentView} />
+                </Document>
+                <p>
+                  Page {currentView} of {numPages}
+                </p>
+              </>
+            ) : (
+              <>
+                <img src={docUrl[currentView].file} onError={handleImageError} alt='Image' />
+                <div className={style.dotContainer}>{dots}</div>
+              </>
+            )}
           </div>
 
           <div className={style.documentInfo}>
@@ -244,7 +280,7 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
                 </button>
               </div>
             )}
-            {appId && appItemId && !resStatus &&  (
+            {appId && appItemId && !resStatus && (
               <div className={style.vote}>
                 <button className={style.vote__button} onClick={takeApplication}>
                   {'Голосовать'}
@@ -253,31 +289,35 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
             )}
             {appId && appItemId && resStatus && (
               <div className={style.info}>
-              <h1 className={style.title}>Голосование за документ</h1>
-              <div className={style.voteButtons}>
+                <h1 className={style.title}>Голосование за документ</h1>
+                <div className={style.voteButtons}>
+                  <button
+                    className={`${style.voteButton} ${style.choice} ${
+                      selectedOption === 'ACCEPTED' && style.active
+                    }`}
+                    onClick={() => handleVoteOption('ACCEPTED')}
+                    disabled={formSubmitted}
+                  >
+                    За
+                  </button>
+                  <button
+                    className={`${style.voteButton} ${style.choice} ${
+                      selectedOption === 'DENIED' && style.active
+                    }`}
+                    onClick={() => handleVoteOption('DENIED')}
+                    disabled={formSubmitted}
+                  >
+                    Против
+                  </button>
+                </div>
                 <button
-                  className={`${style.voteButton} ${style.choice} ${selectedOption === 'ACCEPTED' && style.active}`}
-                  onClick={() => handleVoteOption('ACCEPTED')}
-                  disabled={formSubmitted}
+                  className={`${style.voteButton} ${style.choice}`}
+                  onClick={handleVoteSubmit}
+                  disabled={!selectedOption || formSubmitted}
                 >
-                  За
-                </button>
-                <button
-                  className={`${style.voteButton} ${style.choice} ${selectedOption === 'DENIED' && style.active}`}
-                  onClick={() => handleVoteOption('DENIED')}
-                  disabled={formSubmitted}
-                >
-                  Против
+                  Проголосовать
                 </button>
               </div>
-              <button
-                className={`${style.voteButton} ${style.choice}`}
-                onClick={handleVoteSubmit}
-                disabled={!selectedOption || formSubmitted}
-              >
-                Проголосовать
-              </button>
-            </div>
             )}
           </div>
         </div>
