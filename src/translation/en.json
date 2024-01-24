@@ -57,7 +57,6 @@
       "title": "User Management Panel",
       "addUserButton": "Add User",
       "deleteDepartmentButton": "Delete Department",
-      "errorAlert": "Error",
       "loadingMessage": "Loading...",
       "plusIconAlt": "Add",
       "trashIconAlt": "Delete"
@@ -65,6 +64,10 @@
     "DocumentPanel":{
       "AddDocument":"Add Document",
       "AddApplication":"Add Application"
+    },
+    "DocumentTake": {
+      "title": "Documents In Review",
+      "department": "department"
     },
     "DocumentModal":{
       "UploadFile":"Upload file",

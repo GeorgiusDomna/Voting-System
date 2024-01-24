@@ -11,27 +11,17 @@ import ModalConfirmAddApplication from '@/components/ContentBlock/CreateDocument
 import CreateApplicationModal from '@/components/ContentBlock/CreateApplicationModal/CreateApplicationModal';
 
 import documentStore from '@/stores/DocumentStore';
-import authStore from '@/stores/AuthStore';
-import { getDocumentsByPages } from '@/api/docuService';
 
 import style from './documentPanel.module.css';
 import plusIcon from '@/assets/plus.png';
-import alertStore from '@/stores/AlertStore';
 
 const DocumentPanel: React.FC = () => {
-  const {
-    documentPages,
-    setDocumentList,
-    setPaginationInfo,
-    paginationInfo,
-    currentPage,
-    setCurrentPage,
-  } = documentStore;
+  const { loadData, documentPages, paginationInfo, currentPage, setCurrentPage, isLoading } =
+    documentStore;
   const [isOpenModalCreateDocument, setIsOpenModalCreateDocument] = useState(false);
   const [isOpenModalConfirmAddApplication, setIsOpenModalConfirmAddApplication] = useState(false);
   const [isOpenModalCreateApplication, setIsOpenModalCreateApplication] = useState(false);
   const [idDoc, setIdDoc] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const { t } = useTranslation();
 
   const toggleModalCreateDocument = () => {
@@ -48,23 +38,7 @@ const DocumentPanel: React.FC = () => {
   };
 
   useEffect(() => {
-    (async () => {
-      try {
-        if (authStore.token && !documentPages[currentPage]) {
-          setIsLoading(true);
-          const res = await getDocumentsByPages(currentPage, paginationInfo.size, authStore.token);
-          if (res) {
-            const { content, ...paginationInfo } = res;
-            setDocumentList(content);
-            setPaginationInfo(paginationInfo);
-          }
-        }
-      } catch (err) {
-        alertStore.toggleAlert((err as Error).message);
-      } finally {
-        setIsLoading(false);
-      }
-    })();
+    loadData();
   }, [currentPage]);
 
   return (

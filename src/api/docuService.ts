@@ -27,7 +27,7 @@ export async function getDocumentsByPages(
   page: number,
   limit: number,
   token: string
-): Promise<IDocumentResponseDto[] | void> {
+): Promise<IDocumentResponseDto | void> {
   const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
   try {
     const url = `${baseUrl}/doc/filter?page=${page}&limit=${limit}&state=ACTIVE`;

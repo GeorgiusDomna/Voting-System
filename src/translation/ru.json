@@ -58,7 +58,6 @@
       "title": "Панель управления пользователями",
       "addUserButton": "Добавить пользователя",
       "deleteDepartmentButton": "Удалить департамент",
-      "errorAlert": "Ошибка",
       "loadingMessage": "Загрузка...",
       "plusIconAlt": "Добавить",
       "trashIconAlt": "Удалить"
@@ -66,6 +65,10 @@
     "DocumentPanel":{
       "AddDocument":"Добавить документ",
       "AddApplication":"Добавить голосование"
+    },
+    "DocumentTake": {
+      "title": "Документы на рассмотрении",
+      "department": "департамент"
     },
     "DocumentModal":{
       "UploadFile":"Загрузите файл",
