@@ -144,12 +144,18 @@ export async function getUsersByDepartment(
 export async function getDepartmentUsersByPage(
   id: number,
   current: number = 0,
-  size: number = 5
+  size: number = 5,
+  isDeleted: number = 0
 ): Promise<IUserResponseDto | void> {
   const headersWithToken = { ...headers, Authorization: `Bearer ${authStore.token}` };
   try {
     if (!isOnline()) throw new NetworkError();
-    const url = `${baseUrl}/department/${id}/users?page=${current}&limit=${size}&recordState=ACTIVE`;
+    let url;
+    if (isDeleted) {
+      url = `${baseUrl}/user/?limit=${size}&page=${current}&recordState=DELETED`;
+    } else {
+      url = `${baseUrl}/department/${id}/users?page=${current}&limit=${size}&recordState=ACTIVE`;
+    }
     const response = await fetch(url, {
       method: 'GET',
       headers: headersWithToken,

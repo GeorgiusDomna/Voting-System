@@ -40,12 +40,19 @@ const UserPanel: React.FC = () => {
 
   useEffect(() => {
     (async () => {
+      let res;
       if (id) {
         try {
           if (authStore.token && (!userPages[id] || !userPages[id].pages[currentPage])) {
-            setIsLoading(true);
-            const res = await getDepartmentUsersByPage(+id, currentPage);
-            res && setUserList(res);
+            if (id !== '-1') {
+              setIsLoading(true);
+              res = await getDepartmentUsersByPage(+id, currentPage);
+              res && setUserList(res);
+            } else if (id == '-1') {
+              setIsLoading(true);
+              res = await getDepartmentUsersByPage(+id, currentPage, 10, 1);
+              res && setUserList(res);
+            }
           }
         } catch (err) {
           alertStore.toggleAlert((err as Error).message);
@@ -69,20 +76,25 @@ const UserPanel: React.FC = () => {
   return (
     <div className={style.UserPanel}>
       <h2 className={style.UserPanel__title}>{decodeURIComponent(name as string)}</h2>
-      <div className={style.UserPanel__controls}>
-        <div className={style.UserPanel__control} onClick={toggle}>
-          <img className={style.UserPanel__img} src={plusIcon} alt='+' />
-          <button className={style.UserPanel__button}>
-            {t(`${Localization.UserPanel}.addUserButton`)}
-          </button>
+      {id !== '-1' ? (
+        <div className={style.UserPanel__controls}>
+          <div className={style.UserPanel__control} onClick={toggle}>
+            <img className={style.UserPanel__img} src={plusIcon} alt='+' />
+            <button className={style.UserPanel__button}>
+              {t(`${Localization.UserPanel}.addUserButton`)}
+            </button>
+          </div>
+          <div className={style.UserPanel__control} onClick={toggleDeleteModal}>
+            <img className={style.UserPanel__img} src={trashIcon} />
+            <button className={style.UserPanel__button}>
+              {t(`${Localization.UserPanel}.deleteDepartmentButton`)}
+            </button>
+          </div>
         </div>
-        <div className={style.UserPanel__control} onClick={toggleDeleteModal}>
-          <img className={style.UserPanel__img} src={trashIcon} />
-          <button className={style.UserPanel__button}>
-            {t(`${Localization.UserPanel}.deleteDepartmentButton`)}
-          </button>
-        </div>
-      </div>
+      ) : (
+        <></>
+      )}
+
       {isLoading ? (
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />
       ) : (
