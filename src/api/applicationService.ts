@@ -194,7 +194,12 @@ export async function takeApplicationItem(token: string, appItemId: number, appI
   }
 }
 
-export async function voteApplicationItem(token: string, appItemId: number, appId: number, value: { status: string; comment?: string }) {
+export async function voteApplicationItem(
+  token: string,
+  appItemId: number,
+  appId: number,
+  value: { status: string; comment?: string }
+) {
   const headersWithToken = { ...headers, Authorization: `Bearer ${token}` };
   try {
     const url = `${baseUrl}/application/${appId}/applicationItem/${appItemId}/vote`;
