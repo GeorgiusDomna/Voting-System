@@ -9,10 +9,9 @@ import {
 } from '@/api/departmentService';
 
 import DepartmentRequestDto from '@/interfaces/DepartmentRequestDto';
-import { IDepartmentData } from '@/interfaces/IDepartmentData';
+import { IDepartmentData } from '@/interfaces/IdepartmentData';
 import { IPaginationInfo } from '@/interfaces/IPaginationInfo';
 import { deleteUser, getUsersByDepartment } from '@/api/userService';
-import IUserInfo from '@/interfaces/userInfo';
 
 class DepartmentsStore {
   /**
@@ -147,19 +146,25 @@ class DepartmentsStore {
    */
   async deleteUsersByDepart(id: number) {
     if (authStore.token) {
+      let result = false;
       try {
         const data = await getUsersByDepartment(authStore.token, id);
-        if (data) {
-          const userArr = data as IUserInfo[];
-          userArr.forEach((user) => {
-            deleteUser(user.id as number, authStore.token as string).catch((error) => {
+        if (data && data.length) {
+          const deletePromises = data.map((user) => {
+            return deleteUser(user.id as number, authStore.token as string).catch((error) => {
               alertStore.toggleAlert((error as Error).message);
             });
           });
+          if (await Promise.all(deletePromises)) {
+            result = true;
+          }
+        } else {
+          result = true;
         }
       } catch (error) {
         alertStore.toggleAlert((error as Error).message);
       }
+      return result;
     }
   }
 
@@ -177,7 +182,7 @@ class DepartmentsStore {
           for (let i = 0; i < this.departamentPages.length; i++) {
             this.departamentPages[i] = this.departamentPages[i].filter((item) => item.id !== id);
           }
-          if (!this.departamentPages[this.departamentPages.length]) {
+          if (!this.departamentPages[this.departamentPages.length] && this.currentPage > 0) {
             this.setCurrentPage(this.currentPage - 1);
             this.paginationInfo.totalPages--;
           }

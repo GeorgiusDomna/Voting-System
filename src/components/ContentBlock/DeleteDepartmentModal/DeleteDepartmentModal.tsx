@@ -30,7 +30,7 @@ const AddUserModal: React.FC<deleteDepartmentProps> = ({ isOpen, toggle, departm
     if (confirmDelete) {
       deleteUsers && deleteUsersByDepart(departmentId);
       const res = await deleteDepart(departmentId);
-      res && toggle(), navigate(Paths.DEPARTMENTS);
+      res && navigate(Paths.DEPARTMENTS), toggle();
     }
   };
 

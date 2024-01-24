@@ -47,6 +47,7 @@ class UserStore {
       userPages: observable,
       setOpenDepartID: action.bound,
       setUserList: action.bound,
+      createUser: action.bound,
       addUser: action.bound,
       deleteUser: action.bound,
       moveUser: action.bound,
@@ -109,13 +110,12 @@ class UserStore {
    * Устанавливает список сотрудников на странице и информацию о пагинации.
    * @param {IUserResponseDto} data - объект типа `IUserResponseDto` содержащий в себе массив пользователей на странице и информацию для пагинации.
    */
-  setUserList(data: IUserResponseDto) {
+  setUserList({ content, ...paginationInfo }: IUserResponseDto) {
     const id = this.openDepartID;
     if (id) {
       if (!(id in this.userPages)) {
-        this.userPages[id] = { pages: [], pagination: {} };
+        this.userPages[id] = { pages: [], pagination: paginationInfo };
       }
-      const { content, ...paginationInfo } = data;
       this.userPages[id].pages[this.currentPage] = content;
       this.userPages[id].pagination = paginationInfo;
     }
@@ -179,7 +179,10 @@ class UserStore {
       this.userPages[this.openDepartID].pages[this.currentPage] = this.userPages[
         this.openDepartID
       ].pages[this.currentPage].filter((user) => user.id !== id);
-      if (!this.userPages[this.openDepartID].pages[this.currentPage].length) {
+      if (
+        !this.userPages[this.openDepartID].pages[this.currentPage].length &&
+        this.currentPage > 0
+      ) {
         this.userPages[this.openDepartID].pagination.totalPages--;
         this.userPages[this.openDepartID].pagination.number--;
       }
@@ -200,7 +203,7 @@ class UserStore {
         );
         if (res) {
           this.deleteUser(currentInfo.id);
-          this.addUser(currentInfo, to);
+          this.userPages[to] && this.addUser(currentInfo, to);
           return true;
         }
       }

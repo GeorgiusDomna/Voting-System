@@ -1,6 +1,6 @@
 import { NetworkError } from '@/errors/NetworkError';
 import { IFailedServerResponse } from '@/interfaces/IFailedServerResponse';
-import { IDepartmentData, IDepartmentResponseDto } from '@/interfaces/IDepartmentData';
+import { IDepartmentData, IDepartmentResponseDto } from '@/interfaces/IdepartmentData';
 import DepartmentRequestDto from '@/interfaces/DepartmentRequestDto';
 
 import alertStore from '@/stores/AlertStore';

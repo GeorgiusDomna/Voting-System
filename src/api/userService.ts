@@ -26,7 +26,7 @@ export async function createUser(params: IUser, token: string) {
     });
     if (!response.ok) {
       const error: IFailedServerResponse = await response.json();
-      return Promise.reject(error.message);
+      throw new Error(error.message);
     }
     const createdUser = await response.json();
     return createdUser;
@@ -155,15 +155,17 @@ export async function getDepartmentUsersByPage(
       headers: headersWithToken,
     });
     if (!response.ok) {
+      if (response.status === 204) {
+        return {
+          content: [],
+          size,
+          number: 0,
+          totalPages: 1,
+        };
+      }
       const error: IFailedServerResponse = await response.json();
       return Promise.reject(error.message);
-    } else if (response.status === 204)
-      return {
-        content: [],
-        size,
-        number: 0,
-        totalPages: 1,
-      };
+    }
     return await response.json();
   } catch (error) {
     throw new Error((error as Error).message);
