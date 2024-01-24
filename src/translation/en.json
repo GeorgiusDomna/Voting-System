@@ -65,6 +65,10 @@
       "AddDocument":"Add Document",
       "AddApplication":"Add Application"
     },
+    "DocumentTake": {
+      "title": "Documents In Review",
+      "department": "department"
+    },
     "DocumentModal":{
       "UploadFile":"Upload file",
       "ModalWindow":"Modal window",

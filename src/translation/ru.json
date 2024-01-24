@@ -66,6 +66,10 @@
       "AddDocument":"Добавить документ",
       "AddApplication":"Добавить голосование"
     },
+    "DocumentTake": {
+      "title": "Документы на рассмотрении",
+      "department": "департамент"
+    },
     "DocumentModal":{
       "UploadFile":"Загрузите файл",
       "ModalWindow":"Модальное окно",
