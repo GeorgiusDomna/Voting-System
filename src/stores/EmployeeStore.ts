@@ -68,9 +68,14 @@ class UserStore {
       if (!(id in this.userPages)) {
         this.userPages[id] = { pages: [], pagination: {} };
       }
-      const { content, ...paginationInfo } = data;
-      this.userPages[id].pages[this.currentPage] = content;
-      this.userPages[id].pagination = paginationInfo;
+      if ('content' in data) {
+        const { content, totalPages, number } = data;
+        this.userPages[id].pages[this.currentPage] = content;
+        this.userPages[id].pagination = { totalPages, number };
+      } else {
+        this.userPages[id].pages[this.currentPage] = data;
+        this.userPages[id].pagination = {};
+      }
     }
   }
 
