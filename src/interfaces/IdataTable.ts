@@ -21,4 +21,6 @@ export default interface IdataTable {
   patronymic?: string;
   departmentId?: number;
   birthDate?: string;
+  appId?: number;
+  appItemId?: number;
 }

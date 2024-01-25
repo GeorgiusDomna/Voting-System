@@ -1,25 +1,32 @@
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import {
+  ProtectedRouteElementForAuthorized,
+  ProtectedRouteElementForUnauthorized,
+} from './ProtectedRoute';
+
 import authStore from '@/stores/AuthStore';
+import alertStore from '@/stores/AlertStore';
+
 import { getUserMe } from '@/api/authService';
+
 import ContentBlock from '../ContentBlock/ContentBlock';
 import DepartmentPanel from '../../Pages/DepartmentPanel/DepartmentPanel';
+import DocumentTake from '@/Pages/DocumentTake/DocumentTake';
 import UserPanel from '@/Pages/UserPanel/UserPanel';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import Alert from '../Alert/Alert';
 import { observer } from 'mobx-react-lite';
-import alertStore from '@/stores/AlertStore';
-import styles from './app.module.css';
 import { Paths } from '@/enums/Paths';
 import Auth from '../Auth/Auth';
-import {
-  ProtectedRouteElementForAuthorized,
-  ProtectedRouteElementForUnauthorized,
-} from './ProtectedRoute';
 import FormLogin from '../Auth/Forms/FormLogin';
 import FormRegistration from '../Auth/Forms/FormRegistration';
+
 import DocumentPanel from '@/Pages/DocumentPanel/DocumentPanel';
+import NotFoundPage from '../../Pages/NotFoundPage/NotFoundPage';
+
+import styles from './app.module.css';
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -64,10 +71,13 @@ const App: React.FC = () => {
               <Route path={`${Paths.DEPARTMENTS}/:name/:id`} element={<UserPanel />} />
             </>
           ) : (
-            <Route
-              path={Paths.DOCUMENTS_VOTE}
-              element={'Компонент голосования за документ (Юзер)'}
-            />
+            <>
+              <Route path={Paths.DOCUMENTS_TAKE} element={<DocumentTake />} />
+              <Route
+                path={`${Paths.DOCUMENTS_TAKE}/:id/:appId?/:appItemId?`}
+                element={<DocumentTake />}
+              />
+            </>
           )}
         </Route>
         <Route
@@ -81,7 +91,7 @@ const App: React.FC = () => {
           <Route path={Paths.LOGIN} element={<FormLogin />} />
           <Route path={Paths.REGISTRATION} element={<FormRegistration />} />
         </Route>
-        <Route path={Paths.ANY} element={<h1>Страница не найдена</h1>} />
+        <Route path={Paths.ANY} Component={NotFoundPage} />
       </Routes>
       {isOpen && <Alert message={message} toggleAlert={toggleAlert} />}
     </>

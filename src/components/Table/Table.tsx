@@ -1,18 +1,21 @@
-import TableItem from './TableItem/TableItem';
-import UserInfoModal from '../userInfoModal/userInfoModal';
 import { observer } from 'mobx-react-lite';
-import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
+import { Paths } from '@/enums/Paths';
 
+import TableItem from './TableItem/TableItem';
+import Pagination from './Pagination/Pagination';
+import UserInfoModal from '../userInfoModal/userInfoModal';
+
+import IdataTable from '@/interfaces/IdataTable';
+import IUserInfo from '@/interfaces/userInfo';
+
+import style from './table.module.css';
 import userIcon from '@/assets/user.svg';
 import departIcon from '@/assets/depart.svg';
 import docIcon from '@/assets/docIcon.svg';
-import style from './table.module.css';
-import IUserInfo from '@/interfaces/userInfo';
-import { Paths } from '@/enums/Paths';
-import { useTranslation } from 'react-i18next';
-import { Localization } from '@/enums/Localization';
-import IdataTable from '@/interfaces/IdataTable';
 
 interface Itype_el {
   title?: string;
@@ -24,7 +27,10 @@ interface Itype_el {
 }
 
 interface ITableProps {
-  dataList: IdataTable[];
+  dataList: IdataTable[][];
+  totalPages?: number;
+  сurrentPage?: number;
+  setCurrentPage?: (current: number) => void;
   type: 'document' | 'department' | 'user';
 }
 
@@ -35,7 +41,13 @@ const roleCheck = (role: [{ name: string }] | undefined): string => {
   return role && role.find((el) => el.name === 'ROLE_ADMIN') ? 'Admin' : 'User';
 };
 
-const Table: React.FC<ITableProps> = ({ dataList, type }) => {
+const Table: React.FC<ITableProps> = ({
+  dataList,
+  totalPages,
+  сurrentPage = 0,
+  setCurrentPage,
+  type,
+}) => {
   const [isOpenUserInfo, setIsOpenUserInfo] = useState(false);
   const [userInfo, setUserInfo] = useState<IUserInfo>({
     id: -1,
@@ -88,7 +100,7 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
       break;
   }
 
-  if (!dataList.length) {
+  if (!dataList) {
     tabelItems = (
       <tr>
         <td colSpan={4} align='center'>
@@ -98,49 +110,61 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
     );
   } else {
     if (type === 'document') {
-      tabelItems = dataList.map((data) => (
-        <TableItem
-          key={data.id}
-          td1={data.name}
-          td2={data.creationDate && dateFormater(data.creationDate)}
-          td3={data.updateDate && dateFormater(data.updateDate)}
-          img={type_el.img}
-          callback={() => {
-            navigate(`${Paths.DOCUMENTS}/${encodeURIComponent(data.id)}`);
-          }}
-        />
-      ));
+      if (dataList.length && dataList[сurrentPage]) {
+        tabelItems = dataList[сurrentPage].map((data) => (
+          <TableItem
+            key={data.appId ? data.appId : data.id}
+            td1={data.name}
+            td2={data.creationDate && dateFormater(data.creationDate)}
+            td3={data.updateDate && dateFormater(data.updateDate)}
+            img={type_el.img}
+            callback={() => {
+              const path =
+                data.appId && data.appItemId
+                  ? `${Paths.DOCUMENTS_TAKE}/${encodeURIComponent(data.id)}/${data.appId}/${
+                      data.appItemId
+                    }`
+                  : `${Paths.DOCUMENTS}/${encodeURIComponent(data.id)}`;
+              navigate(path);
+            }}
+          />
+        ));
+      }
     }
     if (type === 'department') {
-      tabelItems = dataList.map((data) => (
-        <TableItem
-          key={data.id}
-          td1={data.name}
-          td2={data.amountOfEmployee}
-          img={type_el.img}
-          callback={() => {
-            data.name &&
-              navigate(`${Paths.DEPARTMENTS}/${encodeURIComponent(data.name)}/${data.id}`);
-          }}
-        />
-      ));
+      if (dataList.length && dataList[сurrentPage]) {
+        tabelItems = dataList[сurrentPage].map((data) => (
+          <TableItem
+            key={data.id}
+            td1={data.name}
+            td2={data.amountOfEmployee}
+            img={type_el.img}
+            callback={() => {
+              data.name &&
+                navigate(`${Paths.DEPARTMENTS}/${encodeURIComponent(data.name)}/${data.id}`);
+            }}
+          />
+        ));
+      }
     }
     if (type === 'user') {
-      tabelItems = dataList.map((data) => (
-        <TableItem
-          key={data.id}
-          td1={
-            data.firstName && data.lastName ? `${data.firstName} ${data.lastName}` : data.username
-          }
-          td2={roleCheck(data.roles)}
-          td3={data.email}
-          img={type_el.img}
-          callback={() => {
-            setUserInfo(data as IUserInfo);
-            toggleUserInfo();
-          }}
-        />
-      ));
+      if (dataList.length && dataList[сurrentPage]) {
+        tabelItems = dataList[сurrentPage].map((data) => (
+          <TableItem
+            key={data.id}
+            td1={
+              data.firstName && data.lastName ? `${data.firstName} ${data.lastName}` : data.username
+            }
+            td2={roleCheck(data.roles)}
+            td3={data.email}
+            img={type_el.img}
+            callback={() => {
+              setUserInfo(data as IUserInfo);
+              toggleUserInfo();
+            }}
+          />
+        ));
+      }
     }
   }
 
@@ -160,6 +184,9 @@ const Table: React.FC<ITableProps> = ({ dataList, type }) => {
         </thead>
         <tbody>{tabelItems}</tbody>
       </table>
+      {totalPages && (
+        <Pagination total={totalPages} сurrent={сurrentPage} setCurrentPage={setCurrentPage} />
+      )}
       {type === 'user' && isOpenUserInfo && (
         <UserInfoModal isOpen={isOpenUserInfo} toggle={toggleUserInfo} userInfo={userInfo} />
       )}

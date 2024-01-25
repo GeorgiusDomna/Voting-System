@@ -5,15 +5,21 @@ import { Form, Formik, FormikHelpers } from 'formik';
 import InputText from '@/components/Auth/Inputs/InputText';
 import styles from '@/components/ContentBlock/CreateDocumentModal/createDocumentModal.module.css';
 import stylesApp from './createApplicationModal.module.css';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { downloadFile, getDocumetData } from '@/api/docuService';
 import alertStore from '@/stores/AlertStore';
 import documentData from '@/interfaces/IdocumentData';
 import authStore from '@/stores/AuthStore';
-import { connectDocToApplication, createApplication } from '@/api/applicationService';
+import {
+  connectDocToApplication,
+  createApplication,
+  sendAppToDepOrUser,
+} from '@/api/applicationService';
 import JSZip from 'jszip';
 import { useTranslation } from 'react-i18next';
 import { Localization } from '@/enums/Localization';
+import departmentsStore from '@/stores/DepartmentStore';
+import { getAllDepartments } from '@/api/departmentService';
 
 interface ICreateApplicationModalProps {
   toggle: () => void;
@@ -24,6 +30,7 @@ interface ICreateApplicationModalProps {
 interface values {
   docapp: string;
   deadline: string;
+  selectdep: string;
 }
 
 interface fileData {
@@ -55,6 +62,8 @@ const CreateApplicationModal: React.FC<ICreateApplicationModalProps> = observer(
       },
     ]);
     const { t } = useTranslation();
+    const { departmentList, setDepartments } = departmentsStore;
+    const [dep, setDep] = useState('');
     const CreateApplicationSchema = Yup.object().shape({
       docapp: Yup.string()
         .min(2, t(Localization.Min2Chars))
@@ -62,11 +71,15 @@ const CreateApplicationModal: React.FC<ICreateApplicationModalProps> = observer(
       deadline: Yup.date()
         .min(new Date(), t(`${Localization.CreateApplicationModal}.dateNotEarlierThanToday`))
         .required(t(`${Localization.CreateApplicationModal}.chooseEndDate`)),
+      selectdep: Yup.string(),
     });
 
     useEffect(() => {
-      if (idDoc) {
-        getDocumetData(idDoc)
+      if (idDoc && authStore.token) {
+        getAllDepartments(authStore.token)
+          .then((res) => res && setDepartments(res))
+          .catch((error) => alertStore.toggleAlert(error));
+        getDocumetData(authStore.token, idDoc)
           .then((res) => {
             if (res) {
               setDocInfo(res);
@@ -116,6 +129,16 @@ const CreateApplicationModal: React.FC<ICreateApplicationModalProps> = observer(
                   toggle();
                 })
                 .catch((error) => alertStore.toggleAlert(error));
+              if (dep) {
+                sendAppToDepOrUser(authStore.token, res.id, [{ toDepartmentId: Number(dep) }])
+                  .then(() => {
+                    toggle();
+                    resetForm();
+                    setDep('');
+                  })
+                  .catch((error) => alertStore.toggleAlert(error));
+                return;
+              }
             }
           })
           .catch((error) => alertStore.toggleAlert(error));
@@ -155,6 +178,15 @@ const CreateApplicationModal: React.FC<ICreateApplicationModalProps> = observer(
         });
     }
 
+    const handleDepartmentChange = (e: ChangeEvent<HTMLSelectElement>) => {
+      const selectedValue = e.target.value;
+      if (selectedValue) {
+        setDep(selectedValue);
+      } else {
+        setDep('');
+      }
+    };
+
     return (
       <Modal
         isOpen={isOpen}
@@ -166,6 +198,7 @@ const CreateApplicationModal: React.FC<ICreateApplicationModalProps> = observer(
           initialValues={{
             docapp: '',
             deadline: '',
+            selectdep: '',
           }}
           validateOnMount
           validateOnChange
@@ -229,6 +262,15 @@ const CreateApplicationModal: React.FC<ICreateApplicationModalProps> = observer(
               >
                 {t(`${Localization.CreateApplicationModal}.downloadArchiveButton`)}
               </button>
+              <p>Отправить на голосование</p>
+              <select name='selectdep' onChange={handleDepartmentChange}>
+                <option value=''>Выберите департамент</option>
+                {departmentList.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
               <button
                 type='submit'
                 className={styles.button}

@@ -29,7 +29,6 @@
 .document_header {
   display: flex;
   justify-content: space-between;
-
 }
 .fileName {
   margin: 0.5rem 0 0 1rem;
@@ -61,6 +60,7 @@
   object-fit: contain;
   overflow: hidden;
 }
+
 .documentInfo {
   margin: 1.7rem 0 1.3rem 1.3rem;
 }

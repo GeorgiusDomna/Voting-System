@@ -11,19 +11,17 @@ import ModalConfirmAddApplication from '@/components/ContentBlock/CreateDocument
 import CreateApplicationModal from '@/components/ContentBlock/CreateApplicationModal/CreateApplicationModal';
 
 import documentStore from '@/stores/DocumentStore';
-import authStore from '@/stores/AuthStore';
-import { getAllDocuments } from '@/api/docuService';
 
 import style from './documentPanel.module.css';
 import plusIcon from '@/assets/plus.png';
 
 const DocumentPanel: React.FC = () => {
-  const { documentList, setDocumentList } = documentStore;
+  const { loadData, documentPages, paginationInfo, currentPage, setCurrentPage, isLoading } =
+    documentStore;
   const [isOpenModalCreateDocument, setIsOpenModalCreateDocument] = useState(false);
   const [isOpenModalConfirmAddApplication, setIsOpenModalConfirmAddApplication] = useState(false);
   const [isOpenModalCreateApplication, setIsOpenModalCreateApplication] = useState(false);
   const [idDoc, setIdDoc] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const { t } = useTranslation();
 
   const toggleModalCreateDocument = () => {
@@ -32,7 +30,7 @@ const DocumentPanel: React.FC = () => {
 
   const toggleModalConfirmAddApplication = (id: number | null = null) => {
     setIsOpenModalConfirmAddApplication(!isOpenModalConfirmAddApplication);
-    setIdDoc(id ? id : null);
+    setIdDoc(() => (id ? id : null));
   };
 
   const toggleModalCreateApplication = () => {
@@ -40,16 +38,8 @@ const DocumentPanel: React.FC = () => {
   };
 
   useEffect(() => {
-    setIsLoading(true);
-    const fetchData = async () => {
-      if (authStore.token) {
-        const res = await getAllDocuments(authStore.token);
-        res && setDocumentList(res);
-      }
-      setIsLoading(false);
-    };
-    fetchData();
-  }, [authStore.isLoggedIn]);
+    loadData();
+  }, [currentPage]);
 
   return (
     <div className={style.documentPanel}>
@@ -64,8 +54,14 @@ const DocumentPanel: React.FC = () => {
         <Loading type={'spinningBubbles'} color={'#bdbdbd'} />
       ) : (
         <>
-          <Table dataList={documentList} type='document' />
-          <DocumentModal />
+          <Table
+            dataList={documentPages}
+            totalPages={paginationInfo.totalPages}
+            сurrentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            type='document'
+          />
+          <DocumentModal toggle={toggleModalCreateApplication} setIdDoc={setIdDoc} />
           <CreateDocumentModal
             isOpen={isOpenModalCreateDocument}
             toggle={toggleModalCreateDocument}

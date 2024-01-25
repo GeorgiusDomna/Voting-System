@@ -1,24 +1,21 @@
 import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-
 import Modal from 'react-modal';
+import { useTranslation } from 'react-i18next';
+import { Localization } from '@/enums/Localization';
 
-import { addUserToDepartment, deleteUser } from '@/api/userService';
+import { deleteUser } from '@/api/userService';
 import { getAllDepartments } from '@/api/departmentService';
-
 import userStore from '@/stores/EmployeeStore';
 import authStore from '@/stores/AuthStore';
 import alertStore from '@/stores/AlertStore';
 
 import IUserInfo from '@/interfaces/userInfo';
-import departamentData from '@/interfaces/IdepartmentData';
+import { IDepartmentData } from '@/interfaces/IDepartmentData';
 
 import styles from './userInfoModal.module.css';
 import closeIcon from '@/assets/cancel.svg';
 import blankAvatar from '@/assets/blank-avatar.png';
-
-import { useTranslation } from 'react-i18next';
-import { Localization } from '@/enums/Localization';
 
 interface userInfoModalProps {
   isOpen: boolean;
@@ -27,12 +24,12 @@ interface userInfoModalProps {
 }
 
 const UserInfoModal: React.FC<userInfoModalProps> = ({ isOpen, toggle, userInfo }) => {
-  const [departments, setDepartments] = useState<departamentData[]>([]);
+  const [departments, setDepartments] = useState<IDepartmentData[]>([]);
   const [selectedValue, setSelectedValue] = useState(userInfo.departmentId);
   const { t } = useTranslation();
 
   useEffect(() => {
-    const fetchData = async () => {
+    (async () => {
       try {
         if (authStore.token) {
           const res = await getAllDepartments(authStore.token);
@@ -41,26 +38,11 @@ const UserInfoModal: React.FC<userInfoModalProps> = ({ isOpen, toggle, userInfo 
       } catch (err) {
         alertStore.toggleAlert((err as Error).message);
       }
-    };
-    fetchData();
+    })();
   }, []);
 
-  function moveHandler() {
-    if (selectedValue !== userInfo.departmentId) {
-      if (authStore.token) {
-        addUserToDepartment(
-          { userId: userInfo.id as number, departmentId: selectedValue },
-          authStore.token as string
-        )
-          .then(() => {
-            userStore.deleteUser(userInfo.id);
-            toggle();
-          })
-          .catch((error) => {
-            alertStore.toggleAlert((error as Error).message);
-          });
-      }
-    }
+  async function moveHandler() {
+    (await userStore.moveUser(userInfo, selectedValue)) && toggle();
   }
 
   function deleteHandler() {
@@ -121,7 +103,10 @@ const UserInfoModal: React.FC<userInfoModalProps> = ({ isOpen, toggle, userInfo 
                 value={selectedValue}
                 onChange={(e) => setSelectedValue(+e.target.value)}
               >
-                <option key={userInfo.departmentId} value={userInfo.departmentId}>
+                <option
+                  key={userInfo.departmentId === null ? -1 : userInfo.departmentId}
+                  value={userInfo.departmentId}
+                >
                   {departments.find((el) => el.id === userInfo.departmentId)?.name ||
                     t(`${Localization.UserInfoModal}.withoutDepartment`)}
                 </option>

@@ -58,13 +58,17 @@
       "title": "Панель управления пользователями",
       "addUserButton": "Добавить пользователя",
       "deleteDepartmentButton": "Удалить департамент",
-      "errorAlert": "Ошибка",
       "loadingMessage": "Загрузка...",
       "plusIconAlt": "Добавить",
       "trashIconAlt": "Удалить"
     },
     "DocumentPanel":{
-      "AddDocument":"Добавить документ"
+      "AddDocument":"Добавить документ",
+      "AddApplication":"Добавить голосование"
+    },
+    "DocumentTake": {
+      "title": "Документы на рассмотрении",
+      "department": "департамент"
     },
     "DocumentModal":{
       "UploadFile":"Загрузите файл",
@@ -105,6 +109,11 @@
       "move": "Переместить",
       "delete": "Удалить",
       "withoutDepartment": "Без департамента"
+    },
+    "NotFoundPage": {
+      "title": "Страница не найдена",
+      "discription": "Пожалуйста, проверьте правильность введенного адреса или вернитесь на главную страницу и повторите попытку позже.",
+      "button": "Главная страница"
     }
   }
   
