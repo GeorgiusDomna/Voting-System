@@ -21,7 +21,7 @@ class DocumentStore {
    * Информация о пагинации.
    */
   paginationInfo: IPaginationInfo = {
-    size: 5,
+    size: 10,
     number: 0,
     totalPages: 1,
   };
