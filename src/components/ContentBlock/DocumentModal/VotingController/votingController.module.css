@@ -1,0 +1,88 @@
+.info {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  row-gap: 5px;
+  border-radius: 10px;
+  background-color: white;
+}
+.dataList__img {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.dataList__controls {
+  margin-top: 2rem;
+  padding: 4px;
+  font-size: 1.2rem;
+  background-color: rgb(224, 224, 224);
+  display: inline-flex;
+  align-items: center;
+  gap: 0px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dataList__controls:hover {
+  opacity: 0.75;
+}
+
+.dataList__button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.vote {
+  text-align: center;
+}
+
+.vote__button {
+  font-size: 1rem;
+  background-color: rgb(224, 224, 224);
+  border: none;
+  margin-top: 2rem;
+  padding: 7px 10px 7px 10px;
+  transition: all 0.2s ease;
+}
+
+.vote__button:hover {
+  cursor: pointer;
+  opacity: 0.75;
+}
+
+.title {
+  margin-bottom: 10px;
+}
+
+.voteButtons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.voteButton {
+  padding: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  transition: 0.3s;
+}
+.voteButton:hover {
+  opacity: 0.8;
+}
+
+.voteButton.choice {
+  background-color: rgb(196, 196, 196); 
+}
+
+
+.voteButton.active {
+  background-color: #6e6e6e; /* Фиолетовый цвет для активной кнопки */
+}
+
+.voteButton:disabled {
+  display: none; 
+}

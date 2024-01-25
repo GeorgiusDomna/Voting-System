@@ -16,6 +16,9 @@ body {
   width: 100% !important;
   height: 100% !important;
 }
+.react-pdf__Page__textContent {
+  pointer-events: none;
+}
 
 @media (max-width: 1000px) {
   *,
