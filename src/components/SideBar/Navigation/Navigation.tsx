@@ -27,7 +27,6 @@ const Navigation: React.FC = observer(() => {
         setNavItems(
           <>
             <CategoryItem path={Paths.ROOT} category={t(Localization.ManagementDocuments)} />
-            <CategoryItem path={Paths.DOCUMENTS_VOTE} category={'Голосование'} />
             <CategoryItem
               path={Paths.DOCUMENTS_TAKE}
               category={t(Localization.DocumentsInReview)}

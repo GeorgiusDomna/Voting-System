@@ -1,31 +1,32 @@
-import { pdfjs } from 'react-pdf';
-import { Document, Page } from 'react-pdf';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { Document, Page } from 'react-pdf';
+import { pdfjs } from 'react-pdf';
 import { useTranslation } from 'react-i18next';
 import { Localization } from '@/enums/Localization';
 import { Paths } from '@/enums/Paths';
 import Modal from 'react-modal';
 
+import VotingController from './VotingController/VotingController';
+
 import IdocumentData from '@/interfaces/IdocumentData';
-import { IDepartmentData } from '@/interfaces/IDepartmentData';
+import { IDepartmentData } from '@/interfaces/IdepartmentData';
 import userInfo from '@/interfaces/userInfo';
 
 import { getUserInfo } from '@/api/userService';
 import { getDepartmentData } from '@/api/departmentService';
 import { getDocumetData } from '@/api/docuService';
-import { takeApplicationItem, voteApplicationItem } from '@/api/applicationService';
 
 import alertStore from '@/stores/AlertStore';
 import authStore from '@/stores/AuthStore';
 import { dateFormater } from '@/utils/dateFormater';
 
 import style from './documentModal.module.css';
-import closeIcon from '@/assets/cancel.svg';
-import defaultImg from '@/assets/defaultImg.svg';
-import plusIcon from '@/assets/plus.png';
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
+
+import closeIcon from '@/assets/cancel.svg';
+import defaultImg from '@/assets/defaultImg.svg';
 
 if (process.env.NODE_ENV !== 'test') Modal.setAppElement('#root');
 
@@ -45,14 +46,11 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
   const [docUrl, setDocUrl] = useState<{ file: string; fileName?: string }[]>([
     { file: defaultImg },
   ]);
-  const [resStatus, setResStatus] = useState(0);
   const [dataUser, setDataUser] = useState<userInfo | null>();
   const [dataDepart, setDataDepart] = useState<IDepartmentData | null>();
   const [prevLocation, setPrevLocation] = useState<null | string>(null);
   const dots: JSX.Element[] = [];
   const { t } = useTranslation();
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const closeModal = () => {
     prevLocation ? navigate(prevLocation, { state: { fetch: true } }) : navigate(Paths.ROOT);
@@ -88,50 +86,6 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
         ? setCurrentView(currentView + 1 === docUrl.length ? 0 : currentView + 1)
         : setCurrentView(currentView === 0 ? docUrl.length - 1 : currentView - 1);
     }
-  };
-
-  const takeApplication = () => {
-    const take = async () => {
-      try {
-        if (appId && appItemId) {
-          if (authStore.token) {
-            const res = await takeApplicationItem(authStore.token, +appItemId, +appId);
-            //setResStatus(res ? 1 : 0);
-            res && setResStatus(1);
-          }
-        } else alertStore.toggleAlert(t(`${Localization.UserPanel}.errorAlert`));
-      } catch (e) {
-        alertStore.toggleAlert((e as Error).message);
-      }
-    };
-
-    take();
-  };
-
-  const handleVoteOption = (option: 'ACCEPTED' | 'DENIED') => {
-    setSelectedOption(option);
-  };
-
-  const handleVoteSubmit = () => {
-    setFormSubmitted(true);
-    const obj = {
-      status: selectedOption!,
-      comment: 'string',
-    };
-    const vote = async () => {
-      try {
-        if (appId && appItemId) {
-          if (authStore.token) {
-            const res = await voteApplicationItem(authStore.token, +appItemId, +appId, obj);
-            res && closeModal();
-          }
-        } else alertStore.toggleAlert(t(`${Localization.UserPanel}.errorAlert`));
-      } catch (e) {
-        alertStore.toggleAlert((e as Error).message);
-      }
-    };
-
-    vote();
   };
 
   useEffect(() => {
@@ -272,53 +226,12 @@ const DocumentModal: React.FC<ModalProps> = ({ toggle = null, setIdDoc = null })
                 </div>
               </>
             )}
-            {!appId && !appItemId && toggle && (
-              <div className={style.dataList__controls} onClick={toggle}>
-                <img className={style.dataList__img} src={plusIcon} alt='+' />
-                <button className={style.dataList__button}>
-                  {t(`${Localization.DocumentPanel}.AddApplication`)}
-                </button>
-              </div>
-            )}
-            {appId && appItemId && !resStatus && (
-              <div className={style.vote}>
-                <button className={style.vote__button} onClick={takeApplication}>
-                  {'Голосовать'}
-                </button>
-              </div>
-            )}
-            {appId && appItemId && resStatus && (
-              <div className={style.info}>
-                <h1 className={style.title}>Голосование за документ</h1>
-                <div className={style.voteButtons}>
-                  <button
-                    className={`${style.voteButton} ${style.choice} ${
-                      selectedOption === 'ACCEPTED' && style.active
-                    }`}
-                    onClick={() => handleVoteOption('ACCEPTED')}
-                    disabled={formSubmitted}
-                  >
-                    За
-                  </button>
-                  <button
-                    className={`${style.voteButton} ${style.choice} ${
-                      selectedOption === 'DENIED' && style.active
-                    }`}
-                    onClick={() => handleVoteOption('DENIED')}
-                    disabled={formSubmitted}
-                  >
-                    Против
-                  </button>
-                </div>
-                <button
-                  className={`${style.voteButton} ${style.choice}`}
-                  onClick={handleVoteSubmit}
-                  disabled={!selectedOption || formSubmitted}
-                >
-                  Проголосовать
-                </button>
-              </div>
-            )}
+            <VotingController
+              appId={appId}
+              appItemId={appItemId}
+              toggle={toggle}
+              closeModal={closeModal}
+            />
           </div>
         </div>
       </Modal>
